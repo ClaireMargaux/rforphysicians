@@ -1,4 +1,4 @@
 # rforphysicians
 R for physicians
 
-[https://clairemargaux.github.io/rforphysicians/](Chapter 1)
+[Lecture notes](https://clairemargaux.github.io/rforphysicians/)

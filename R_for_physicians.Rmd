@@ -1,12 +1,9 @@
 ---
 title: "R for Physicians"
 date: "`r Sys.Date()`"
-contact: "your.email@example.com"
-bibliography: /home/claire/Nextcloud/Documents/Personnel/Stats/Rforphysicians.bib
-output: 
-  bookdown::pdf_document2:
-    keep_md: true
-toc: yes
+contact: your.email@example.com
+bibliography: /home/claire/Documents/GitHub/rforphysicians/Rforphysicians.bib
+toc: true
 toc-depth: 10
 ---
 
@@ -43,7 +40,7 @@ To download both, follow the links below:
 Once you have downloaded both programs and opened RStudio, you will be presented with a window similar to the one shown in Figure \ref{fig:rstudio-window-start}.
 
 ```{r rstudio-window-start, echo=FALSE, fig.cap = "RStudio window"}
-knitr::include_graphics(path = "/home/claire/Nextcloud/Documents/Personnel/Stats/rstudio-window-start.png")
+knitr::include_graphics(path = "/home/claire/Documents/GitHub/rforphysicians/rstudio-window-start.png")
 ```
 
 * Left pane: Contains the Console, Terminal and Background Jobs tabs.
@@ -81,7 +78,7 @@ However, when we run our code directly in the console, it isn't saved for being 
 To start recording a script, click *File – New File – R Script*. This will open a text editor in the top-left corner of the RStudio interface (above the Console tab, see Figure \ref{fig:rstudio-window}).
 
 ```{r rstudio-window, echo=FALSE, fig.cap = "RStudio window"}
-knitr::include_graphics(path = "/home/claire/Nextcloud/Documents/Personnel/Stats/rstudio-window.png")
+knitr::include_graphics(path = "/home/claire/Documents/GitHub/rforphysicians/rstudio-window.png")
 ```
 
 ## Comments
@@ -412,7 +409,7 @@ ggplot2 is based on the grammar of graphics, the idea that you can build every g
 To display values, map variables in the data to visual properties of the geom (aesthetics) like size, color, and x and y locations.
 
 ```{r ggplot2-structure, echo=FALSE, out.width="50%"}
-knitr::include_graphics(path = "/home/claire/Nextcloud/Documents/Personnel/Stats/ggplot2-structure.png")
+knitr::include_graphics(path = "/home/claire/Documents/GitHub/rforphysicians/ggplot2-structure.png")
 ```
 
 Absolutely unavoidable are the 
@@ -476,6 +473,16 @@ plot3
 | **4.4 Tests for survival analysis** | Tests for time-to-event data | Logrank/ Log-Rank Test |
 | **4.5 Correlation and association tests** | Tests for relationships between variables | Correlation test by Pearson, Correlation test by Spearman |
 | **4.6 Predictive modeling and regression** | Predictive models and regression techniques | Generalized Linear Models (GLMs) (Linear Regression - Logistic Regression - Cox Proportional Hazards Regression - Multivariable Regression) Mixed Effects Models, Generalized Additive Models (GAMs), Generalized Additive Mixed Models (GAMMs) |
+
+## Overview
+
+|               | 1 Sample                             | 2 Paired Samples                                             | 2 Unpaired Samples                           | >2 Paired Samples                            | >2 Unpaired Samples                         | Continuous Predictor               |
+|---------------|--------------------------------------|--------------------------------------------------------------|----------------------------------------------|----------------------------------------------|----------------------------------------------|------------------------------------|
+| **Binary**    | Binomial test                        | McNemar test                                                 | Chi-square test, Fisher's exact test         | Cochran's Q test                             | Chi-square test, extensions of Fisher's test | Logistic regression                |
+| **Nominal**   | Chi-square goodness of fit test      |                                                              | Chi-square test, extensions of Fisher's test |                                              | Chi-square test                              | Multinomial regression             |
+| **Ordinal**   | Wilcoxon signed-rank test, sign test | Sign test or Wilcoxon signed-rank test on differences        | Mann-Whitney U test (Wilcoxon rank-sum test) | Friedman test                                | Kruskal–Wallis test                          | Ordinal regression                 |
+| **Continuous**| One-sample t-test                    | Paired t-test or Wilcoxon signed-rank test on differences    | Two-sample t-test                            | Repeated measures ANOVA                      | ANOVA                                        | Linear regression                  |
+| **Time-to-event** | One-sample log-rank test             |                                                              | Log-rank test                                |                                              |                                             | Cox regression, Weibull regression |
 
 ## Tests for comparing two groups
 

@@ -17,7 +17,7 @@ library(ggplot2)
 
 **Author**
 
-Claire Descombes, MSc Statistics and Data Science UniBe, [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch).
+Claire Descombes, Universitätsklinik für Neurochirurgie des Inselspitals Bern, MSc Statistics and Data Science UniBe, [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch).
 
 # Good practices
 

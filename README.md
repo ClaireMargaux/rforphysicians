@@ -1,5 +1,5 @@
 <span style="float: left; margin-right: 10px;">
-  <img src="logo.png" alt="Logo" width="100">
+  <img src="other_files/logo.png" alt="Logo" width="100">
 </span>
 
 # Objectives

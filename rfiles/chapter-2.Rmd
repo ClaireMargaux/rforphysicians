@@ -1,0 +1,120 @@
+---
+title: "Chapter 2"
+date: "`r Sys.Date()`"
+contact: claire.descombes@insel.ch
+output:
+  html_document:
+  toc: true
+  toc-depth: 10
+bibliography: /home/claire/Documents/GitHub/rforphysicians/rfiles/Rforphysicians.bib
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+**Author**
+
+Claire Descombes, MSc Statistics and Data Science UniBe, [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch).
+
+# Including plots using ggplot2
+
+The base `plot()` function works well and is easy to use, but is not as good looking as the geom functions provided by the `ggplot2` package.
+
+**ggplot2** is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+
+\vspace{0.2cm}
+
+```{r, echo=TRUE, eval=FALSE}
+# The easiest way to get ggplot2 is to install the whole tidyverse:
+install.packages("tidyverse")
+
+# Alternatively, install just ggplot2:
+install.packages("ggplot2")
+```
+
+To explore the potential of `ggplot2`, we start by importing data sets (which are included in Base R).
+
+\vspace{0.2cm}
+
+```{r, echo=TRUE}
+data.iris <- iris
+head(data.iris) # to have a look at the first few rows
+data.cars <- cars
+head(data.cars)
+```
+
+**Iris**: *This famous (Fisher's or Anderson's) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica.*
+
+**Cars**: *The data give the speed of cars and the distances taken to stop. Note that the data were recorded in the 1920s.*
+
+ggplot2 is based on the grammar of graphics, the idea that you can build every graph from the same components: 
+
+* a data set, 
+* a coordinate system, 
+* and geoms—visual marks that represent data points.
+ 
+To display values, map variables in the data to visual properties of the geom (aesthetics) like size, color, and x and y locations.
+
+```{r ggplot2-structure, echo=FALSE, out.width="50%"}
+knitr::include_graphics(path = "images/ggplot2-structure.png")
+```
+
+Absolutely unavoidable are the 
+
+* data: our data set
+* geom function: geom_point(), geom_line(), geom_histogram(), geom_bar(), geom_qq(), etc.
+* and mappings: color, filling, linetype, linewidth, etc.
+
+The geom function must be chosen according to the type of data examined (two continuous variables, one categorical and one continuous variable, etc.).
+
+The best way to understand how to use ggplot2 is to look at some examples.
+
+```{r, out.width="75%"}
+# For comparison, let us start by plotting the petal length against the petal width using
+# the Base R plot() function.
+plot(x = data.iris$Sepal.Length, y = data.iris$Sepal.Width)
+
+# Now we will use the ggplot2 package. We plot again the petal length against the petal 
+# width.
+plot <- ggplot(data = data.iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width))
+plot
+
+# Our plot can be made much nicer using optional features.
+nice.plot <- ggplot(data = data.iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, color = Species)) +
+  labs(x = "Petal length (cm)", y = "Petal width (cm)", 
+       title = "Petal length against petal width") +
+  theme_minimal()
+nice.plot
+
+plot2 <- ggplot(data = data.cars) +
+  geom_line(mapping = aes(x = speed, y = dist), color = "brown1", linewidth = 1) +
+  geom_point(mapping = aes(x = speed, y = dist), color = "brown2", size = 1) +
+  theme(legend.position = "top") +
+  theme_minimal() +
+  labs(x = "Speed (mph)", y = "Distance to stop (ft)", 
+       title = "Relationship between speed and stopping distance")
+plot2
+
+plot3 <- ggplot(data = data.iris) +
+  geom_histogram(mapping = aes(Petal.Length, fill = Species), 
+                 color = "white", bins = 20) +
+  theme(legend.position = "top") +
+  theme_minimal() +
+  labs(x = "Petal length (cm)", y = "Petal width (cm)", 
+       title = "Petal length distribution by species") +
+  facet_wrap(~ Species)
+plot3
+```
+
+\newpage
+
+# References
+
+---
+nocite: '@*'
+...

@@ -11,4 +11,4 @@ The aim of this introduction to R for physicians is to
 -   Chapter 3: introducing common statistical tests used in medical research
 -   Chapter 4: recalling general best practices for working with data
 
-[Lecture notes](https://clairemargaux.github.io/rforphysicians/)
+To get started, access the lecture notes via the following link: [Lecture notes](https://clairemargaux.github.io/rforphysicians/)

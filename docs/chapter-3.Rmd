@@ -1,17 +1,34 @@
 ---
 title: "Chapter 3"
+author: "Claire Descombes"
 date: "`r Sys.Date()`"
 contact: claire.descombes@insel.ch
 output:
   html_document:
-  toc: true
-  toc-depth: 10
-bibliography: /home/claire/Documents/GitHub/rforphysicians/rfiles/Rforphysicians.bib
-
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+    df_print: paged
+    theme: paper
+    code_folding: show
+    math_method: katex
+subtitle: "R for physicians"
+bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+link-citations: yes
+editor_options: 
+  chunk_output_type: console
+knit: (function(input, ...) {rmarkdown::render(input, output_dir = "docs")})
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE,
+  message = FALSE, 
+  fig.height = 5,
+  fig.width = 6,
+  eval = TRUE
+)
 library(ggplot2)
 ```
 

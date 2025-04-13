@@ -17,7 +17,7 @@ bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.b
 link-citations: yes
 editor_options: 
   chunk_output_type: console
-knit: (function(input, ...) {rmarkdown::render(input, output_dir = "docs")})
+knit: (function(input, ...) {rmarkdown::render(input)})
 ---
 
 ```{r setup, include=FALSE}

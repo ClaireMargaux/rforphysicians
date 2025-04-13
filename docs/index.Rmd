@@ -1,0 +1,12 @@
+---
+title: "R for physicians"
+output:
+  html_document:
+    theme: null
+    toc: false
+    css: styles.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```

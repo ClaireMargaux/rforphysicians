@@ -10,3 +10,56 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<span style="font-size: 24px; font-weight: bold;">Chapter Navigation</span>
+
+<div class="tabs">
+  <button class="tablinks" onclick="openChapter(event, 'chapter1')">Chapter 1</button>
+  <button class="tablinks" onclick="openChapter(event, 'chapter2')">Chapter 2</button>
+  <button class="tablinks" onclick="openChapter(event, 'chapter3')">Chapter 3</button>
+  <button class="tablinks" onclick="openChapter(event, 'chapter4')">Chapter 4</button>
+</div>
+
+<div id="chapter1" class="tabcontent" style="display:block;">
+  <iframe src="chapter-1.html" width="100%" height="800px" style="border:none;"></iframe>
+</div>
+
+<div id="chapter2" class="tabcontent" style="display:none;">
+  <iframe src="chapter-2.html" width="100%" height="800px" style="border:none;"></iframe>
+</div>
+
+<div id="chapter3" class="tabcontent" style="display:none;">
+  <iframe src="chapter-3.html" width="100%" height="800px" style="border:none;"></iframe>
+</div>
+
+<div id="chapter4" class="tabcontent" style="display:none;">
+  <iframe src="chapter-4.html" width="100%" height="800px" style="border:none;"></iframe>
+</div>
+
+<script>
+function openChapter(evt, chapterName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  
+  // Hide all chapters
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  
+  // Remove "active" class from all buttons
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  
+  // Show the selected chapter
+  document.getElementById(chapterName).style.display = "block";
+  
+  // Add "active" class to the clicked button
+  evt.currentTarget.className += " active";
+}
+</script>

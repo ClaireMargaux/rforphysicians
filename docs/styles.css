@@ -78,3 +78,31 @@ ul li a:hover {
     width: 90%;
   }
 }
+/* Logo styling (if needed, already handled inline) */
+
+/* Chapter Navigation Buttons */
+.tabs {
+  margin: 20px 0;
+}
+
+.tablinks {
+  background-color: #f8f9fa;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 10px 20px;
+  margin-right: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.tablinks:hover {
+  background-color: #e2e6ea;
+}
+
+.tablinks.active {
+  background-color: #d0d8de;
+  font-weight: bold;
+}

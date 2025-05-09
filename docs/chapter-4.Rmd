@@ -36,6 +36,8 @@ library(ggplot2)
 
 Claire Descombes, Universitätsklinik für Neurochirurgie des Inselspitals Bern, MSc Statistics and Data Science UniBe, [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch).
 
+The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
+
 # Good practices
 
 ## Primary vs Secondary outcomes

@@ -36,10 +36,12 @@ library(ggplot2)
 
 Claire Descombes, Universitätsklinik für Neurochirurgie des Inselspitals Bern, MSc Statistics and Data Science UniBe, [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch).
 
+The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
+
 # Basics of coding in R
 
-R is a free and open source statistical computing and graphics software.
-RStudio is a user-friendly environment for R, designed to facilitate its accessibility. 
+*R* is a free and open source statistical computing and graphics software.
+*RStudio* is a user-friendly environment for R, designed to facilitate its accessibility. 
 R can technically be used without RStudio (although I wouldn't advise it), but the reverse is not possible. 
 To download both, follow the links below:
 
@@ -60,8 +62,6 @@ knitr::include_graphics(path = "images/rstudio-window-start.png")
 
 In the **Console tab**, we first see information about the version of R we are using and some basic commands to try out. At the end of these descriptions, we can type our R code, press Enter and see the result below the code line.
 
-\vspace{0.2cm}
-
 ```{r, echo=TRUE}
 2+2
 ```
@@ -71,8 +71,6 @@ In the **Console tab**, we first see information about the version of R we are u
 The `help()` function and `?` help operator in R provide access to the documentation pages for R functions, data sets, and other objects, both for packages in the standard R distribution and for contributed packages.
 
 You can access help directly from the console or via the Help tab in the bottom right-hand corner.
-
-\vspace{0.2cm}
 
 ```{r}
 help(c)
@@ -90,14 +88,19 @@ To start recording a script, click *File – New File – R Script*. This will o
 knitr::include_graphics(path = "images/rstudio-window.png")
 ```
 
+✏️ Create your own script. Feel free to take notes directly in it. You’ll use this script as a working document to complete various small tasks and exercises.
+
+☑️ All exercises have an example solution at the end of the chapter.
+
+💡 When your code starts to get long or complex, consider breaking it down into separate scripts with clear and specific purposes — for example:
+`1_data_import.R`, `2_data_cleaning.R`, `3_survival_analysis.R`, `4_qol_analysis.R`, etc.
+
 ## Comments
 
-Comments can be added to the code in a script using the hash symbol.
-
-\vspace{0.2cm}
+Comments can be added to the code in a script using the hash symbol `#`.
 
 ```{r}
-# Here is your script.
+# Here is a comment.
 ```
 
 It is very, very important that you always comment every piece of your code, to make sure:
@@ -105,66 +108,99 @@ It is very, very important that you always comment every piece of your code, to 
 * that you will still be able to understand what you have written after a few months/years.
 * to facilitate sharing: without comments, it will take someone much longer to understand your code.
 
-So for scientific purposes, please **comment your code**!
+So, for scientific purposes, **please comment your code**!  
+Here’s an example of how I usually comment the scripts I use in my daily work:
+
+```{r, eval = FALSE}
+################################
+# TOSCAN 2.0: Matching algorithm
+################################
+
+# 1) Script info-header --------------------------------------------------------
+
+# Project:                  TOSCAN 2.0
+# Author:                   Claire Descombes
+# Contact:                  claire.descombes@insel.ch
+# Date last modification:   07/05/2025
+# Purpose:                  Match TOSCAN cohort to Swiss population using BFS data
+# Environment:              R version 4.4.2
+#                           RStudio 2024.09.1+394 "Cranberry Hibiscus" Release
+
+# 2) Packages & environment ----------------------------------------------------
+
+library(duckdb)      # Interface to DuckDB, an in-process SQL OLAP database engine for fast queries on large datasets
+library(dplyr)       # Grammar of data manipulation for data frames (select, filter, mutate, etc.)
+library(lubridate)   # Makes working with dates and times easier (e.g., extracting year, month, parsing dates)
+library(arrow)       # Provides access to Apache Arrow tools, including reading/writing Parquet files
+library(readxl)      # Imports Excel files (.xls and .xlsx) into R
+library(progress)    # Adds progress bars to loops and long operations in the console
+library(glue)        # Facilitates string interpolation, especially useful for building SQL queries dynamically
+
+options(scipen = 999)  # Prevents scientific notation (e.g., 1e+05) when printing numbers
+
+# 3) Data import ---------------------------------------------------------------
+
+# Set working directory to source file location
+setwd("C:/Users/I0343303/Documents/Forschung/TOSCAN2.0")
+
+# Etc.
+```
+
+💡 Use `----` after numbered headers in comments to make your code more navigable and readable in long scripts (this is a common R style convention).
 
 ## Objects, data types, variables
 
 In R, everything is an **object**. This means that every piece of data you work with, from a single number to a complex dataset, is represented as an object with specific properties and behaviours. An object has attributes like class (data type) and dimensions.
 
-**Variables** are labels: They act as pointers to the actual object stored in memory, and appear in the Environment tab.
+**Variables** act as labels for objects. They are essentially pointers to the actual object stored in memory and appear in the Environment tab in RStudio.
 
-To better grasp the difference, here is an example.
-
-\vspace{0.2cm}
+Here’s an example to clarify the difference between variables and objects.
 
 ```{r}
-# We create an object named 'vec' and assign a sequence of numbers to it.
+# Create an object named 'vec' and assign a sequence of numbers to it.
 vec <- 1:10 
 
 # 'vec' is the variable. The sequence of numbers (1, 2, 3, ..., 10) is the object.
 ```
 
-To assign values to an object, use the '<-' or '=' symbols.
+To assign values to an object, use the `<-` or `=` symbols.
 
 ### Data types
 
-In R, data types define the kind of information a variable can hold. Here are some of the key data types:
+In R, data types define the kind of information a variable can hold. Here are some of the most common data types:
 
-* Numeric: Represents real numbers (e.g., 3.14, -2.5, 0).
+#### Numeric: Represents real numbers (e.g., 3.14, -2.5, 0).
 
-\vspace{0.2cm}
-        
 ```{r} 
-typeof(3.14) 
+typeof(3.14)
 ```
 
-* Integer: Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
-
-\vspace{0.2cm}
+#### Integer: Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
 
 ```{r} 
 typeof(2L) 
 ```
 
-* Logical: Represents Boolean values (TRUE or FALSE).
-
-\vspace{0.2cm}
+#### Logical: Represents Boolean values (TRUE or FALSE).
 
 ```{r} 
 typeof(TRUE)
+
+# Example: Logical operation
+values <- 1:10
+above_five <- (values > 5)
+above_five
 ```
 
-* Character: Represents text or strings (e.g., "hello", "world").
+✏️ Exercise on Booleans: Given a vector of ages (`ages <- c(35, 45, 60, 15, 50, 8)`), determine which patients are eligible for a treatment (age above 18). Return a Boolean vector indicating whether each patient meets the age criteria.
 
-\vspace{0.2cm}
+#### Character: Represents text or strings (e.g., "hello", "world").
 
 ```{r} 
 typeof("hello")
 ```
 
-* Complex: Represents complex numbers (e.g., 1 + 2i).
-
-\vspace{0.2cm}
+#### Complex: Represents complex numbers (e.g., 1 + 2i).
 
 ```{r} 
 typeof(1 + 2i) 
@@ -172,103 +208,118 @@ typeof(1 + 2i)
 
 #### NAs/NANs
 
-In R, missing values are represented by the symbol NA (not available). Impossible values (e.g., dividing by zero) are represented by the symbol NaN (not a number). Unlike SAS, R uses the same symbol for character and numeric data.
+In some cases the components of a vector may not be known. When an element or value is “not available” or a “missing value” in the statistical sense, a place within a vector may be reserved for it by assigning it the special value `NA`. In general any operation on an NA becomes an NA.
+
+```{r} 
+z <- c(1:3,NA)
+print(z)
+is.na(z)
+```
+
+There is a second kind of “missing” values which are produced by numerical computation, the so-called Not a Number, `NaN`, values.
+
+```{r} 
+0/0
+Inf - Inf
+```
 
 ### Objects
 
-* Vectors:
+Objects are the entities that R operates on. These can be:
+
+#### Vectors
   + The most fundamental data structure.
   + A one-dimensional array of elements of the same data type (e.g., numeric, character, logical).
   + Created using the `c()` function.
   
-\vspace{0.2cm}
-
 ```{r, echo=TRUE}
 vec1 <- c(1,2,3)
-vec1
 
-# Or equivalently (only for integers!)
-vec2 <- 1:3
-vec2
+# Alternative ways of creating vectors:
+vec2 <- 1:3  # Sequence of integers
+vec3 <- seq(1, 3, by=1)  # More general sequence
 
-# Or equivalently (only for equally spaced values!)
-vec3 <- seq(from=1, to=3, by=1)
-vec3
-
-# To look only at some elements in the vector, we can specify
-# which indices we are interested in inside brackets [].
-# (Note: in R, indices start with 1.)
-vec1[1]
-vec2[c(2,3)]
+# Accessing elements of the vector by index (R uses 1-based indexing)
+vec1[1]  # First element
+vec2[c(2, 3)]  # Elements at indices 2 and 3
+vec3[c(-2)]  # All elements except for the element at index 2
 ```
 
-* Matrices:
+#### Matrices
   + Two-dimensional arrays of elements of the same data type.
   + Can be created using the `matrix()` function.
   
-\vspace{0.2cm}
+```{r, echo=TRUE}
+(mat <- matrix(c(1,2,3,4), nrow = 2, ncol = 2))
+```
+
+💡 By enclosing the assignment in parentheses (), you not only create the object but also automatically print its value to the console.
+
+#### Arrays
+  + Generalization of matrices to more than two dimensions.
   
 ```{r, echo=TRUE}
-mat <- matrix(c(1,2,3,4), nrow = 2, ncol = 2)
-mat
+(array <- array(1:8, c(2,4,2)))
 ```
 
-* Arrays:
-  + Generalization of matrices to multiple dimensions.
+#### Lists
+  + Ordered collections of objects, which may be of different types.
+  + Lists can contain other lists as elements.
   
-\vspace{0.2cm}
-
-```{r, echo=TRUE}
-array <- array(1:8, c(2,4,2))
-array
-```
-
-* Data Frames:
-  +Two-dimensional tabular data structure.
-  + Can hold columns of different data types.
-  + The most common data structure for representing datasets in R.
-  
-\vspace{0.2cm}
-
 ```{r}
-d <- data.frame(id = 1:10, val = c(4,5,2,6,7,9,3,5,8,7))
-d
+(list <- list(numb = 10:15, char = 'hello'))
 ```
 
-* Lists:
-  + Ordered collections of objects of any type (including other lists).
-  + Can hold elements of different data types within a single list.
-  
-\vspace{0.2cm}
-
-```{r}
-list <- list(numb = 10:15, char = 'hello')
-list
-```
-
-* Factors:
+#### Factors
   + Categorical variables.
   + Represent data with a limited number of possible values.
 
-\vspace{0.2cm}
-  
 ```{r}
-fac <- factor(c("single", "married"))
-fac
+(fac <- factor(c("single", "married")))
 ```
 
-* Functions:
+#### Data Frames
+  + Two-dimensional tabular data structure.
+  + Can hold columns of different data types.
+  + The most common data structure for representing datasets in R.
+  
+```{r}
+(d <- data.frame(id = 1:5, 
+                 val = c(4,5,2,6,5),
+                 group = c("exp","control","control","exp","control")))
+
+# Display the structure of the data frame
+str(d)
+```
+
+💡 The function `str()` provides a compact view of the internal structure of an R object, helping you understand its components and data types quickly.
+
+✏️ Create a data frame with 10 rows and the columns `id`, `blood_pressure`, and `group`.
+– `id`: integers from 1 to 10
+– `blood_pressure`: random values from a normal distribution with mean 123 and standard deviation 8
+– `group`: a factor with levels "drug 1", "drug 2", and "obs arm" (you decide how to assign them!)
+
+💡 Use the function `rnorm()` to simulate normal values, and try `help(rnorm)` if you need a hint.
+
+#### Functions
   + Reusable blocks of code that perform a specific task.
   + Also considered objects in R.
 
-\vspace{0.2cm}
-  
 ```{r}
-frac <- function(nominator, denominator) {
-  res <- nominator/denominator
-  return(res)
+frac <- function(numerator, denominator) {
+  result <- numerator / denominator
+  return(result)
 }
-frac(6,2)
+
+frac(6, 2)  # Calling the function
+```
+
+✏️ Write a function `sum_squared` that takes two integers and returns the sum of their squared values.
+```{r, eval=FALSE}
+# Example
+sum_squared(2,3)
+# The output should be:
+13
 ```
 
 ## Working directory
@@ -280,21 +331,23 @@ When you get a file from somewhere on your computer (e.g. a dataset), you can ei
 
 The advantage of putting the files in the folder that contains your script and is set as the working directory is that you can easily move the folder around on your computer without getting any problems with your script: just set the working directory to your source file every time you open it, and you'll be fine.
 
-\vspace{0.2cm}
-
 ```{r, eval = FALSE}
 # Example
-setwd("~home/user/Documents/Trials/VANCO/Analysis5")
+setwd("~/home/claire/Documents/GitHub/rforphysicians/docs")
 data <- read.csv("testdata.csv")
 ```
 
 The advantage of always giving the full path to a file is that you can get data in different folders on your computer, avoiding things like copying the source data in every folder where you have a corresponding script.
 
-\vspace{0.2cm}
-
 ```{r, eval = FALSE}
 # Example
-data <- read.csv("/home/user/Documents/Trials/VANCO/Data/testdata.csv")
+data <- read.csv("~/home/claire/Documents/GitHub/rforphysicians/docs/testdata.csv")
+```
+
+To find out what your current working directory is, you can use the function `getwd()`.
+
+```{r}
+getwd()
 ```
 
 **Working directory**
@@ -305,70 +358,145 @@ I personally recommend that you put your script in the folder you set as your wo
 
 ## Import data
 
-We will study the case CSV to R data frame.
+We will first look at how to import a CSV file into R as a data frame.
 
-CSV is expanded as Comma, Separated, Values. In a CSV file, the values stored are separated by a comma. This process of storing the data is much easier.
+CSV stands for Comma-Separated Values. In a `.csv` file, the values are stored as plain text, separated by commas. This is a simple and widely used format for storing tabular data.
 
-After the setting of the working path/determining the path of your CSV file, you can import your data set using the function `read.csv`, which should always create a data frame. To check the class of the variable ‘readfile’, use the function `class'.
-
-\vspace{0.2cm}
+After setting your working directory or determining the path to your CSV file, you can use the `read.csv()` function to import the data. This will create a data frame, which is one of the most commonly used structures in R for handling datasets.
 
 ```{r, eval=FALSE}
-dataset <- read.csv("testdata.txt")
+# Import a CSV file into a data frame
+dataset <- read.csv("~/home/claire/Documents/GitHub/rforphysicians/docs/testdata.csv")
+
+# Check the class of the imported object
 class(dataset)
 ```
 
-I recommend using data frames for your data, it is a much easier format to understand than matrices if you are not used to it.
+💡 I recommend using data frames — they are generally easier to work with than matrices, especially for beginners.
 
-## Data frames
+Another widely used data format is the Excel file (`.xlsx`). For these, you can use the `readxl` package to import the data:
 
-Let us now look at a data frame to learn how to call or modify its elements. To do this, we will use a data set available in Base R.
+```{r, eval=FALSE}
+# Load the readxl package
+library(readxl)
 
-```{r}
-data.diamonds <- diamonds
-class(data.diamonds) # we check the class
-head(data.diamonds) # we look at the first rows
-```
-**Diamonds**: *A dataset containing the prices and other attributes of almost 54,000 diamonds. The variables are as follows: price, carat, cut, color, clarity, x, y, z, depth, table.*
-
-\vspace{0.2cm}
-
-```{r}
-# To inspect one columns, we can use the dollar $ symbol.
-# (Let us only look at the first 10 entries).
-data.diamonds$carat[1:10]
-
-# Alternatively, you can give the index of the desired column.
-# As data frames are bi-dimentional, you need to specify in the brackets []
-# a value for the rows and one for the columns.
-data.diamonds[1:10, 1]
-
-# If you don't give any value, you get all the rows/columns.
-data.diamonds[1:10, ]
+# Read the first sheet of an Excel file
+dataset <- read_excel("~/home/claire/Documents/datasets.xlsx")
 ```
 
-Note that both approaches don't yield the same data format! When plotting/analysing, favour using the dollar sign.
+⚠️ Note: If your file is actually a CSV but mistakenly has a .xlsx extension, you should rename it to .csv and use read.csv() instead. Mixing up formats can lead to import errors.
 
-Now, let us assume we want to modify one entry/multiple entries in our data frame. The brackets come in handy now. In this setting, I recommend defining a new data frame before modifying the original one.
+## Handling data frames
+
+Let us now look at a data frame to learn how to call or modify its elements. To do this, we will use a synthetic `csv` health data set that you can find in the [`docs` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/docs).
+
+```{r}
+HealthCare_Dataset <- read.csv("HealthCare_Dataset.csv")
+class(HealthCare_Dataset) # we check that we are dealing with a data frame
+head(HealthCare_Dataset) # head() returns the first parts of an object
+```
+
+```{r}
+# Let us only look at the first 10 entries of the variable Blood_Pressure
+HealthCare_Dataset$Blood_Pressure[1:10]
+```
+
+💡 To inspect one column, we can use the dollar `$` symbol. We are then dealing with a vector. As we learnt, the brackets `[]` allow us to inspect specific indices of a vector.
+
+```{r}
+HealthCare_Dataset[1:10, 4]
+```
+
+💡 Alternatively to the dollar `$` symbol, you can specify the index of the column(s) you're interested in. As data frames are bi-dimentional, you need to specify in the brackets `[]` a value for the row(s) and one for the column(s) you want to select. If you don't give any value, you get all the rows/columns.
+
+```{r}
+HealthCare_Dataset[1:10, ]
+```
+
+✏️ Exercise on the `HealthCare_Dataset` data frame n°1: import the `HealthCare_Dataset` data frame, inspect its structure, look at different entries, get familiar with those commands.
+
+### Basic descriptive statistics
+
+R makes it simple to compute basic descriptive statistics for exploring your dataset. Below are a few useful examples.
+
+#### Central tendency: mean and median
+
+```{r}
+mean(HealthCare_Dataset$Age, na.rm = TRUE)                 # Mean age
+median(HealthCare_Dataset$Recovery_Time, na.rm = TRUE)     # Median recovery time
+```
+
+💡 The `na.rm` argument in those functions allows for ignoring the NA values.
+
+#### Dispersion: standard deviation, min, max, and range
+
+```{r}
+sd(HealthCare_Dataset$Heart_Rate, na.rm = TRUE)            # Standard deviation of heart rate
+range(HealthCare_Dataset$Temperature, na.rm = TRUE)        # Range of temperature
+min(HealthCare_Dataset$Temperature, na.rm = TRUE)          # Minimum temperature
+max(HealthCare_Dataset$Temperature, na.rm = TRUE)          # Maximum temperature
+```
+
+#### Frequency tables and proportions
+
+```{r}
+table(HealthCare_Dataset$Gender)         # Number of males and females
+table(HealthCare_Dataset$Diagnosis)      # Number of patients per diagnosis
+prop.table(table(HealthCare_Dataset$Insurance_Type))  # Proportion of insurance types
+```
+
+#### Group-wise summaries
+
+```{r}
+aggregate(Age ~ Gender, data = HealthCare_Dataset, FUN = mean, na.rm = TRUE)
+aggregate(Treatment_Duration ~ Medication, data = HealthCare_Dataset, FUN = median, na.rm = TRUE)
+```
+
+#### Full overview
+
+```{r}
+summary(HealthCare_Dataset)
+```
+
+### Modifying data frames
+
+Now, let us assume we want to modify/add/remove one or multiple entries/rows/columns in our data frame. The brackets really come in handy now. In this setting, I recommend defining a new data frame before modifying the original one.
 
 Some examples follow.
 
-\vspace{0.2cm}
-
 ```{r}
 # Modification of one entry:
-data.diamonds.mod <- data.diamonds
-head(data.diamonds.mod)
-data.diamonds.mod[1,1] <- 0.4
-head(data.diamonds.mod)
+HealthCare_Dataset_mod <- HealthCare_Dataset # I generate a copy of the data set, to avoid modifying the original one
+head(HealthCare_Dataset_mod)
+HealthCare_Dataset_mod[1,3] <- 'Male'
+head(HealthCare_Dataset_mod)
 
 # Modification of multiple entries (selecting by condition):
-data.diamonds.mod[data.diamonds.mod$cut == 'Premium', ]$depth <- 3.00
-head(data.diamonds.mod)
-
-# Suppression of rows with NAs
-data.diamonds.noNA <- na.omit(data.diamonds)
+HealthCare_Dataset_mod[!is.na(HealthCare_Dataset_mod$Blood_Pressure) & HealthCare_Dataset_mod$Blood_Pressure < 110, ]$Blood_Pressure <- 101
+head(HealthCare_Dataset_mod)
 ```
+
+✏️ Exercise on the `HealthCare_Dataset` data frame n°2: generate a new data frame selecting only the patients with a blood pressure above 125 and taking insulin as a medication.
+
+#### Dealing with NAs
+
+Handling missing data (NAs) is a common task in data analysis. Before deciding how to treat them, it's important to understand where and how often they occur.
+
+```{r}
+colSums(is.na(HealthCare_Dataset))              # Number of NAs per column
+sum(complete.cases(HealthCare_Dataset))         # Number of rows without any NAs
+```
+
+💡 `complete.cases()` returns a logical vector: TRUE if a row has no missing values, and FALSE otherwise.
+
+One way to handle missing data is to remove rows containing NAs. This can be appropriate in some cases, but it should be done with care, as it may introduce bias or reduce sample size. We’ll discuss this further in Chapter 4.
+
+```{r}
+# Remove rows with any missing values
+HealthCare_Dataset_noNA <- na.omit(HealthCare_Dataset)
+```
+
+💡 `na.omit()` drops any row where at least one column is NA.
 
 ## Packages
 
@@ -376,6 +504,83 @@ There are a set of standard (or base) packages which are considered part of the 
 
 **Packages** are collections of R functions, data, and compiled code in a well-defined format, created to add specific functionality. There are 10,000+ user contributed packages and growing. You can install packages using the install.packages() function.
 
+```{r, eval=FALSE}
+# To install a package, you can use the function 
+install.packages("dplyr")
+
+# To load a package you've already install, just load it using the library() function
+library(dyplr)
+```
+
+✏️ Exercise on packages: install the `ggplot2` package. We will need it for Chapter 2.
+
+\newpage
+
+# Solutions to the exercises
+
+Please not that those are only examples, there are always many ways to solve the same task!
+
+☑️ Create your own script: I don't think any solution is necessary 😉.
+
+☑️ Exercise on Booleans:
+
+```{r}
+ages <- c(35, 45, 60, 15, 50, 8)
+eligible <- ages >= 18
+eligible
+```
+
+☑️ Create a data frame:
+
+```{r}
+df <- data.frame(id = 1:10, 
+                 blood_pressure = rnorm(10, mean = 123, sd = 8),
+                 group = factor(sample(c("drug 1", "drug 2", "obs arm"), 10, replace = TRUE)))
+
+str(df)
+```
+
+☑️ Write a function `sum_squared`:
+
+```{r}
+sum_squared <- function(int1, int2){
+  sum_of_squares <- int1^2 + int2^2
+  return(sum_of_squares)
+}
+
+sum_squared(3, 5)
+```
+
+✏️ Exercise on the `HealthCare_Dataset` data frame n°1: Did you manage to select a specific column you were interested in? Were you able to check how many men and women are included in the dataset? Here are a few examples of operations you can use to explore the data set.
+```{r}
+# View the first few rows of the dataset
+head(HealthCare_Dataset)
+
+# Display the names of all columns
+names(HealthCare_Dataset)
+
+# View all unique values in the "Medication" column
+unique(HealthCare_Dataset$Medication)
+
+# Count how many men and women are in the dataset
+table(HealthCare_Dataset$Gender)
+
+# Get a quick statistical summary of numeric columns
+summary(HealthCare_Dataset)
+
+# View the number of missing values in each column
+colSums(is.na(HealthCare_Dataset))
+
+# Calculate the average age
+mean(HealthCare_Dataset$Age, na.rm = TRUE)
+```
+
+✏️ Exercise on the `HealthCare_Dataset` data frame n°2:
+```{r}
+# Filter the dataset to include only patients with blood pressure above 125 and taking insulin as a medication
+HealthCare_Dataset_ex2 <- HealthCare_Dataset[HealthCare_Dataset$Medication == "Insulin" & HealthCare_Dataset$Blood_Pressure > 125, ]
+head(HealthCare_Dataset_ex2)
+```
 
 \newpage
 

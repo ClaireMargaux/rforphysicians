@@ -452,10 +452,15 @@ dataset <- read_excel("~/home/claire/Documents/datasets.xlsx")
 
 ## Handling data frames
 
-Let us now look at a data frame to learn how to call or modify its elements. To do this, we will use a synthetic `csv` health data set that you can find in the [`docs` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/docs).
+Let us now look at a data frame to learn how to call or modify its elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can [`docs` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/docs).
 
 ```{r}
-HealthCare_Dataset <- read.csv("HealthCare_Dataset.csv")
+install.packages('nhanesA')
+library(nhanesA)
+demo <- nhanes("DEMO_G")   # Demographics (cycle G = 2011–2012)
+bpx  <- nhanes("BPX_G")    # Blood pressure
+bmx  <- nhanes("BMX_G")    # Body measures
+smq  <- nhanes("SMQ_G")    # Smoking questionnaire
 class(HealthCare_Dataset) # we check that we are dealing with a data frame
 head(HealthCare_Dataset) # head() returns the first parts of an object
 ```

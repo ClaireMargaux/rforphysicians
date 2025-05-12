@@ -11,7 +11,7 @@
 
 <meta name="author" content="Claire Descombes" />
 
-<meta name="date" content="2025-04-13" />
+<meta name="date" content="2025-05-12" />
 
 <title>Chapter 3</title>
 
@@ -2904,14 +2904,46 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Chapter 3</h1>
 <h3 class="subtitle">R for physicians</h3>
 <h4 class="author">Claire Descombes</h4>
-<h4 class="date">2025-04-13</h4>
+<h4 class="date">2025-05-12</h4>
 
 </div>
 
 
-<p><strong>Author</strong></p>
-<p>Claire Descombes, Universitätsklinik für Neurochirurgie des
-Inselspitals Bern, MSc Statistics and Data Science UniBe, <a href="mailto:claire.descombes@insel.ch">claire.descombes@insel.ch</a>.</p>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="78%" />
+</colgroup>
+<thead>
+<tr>
+<th align="left">Author</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Name</td>
+<td align="left">Claire Descombes</td>
+</tr>
+<tr>
+<td align="left">Affiliation</td>
+<td align="left">Universitätsklinik für Neurochirurgie, Inselspital
+Bern</td>
+</tr>
+<tr>
+<td align="left">Degree</td>
+<td align="left">MSc Statistics and Data Science, University of
+Bern</td>
+</tr>
+<tr>
+<td align="left">Contact</td>
+<td align="left"><a href="mailto:claire.descombes@insel.ch">claire.descombes@insel.ch</a></td>
+</tr>
+</tbody>
+</table>
+<p>The reference material for this course, as well as some useful
+literature to deepen your knowledge of R, can be found at the bottom of
+the page.</p>
 <div id="most-commonly-used-statistical-tests" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Most commonly used
 statistical tests</h1>
@@ -2922,40 +2954,40 @@ statistical tests</h1>
 <col width="40%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Section</th>
 <th>Topic</th>
 <th>Subtopics</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>4.1 Tests for comparing two groups</strong></td>
 <td>Tests comparing means or proportions between two groups</td>
 <td>Student’s t-Test, Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test),
 Fisher’s Exact Test, McNemar Test</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>4.2 Tests for more than two groups</strong></td>
 <td>Tests for comparing multiple groups</td>
 <td>Kruskal-Wallis Test, Friedman Test, Pearson’s Chi-Square Test</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>4.3 Tests for distribution and normality</strong></td>
 <td>Tests for distribution of data</td>
 <td>Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>4.4 Tests for survival analysis</strong></td>
 <td>Tests for time-to-event data</td>
 <td>Logrank/ Log-Rank Test</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>4.5 Correlation and association tests</strong></td>
 <td>Tests for relationships between variables</td>
 <td>Correlation test by Pearson, Correlation test by Spearman</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>4.6 Predictive modeling and regression</strong></td>
 <td>Predictive models and regression techniques</td>
 <td>Generalized Linear Models (GLMs) (Linear Regression - Logistic
@@ -2978,7 +3010,7 @@ Generalized Additive Mixed Models (GAMMs)</td>
 <col width="12%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th>1 Sample</th>
 <th>2 Paired Samples</th>
@@ -2989,7 +3021,7 @@ Generalized Additive Mixed Models (GAMMs)</td>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>Binary</strong></td>
 <td>Binomial test</td>
 <td>McNemar test</td>
@@ -2998,7 +3030,7 @@ Generalized Additive Mixed Models (GAMMs)</td>
 <td>Chi-square test, extensions of Fisher’s test</td>
 <td>Logistic regression</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Nominal</strong></td>
 <td>Chi-square goodness of fit test</td>
 <td></td>
@@ -3007,7 +3039,7 @@ Generalized Additive Mixed Models (GAMMs)</td>
 <td>Chi-square test</td>
 <td>Multinomial regression</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Ordinal</strong></td>
 <td>Wilcoxon signed-rank test, sign test</td>
 <td>Sign test or Wilcoxon signed-rank test on differences</td>
@@ -3016,7 +3048,7 @@ Generalized Additive Mixed Models (GAMMs)</td>
 <td>Kruskal–Wallis test</td>
 <td>Ordinal regression</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>Continuous</strong></td>
 <td>One-sample t-test</td>
 <td>Paired t-test or Wilcoxon signed-rank test on differences</td>
@@ -3025,7 +3057,7 @@ Generalized Additive Mixed Models (GAMMs)</td>
 <td>ANOVA</td>
 <td>Linear regression</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>Time-to-event</strong></td>
 <td>One-sample log-rank test</td>
 <td></td>
@@ -3270,23 +3302,63 @@ hospital-specific effects (e.g., variability between hospitals).</p>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-alexander_henzi_programming_2021" class="csl-entry">
+Alexander Henzi. 2021. <span>“Programming and Data Analysis with
+<span>R</span>.”</span> Lecture notes.
+</div>
+<div id="ref-burns_patrick_r_nodate" class="csl-entry">
+Burns, Patrick. n.d. <em>The <span>R</span> <span>Inferno</span></em>.
+Accessed May 8, 2025. <a href="https://www.burns-stat.com/documents/books/the-r-inferno/">https://www.burns-stat.com/documents/books/the-r-inferno/</a>.
+</div>
 <div id="ref-noauthor_chatgpt_nodate" class="csl-entry">
 <span>“<span>ChatGPT</span>.”</span> n.d. Accessed January 26, 2025. <a href="https://chatgpt.com">https://chatgpt.com</a>.
+</div>
+<div id="ref-christopher_j_endres_introducing_2025" class="csl-entry">
+Christopher J. Endres. 2025. <span>“Introducing <span class="nocase">nhanesA</span>.”</span> <a href="https://cran.r-project.org/web/packages/nhanesA/vignettes/Introducing_nhanesA.html">https://cran.r-project.org/web/packages/nhanesA/vignettes/Introducing_nhanesA.html</a>.
 </div>
 <div id="ref-noauthor_create_nodate" class="csl-entry">
 <span>“Create <span>Elegant</span> <span>Data</span>
 <span>Visualisations</span> <span>Using</span> the <span>Grammar</span>
 of <span>Graphics</span>.”</span> n.d. Accessed January 26, 2025. <a href="https://ggplot2.tidyverse.org/">https://ggplot2.tidyverse.org/</a>.
 </div>
-<div id="ref-noauthor_rstudio_nodate" class="csl-entry">
-<span>“<span>RStudio</span> <span>Tutorial</span> for
-<span>Beginners</span>: <span>A</span> <span>Complete</span>
-<span>Guide</span>.”</span> n.d. Accessed January 26, 2025. <a href="https://www.datacamp.com/tutorial/r-studio-tutorial">https://www.datacamp.com/tutorial/r-studio-tutorial</a>.
+<div id="ref-david_birt_2016" class="csl-entry">
+David, Author. 2016. <span>“<span>BIRT</span>
+<span>Joins</span>.”</span> <em>MBSE Chaos</em>. <a href="https://mbsechaos.wordpress.com/2016/05/24/birt-joins/">https://mbsechaos.wordpress.com/2016/05/24/birt-joins/</a>.
+</div>
+<div id="ref-elena_kosourova_rstudio_nodate" class="csl-entry">
+Elena Kosourova. n.d. <span>“<span>RStudio</span> <span>Tutorial</span>
+for <span>Beginners</span>: <span>A</span> <span>Complete</span>
+<span>Guide</span>.”</span> Accessed January 26, 2025. <a href="https://www.datacamp.com/tutorial/r-studio-tutorial">https://www.datacamp.com/tutorial/r-studio-tutorial</a>.
+</div>
+<div id="ref-grolemund_r_nodate" class="csl-entry">
+Grolemund, Hadley Wickham and Garrett. n.d. <em>R for <span>Data</span>
+<span>Science</span></em>. Accessed May 8, 2025. <a href="https://r4ds.had.co.nz/introduction.html">https://r4ds.had.co.nz/introduction.html</a>.
+</div>
+<div id="ref-mayer_mayer79statistical_computing_material_2025" class="csl-entry">
+Mayer, Michael. 2025.
+<span>“Mayer79/Statistical_computing_material.”</span> <a href="https://github.com/mayer79/statistical_computing_material">https://github.com/mayer79/statistical_computing_material</a>.
+</div>
+<div id="ref-patrick_burns_impatient_nodate" class="csl-entry">
+Patrick Burns. n.d. <em>Impatient <span>R</span></em>. Accessed May 8,
+2025. <a href="https://www.burns-stat.com/documents/tutorials/impatient-r/">https://www.burns-stat.com/documents/tutorials/impatient-r/</a>.
+</div>
+<div id="ref-noauthor_synthetic_nodate" class="csl-entry">
+<span>“Synthetic Dataset for <span>AI</span> in Healthcare.”</span> n.d.
+Accessed May 9, 2025. <a href="https://www.kaggle.com/datasets/smmmmmmmmmmmm/synthetic-dataset-for-ai-in-healthcare">https://www.kaggle.com/datasets/smmmmmmmmmmmm/synthetic-dataset-for-ai-in-healthcare</a>.
 </div>
 <div id="ref-noauthor_comprehensive_nodate" class="csl-entry">
 <span>“The <span>Comprehensive</span> <span>R</span>
 <span>Archive</span> <span>Network</span>.”</span> n.d. Accessed January
 26, 2025. <a href="https://stat.ethz.ch/CRAN/">https://stat.ethz.ch/CRAN/</a>.
+</div>
+<div id="ref-w_n_venables_d_m_smith_and_the_r_core_team_introduction_nodate" class="csl-entry">
+W. N. Venables, D. M. Smith and the R Core Team. n.d. <span>“An
+<span>Introduction</span> to <span>R</span>.”</span> Accessed May 8,
+2025. <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html">https://cran.r-project.org/doc/manuals/r-release/R-intro.html</a>.
+</div>
+<div id="ref-wickham_advanced_nodate" class="csl-entry">
+Wickham, Hadley. n.d. <em>Advanced <span>R</span></em>. Accessed May 8,
+2025. <a href="https://adv-r.hadley.nz/introduction.html">https://adv-r.hadley.nz/introduction.html</a>.
 </div>
 </div>
 </div>

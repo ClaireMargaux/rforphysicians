@@ -32,9 +32,12 @@ knitr::opts_chunk$set(
 library(ggplot2)
 ```
 
-**Author**
-
-Claire Descombes, Universitätsklinik für Neurochirurgie des Inselspitals Bern, MSc Statistics and Data Science UniBe, [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch).
+| Author           |                                                                 |
+|:-----------------|:----------------------------------------------------------------|
+| Name             | Claire Descombes                                                |
+| Affiliation      | Universitätsklinik für Neurochirurgie, Inselspital Bern         |
+| Degree           | MSc Statistics and Data Science, University of Bern             |
+| Contact          | [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch)   |
 
 The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
 

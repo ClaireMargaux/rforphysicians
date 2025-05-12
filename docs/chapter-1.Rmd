@@ -157,13 +157,52 @@ In R, everything is an **object**. This means that every piece of data you work 
 Here’s an example to clarify the difference between variables and objects.
 
 ```{r}
-# Create an object named 'vec' and assign a sequence of numbers to it.
+# We create an object (here: a vector) named 'vec' and assign a sequence of numbers to it.
 vec <- 1:10 
 
 # 'vec' is the variable. The sequence of numbers (1, 2, 3, ..., 10) is the object.
 ```
 
-To assign values to an object, use the `<-` or `=` symbols.
+💡 To assign values to an object, use the `<-` or `=` symbols.
+
+### Inspect an object
+
+Before diving into data types and structures, it's helpful to know how to inspect objects in R. Several built-in functions can help you understand the structure and content of an object.
+
+Let’s define a simple data frame (more details about data frames below) to demonstrate the purpose of those functions.
+
+```{r}
+# Example data frame
+df <- data.frame(
+  ID = 1:5,
+  Name = c("Anna", "Ben", "Carla", "David", "Eva"),
+  Age = c(23, 31, 29, 40, 35)
+)
+```
+
+Now let’s inspect thus object using a few useful functions.
+
+```{r}
+# General object inspection
+typeof(df)          # Returns the internal storage type of the object
+str(df)             # Gives a compact, human-readable summary of the object's structure
+attributes(df)      # Lists the object's attributes (e.g., names, dimensions, class)
+str(attributes(df)) # Displays the structure of the attributes
+class(df)           # Returns the class of the object (e.g., data.frame)
+```
+
+```{r}
+# Functions especially useful for matrices or data frames
+nrow(df)          # Number of rows
+ncol(df)          # Number of columns
+dim(df)           # Dimensions (rows, columns)
+colnames(df)      # Column names
+rownames(df)      # Row names
+str(colnames(df)) # Structure of the column names (e.g., character vector)
+str(rownames(df)) # Structure of the row names (e.g., character vector)
+```
+
+💡 The function `str()` provides a compact view of the internal structure of an R object, helping you understand its components and data types quickly.
 
 ### Data types
 
@@ -173,20 +212,25 @@ In R, data types define the kind of information a variable can hold. Here are so
 
 ```{r} 
 typeof(3.14)
+str(3.14)
 ```
 
 #### Integer: Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
 
 ```{r} 
 typeof(2L) 
+str(2L)
 ```
 
 #### Logical: Represents Boolean values (TRUE or FALSE).
 
 ```{r} 
 typeof(TRUE)
+str(TRUE)
+```
 
-# Example: Logical operation
+```{r}
+# Example of a logical operation
 values <- 1:10
 above_five <- (values > 5)
 above_five
@@ -198,12 +242,14 @@ above_five
 
 ```{r} 
 typeof("hello")
+str("hello")
 ```
 
 #### Complex: Represents complex numbers (e.g., 1 + 2i).
 
 ```{r} 
 typeof(1 + 2i) 
+str(1 + 2i)
 ```
 
 #### NAs/NANs
@@ -232,13 +278,20 @@ Objects are the entities that R operates on. These can be:
   + A one-dimensional array of elements of the same data type (e.g., numeric, character, logical).
   + Created using the `c()` function.
   
-```{r, echo=TRUE}
+```{r}
 vec1 <- c(1,2,3)
+str(vec1)
+```
 
+```{r}
 # Alternative ways of creating vectors:
 vec2 <- 1:3  # Sequence of integers
 vec3 <- seq(1, 3, by=1)  # More general sequence
+```
 
+Vector elements can be accessed using `[]` brackets.
+
+```{r}
 # Accessing elements of the vector by index (R uses 1-based indexing)
 vec1[1]  # First element
 vec2[c(2, 3)]  # Elements at indices 2 and 3
@@ -251,15 +304,17 @@ vec3[c(-2)]  # All elements except for the element at index 2
   
 ```{r, echo=TRUE}
 (mat <- matrix(c(1,2,3,4), nrow = 2, ncol = 2))
+str(mat)
 ```
 
-💡 By enclosing the assignment in parentheses (), you not only create the object but also automatically print its value to the console.
+💡 By enclosing the assignment in parentheses `()`, you not only create the object but also automatically print its value to the console — a useful shortcut. This is equivalent to writing `print(object)` or simply typing the object name (e.g., `object`), but it saves you an extra line of code.
 
 #### Arrays
   + Generalization of matrices to more than two dimensions.
   
 ```{r, echo=TRUE}
 (array <- array(1:8, c(2,4,2)))
+str(array)
 ```
 
 #### Lists
@@ -268,6 +323,7 @@ vec3[c(-2)]  # All elements except for the element at index 2
   
 ```{r}
 (list <- list(numb = 10:15, char = 'hello'))
+str(list)
 ```
 
 #### Factors
@@ -276,30 +332,29 @@ vec3[c(-2)]  # All elements except for the element at index 2
 
 ```{r}
 (fac <- factor(c("single", "married")))
+str(fac)
 ```
 
 #### Data Frames
   + Two-dimensional tabular data structure.
-  + Can hold columns of different data types.
+  + Can contain columns of different data types, such as numeric, character, logical, or factor.
   + The most common data structure for representing datasets in R.
+  + Technically, a data frame is a special type of list where each element (i.e., column) is of the same length and can be a vector (numeric, character, logical), factor, matrix, list, or even another data frame.
   
 ```{r}
 (d <- data.frame(id = 1:5, 
                  val = c(4,5,2,6,5),
-                 group = c("exp","control","control","exp","control")))
-
-# Display the structure of the data frame
+                 group = sample(c("exp","control"), size = 5, replace = TRUE)))
 str(d)
 ```
-
-💡 The function `str()` provides a compact view of the internal structure of an R object, helping you understand its components and data types quickly.
 
 ✏️ Create a data frame with 10 rows and the columns `id`, `blood_pressure`, and `group`.
 – `id`: integers from 1 to 10
 – `blood_pressure`: random values from a normal distribution with mean 123 and standard deviation 8
-– `group`: a factor with levels "drug 1", "drug 2", and "obs arm" (you decide how to assign them!)
+– `group`: a factor with levels "drug 1", "drug 2", and "obs arm" (you decide how to assign them, e.g. by using the function `sample()`)
+After creating that data frame, add a new column `stand_score` where you calculate a standardized score for each blood_pressure value. The standardized score is similar to a z-score but is calculated based on the mean and standard deviation of the `blood_pressure` values in the dataset (standardized score = (x−μ)/σ)).
 
-💡 Use the function `rnorm()` to simulate normal values, and try `help(rnorm)` if you need a hint.
+💡 Use the function `rnorm()` to simulate normal values. Use the function `scale()` to centre and scale a vector, or alternatively the functions `mean()` and `sd()` to compute mean and standard deviation of a vector. You can use `help()` to learn more about how these functions work.
 
 #### Functions
   + Reusable blocks of code that perform a specific task.
@@ -352,9 +407,18 @@ getwd()
 
 **Working directory**
 
-To tell R which folder you are working in (e.g. where you have your data), you can either go to *Session - Set working directory - Choose directory* and choose the folder you want, or use the `setwd()` function, or more directly set your working directory to the folder where your R script is located, via *Session - Set working directory - To source file location*.
+To tell R which folder you are working in (e.g., where your data is stored), you have several options:
 
-I personally recommend that you put your script in the folder you set as your working directory, to avoid forgetting where the script has to look for data.
+  + Go to *Session > Set Working Directory > Choose Directory* and select your folder manually.
+  + Use `setwd("path/to/your/folder")` in your script.
+  + Or, the most convenient for script-based work: go to *Session > Set Working Directory > To Source File Location* to automatically set the working directory to the location of your script.
+
+💡 I recommend placing both your script and your data files in the same folder, and setting that folder as your working directory. This helps avoid errors caused by R not finding your data.
+
+```{r, echo=FALSE}
+getwd()                       # Displays the current working directory
+setwd("path/to/your/folder")  # Sets the working directory
+```
 
 ## Import data
 
@@ -396,21 +460,44 @@ class(HealthCare_Dataset) # we check that we are dealing with a data frame
 head(HealthCare_Dataset) # head() returns the first parts of an object
 ```
 
+### Accessing elements in data frames
+
+Being able to access elements in a data frame is essential when working with data. Here are some common methods to select specific elements, rows, or columns.
+
 ```{r}
-# Let us only look at the first 10 entries of the variable Blood_Pressure
-HealthCare_Dataset$Blood_Pressure[1:10]
+# Select columns by name
+HealthCare_Dataset[, c("Age", "Blood_Pressure")]  # Selecting Age and Blood_Pressure columns
+vars <- c("Age", "Blood_Pressure")
+HealthCare_Dataset[, vars]  # Alternative using variable `vars`
+
+# Select elements by position
+HealthCare_Dataset[1,1] # Access the first element of the first column
+ind_mat <- cbind(c(1, 3, 5), c(2, 4, 6))
+HealthCare_Dataset[ind_mat]  # Access rows and columns using multiple indices
+
+# Select rows based on a condition
+HealthCare_Dataset[, "Blood_Pressure"] > 120  # Logical condition for Blood_Pressure greater than 120
+HealthCare_Dataset[HealthCare_Dataset[, "Blood_Pressure"] > 120, ]  # Rows where Blood_Pressure > 120
+HealthCare_Dataset[, "Age"] > 50  # Age greater than 50
+!(HealthCare_Dataset[, "Age"] > 50)  # Negation: Age not greater than 50
+
+# Combine logical vectors using "&" (AND), "|" (OR), and "!" (NOT)
+HealthCare_Dataset[(HealthCare_Dataset[, "Age"] > 50 & HealthCare_Dataset[, "Blood_Pressure"] > 120), ]  # Both conditions must be true
+HealthCare_Dataset[(HealthCare_Dataset[, "Age"] > 50 | HealthCare_Dataset[, "Blood_Pressure"] > 120), ]  # One condition must be true
 ```
 
-💡 To inspect one column, we can use the dollar `$` symbol. We are then dealing with a vector. As we learnt, the brackets `[]` allow us to inspect specific indices of a vector.
-
+💡 To inspect one column, you can also use the dollar `$` symbol to access a column as a vector.
 ```{r}
-HealthCare_Dataset[1:10, 4]
+HealthCare_Dataset$Age  # Returns the Age column as a vector
 ```
 
-💡 Alternatively to the dollar `$` symbol, you can specify the index of the column(s) you're interested in. As data frames are bi-dimentional, you need to specify in the brackets `[]` a value for the row(s) and one for the column(s) you want to select. If you don't give any value, you get all the rows/columns.
-
+💡 You can use the brackets `[]` to select specific rows and columns. Since data frames are bi-dimensional, the first index refers to rows and the second to columns. To select a particular column, you can omit the row index:
 ```{r}
-HealthCare_Dataset[1:10, ]
+HealthCare_Dataset[, "Age"]  # All rows in the Age column
+```
+To select a particular row, omit the column index:
+```{r}
+HealthCare_Dataset[1, ]  # Row 1 (all columns) 
 ```
 
 ✏️ Exercise on the `HealthCare_Dataset` data frame n°1: import the `HealthCare_Dataset` data frame, inspect its structure, look at different entries, get familiar with those commands.
@@ -478,6 +565,83 @@ head(HealthCare_Dataset_mod)
 
 ✏️ Exercise on the `HealthCare_Dataset` data frame n°2: generate a new data frame selecting only the patients with a blood pressure above 125 and taking insulin as a medication.
 
+### Combining data frames
+
+In practice, data is often spread across multiple data frames that need to be combined. Depending on the structure and goal, there are different ways to combine data frames:
+
+#### Column binding with cbind()
+
+Use `cbind()` to add columns side-by-side. The data frames must have the same number of rows.
+
+```{r}
+# Create an additional data frame with the same number of rows
+extra_info <- data.frame(
+  BMI = c(22.5, 30.2, 24.1, 28.4, 27.0, 23.6),
+  Smoking_Status = c("No", "Yes", "No", "Yes", "No", "Yes")
+)
+
+# Combine using cbind
+combined_df <- cbind(HealthCare_Dataset, extra_info)
+head(combined_df)
+```
+
+#### Row binding with rbind()
+
+Use `rbind()` to stack data frames vertically. The data frames must have the same column names and types.
+
+```{r}
+# Create a new data frame with the same structure (column names and types)
+new_patients <- data.frame(
+  Patient_ID = c(7, 8),
+  Age = c(40, 58),
+  Gender = c("Female", "Male"),
+  Blood_Pressure = c(110.3, 128.6),
+  Heart_Rate = c(72.5, 76.1),
+  Temperature = c(98.7, 99.1),
+  Diagnosis = c("Cancer", "Influenza"),
+  Medication = c("Chemotherapy", "Statins"),
+  Treatment_Duration = c(18, 20),
+  Insurance_Type = c("Private", "Uninsured"),
+  Doctor_Name = c("Dr. Lee", "Dr. Wang"),
+  Hospital_Name = c("Children's Hospital", "Healthcare Clinic"),
+  Lab_Test_Results = c(110.4, 87.9),
+  X.ray_Results = c("Normal", "Abnormal"),
+  Surgery_Type = c("Angioplasty", "Appendectomy"),
+  Recovery_Time = c(6, 8),
+  Allergies = c("None", "Latex"),
+  Family_History = c("Hypertension", "Cancer"),
+  Patient_Satisfaction = c(3, 4)
+)
+
+# Combine using rbind
+extended_df <- rbind(HealthCare_Dataset, new_patients)
+tail(extended_df)
+```
+
+#### Merging with merge() (Join)
+
+Use `merge()` to combine data frames based on a common column, similar to SQL joins.
+
+```{r}
+# Create a data frame with additional info based on Patient_ID
+patient_notes <- data.frame(
+  Patient_ID = c(1, 2, 3),
+  Notes = c("Follow-up needed", "Stable", "Requires monitoring")
+)
+
+# Merge by Patient_ID (inner join by default)
+merged_df <- merge(HealthCare_Dataset, patient_notes, by = "Patient_ID")
+head(merged_df)
+``` 
+
+You can also specify the type of join:
+
+# Left join: keep all rows from HealthCare_Dataset
+left_join_df <- merge(HealthCare_Dataset, patient_notes, by = "Patient_ID", all.x = TRUE)
+
+# Full outer join: keep all rows from both data frames
+full_join_df <- merge(HealthCare_Dataset, patient_notes, by = "Patient_ID", all = TRUE)
+
 #### Dealing with NAs
 
 Handling missing data (NAs) is a common task in data analysis. Before deciding how to treat them, it's important to understand where and how often they occur.
@@ -530,14 +694,22 @@ eligible <- ages >= 18
 eligible
 ```
 
-☑️ Create a data frame:
+☑️ Create a data frame and compute standardized scores of `blood_pressure`:
 
 ```{r}
-df <- data.frame(id = 1:10, 
+# Create the data frame
+(df <- data.frame(id = 1:10, 
                  blood_pressure = rnorm(10, mean = 123, sd = 8),
-                 group = factor(sample(c("drug 1", "drug 2", "obs arm"), 10, replace = TRUE)))
+                 group = factor(sample(c("drug 1", "drug 2", "obs arm"), 10, replace = TRUE))))
 
-str(df)
+# Compute standardized scores for blood pressure
+df$stand_score <- scale(df$blood_pressure)
+
+# Alternatively, compute by hand (standardized score = (x - μ) / σ)
+df$stand_score_2 <- (df$blood_pressure - mean(df$blood_pressure))/sd(df$blood_pressure)
+
+# View the data frame with standardized scores
+df
 ```
 
 ☑️ Write a function `sum_squared`:

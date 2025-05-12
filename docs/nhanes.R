@@ -1,5 +1,5 @@
 # Install and load the necessary package
-install.packages('nhanesA')  # Install the package (run this only once)
+#install.packages('nhanesA')  # Install the package (run this only once)
 library(nhanesA)
 
 # Download NHANES tables for 2011-2012

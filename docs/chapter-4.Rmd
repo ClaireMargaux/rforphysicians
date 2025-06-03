@@ -38,13 +38,190 @@ library(ggplot2)
 | Affiliation      | Universitätsklinik für Neurochirurgie, Inselspital Bern         |
 | Degree           | MSc Statistics and Data Science, University of Bern             |
 | Contact          | [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch)   |
+
 The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
 
-# Good practices
+# Most commonly used statistical tests
 
-## Primary vs Secondary outcomes
+| Section | Topic | Subtopics |
+|---------|-------|-----------|
+| **4.1 Tests for comparing two groups** | Tests comparing means or proportions between two groups | Student’s t-Test, Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test), Fisher’s Exact Test, McNemar Test |
+| **4.2 Tests for more than two groups** | Tests for comparing multiple groups | Kruskal-Wallis Test, Friedman Test, Pearson’s Chi-Square Test |
+| **4.3 Tests for distribution and normality** | Tests for distribution of data | Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test |
+| **4.4 Tests for survival analysis** | Tests for time-to-event data | Logrank/ Log-Rank Test |
+| **4.5 Correlation and association tests** | Tests for relationships between variables | Correlation test by Pearson, Correlation test by Spearman |
+| **4.6 Predictive modeling and regression** | Predictive models and regression techniques | Generalized Linear Models (GLMs) (Linear Regression - Logistic Regression - Cox Proportional Hazards Regression - Multivariable Regression) Mixed Effects Models, Generalized Additive Models (GAMs), Generalized Additive Mixed Models (GAMMs) |
 
-## How to deal with missing data
+## Overview
+
+|               | 1 Sample                             | 2 Paired Samples                                             | 2 Unpaired Samples                           | >2 Paired Samples                            | >2 Unpaired Samples                         | Continuous Predictor               |
+|---------------|--------------------------------------|--------------------------------------------------------------|----------------------------------------------|----------------------------------------------|----------------------------------------------|------------------------------------|
+| **Binary**    | Binomial test                        | McNemar test                                                 | Chi-square test, Fisher's exact test         | Cochran's Q test                             | Chi-square test, extensions of Fisher's test | Logistic regression                |
+| **Nominal**   | Chi-square goodness of fit test      |                                                              | Chi-square test, extensions of Fisher's test |                                              | Chi-square test                              | Multinomial regression             |
+| **Ordinal**   | Wilcoxon signed-rank test, sign test | Sign test or Wilcoxon signed-rank test on differences        | Mann-Whitney U test (Wilcoxon rank-sum test) | Friedman test                                | Kruskal–Wallis test                          | Ordinal regression                 |
+| **Continuous**| One-sample t-test                    | Paired t-test or Wilcoxon signed-rank test on differences    | Two-sample t-test                            | Repeated measures ANOVA                      | ANOVA                                        | Linear regression                  |
+| **Time-to-event** | One-sample log-rank test             |                                                              | Log-rank test                                |                                              |                                             | Cox regression, Weibull regression |
+
+## Tests for comparing two groups
+
+### Student's t-Test
+
+Basis for comparing means of two groups.
+Introduce first as it’s widely used and foundational.
+
+### Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test)
+
+Presented as the non-parametric alternative to the t-Test.
+
+### Fisher's Exact Test
+
+Focus on categorical variables and small sample sizes.
+
+### McNemar Test
+
+Highlight its application for paired categorical data.
+
+## Tests for more than two groups
+
+### Kruskal-Wallis Test
+
+Generalization of Wilcoxon-Mann-Whitney for more than two groups.
+
+### Friedman Test
+
+Generalization of paired tests (e.g., Wilcoxon) for more than two related groups.
+
+### Pearson's Chi-Square Test
+
+Complement Fisher’s Exact Test, emphasizing it’s better suited for larger samples.
+
+## Tests for distribution and normality
+
+### Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test:
+
+Test for deviations from normality, set the stage for determining when to use parametric vs. non-parametric tests.
+
+## Tests for survival analysis
+
+### Logrank/ Log-Rank Test:
+
+For analyzing time-to-event data. Mention Kaplan-Meier curves for context.
+
+## Correlation and association tests
+
+### Correlation test by Pearson
+
+Basis for understanding relationships between two continuous, normally distributed variables.
+
+### Correlation test by spearman:
+
+Non-parametric alternative for monotonic relationships.
+
+## Predictive modeling and regression
+
+### Generalized Linear Models (GLMs)
+
+Purpose: GLMs are an extension of linear models that allow for non-normal distributions of the response variable (e.g., binary, count, or categorical outcomes). They offer more flexibility than traditional linear regression by using different link functions and error distributions.
+
+Key Features: 
+
+Linear relationship: GLMs assume a linear relationship between the predictors and the transformed response variable.
+
+Link function: Links the linear predictor to the mean of the distribution. Common link functions:
+
+* Identity link for normal distribution (linear regression)
+* Logit link for binomial distribution (logistic regression)
+* Log link for Poisson distribution (Poisson regression)
+
+Error distributions: GLMs can be applied with various error distributions:
+* Normal for continuous data (linear regression)
+* Binomial for binary data (logistic regression)
+* Poisson for count data
+
+Assumptions
+
+* Independence: Observations must be independent.
+* Distribution: The response variable follows an appropriate distribution (e.g., binomial for binary outcomes, Poisson for count data).
+
+Common Applications
+
+* Linear regression: Predicting a continuous outcome.
+* Logistic regression: Predicting binary outcomes (e.g., yes/no, success/failure).
+* Poisson regression: Modeling count data (e.g., number of events in a fixed time period).
+* Cox regression: A form of survival analysis used to model time-to-event data, often with censored observations. It is based on the proportional hazards assumption and estimates the effect of predictor variables on the hazard (event occurrence rate).
+
+#### Linear regression
+
+Purpose: Used to model the relationship between a continuous dependent variable and one or more independent variables.
+Assumptions: Linearity, normality of residuals, homoscedasticity, independence.
+Example Application: Predicting the price of a house based on square footage, number of rooms, etc.
+
+#### Logistic regression
+
+Purpose: Used when the dependent variable is binary (e.g., yes/no, success/failure).
+Assumptions: Linear relationship between the log-odds of the outcome and predictors.
+Example Application: Predicting the likelihood of a disease based on age, gender, and other factors.
+
+#### Cox proportional hazards regression
+
+Purpose: Used for survival analysis, particularly when studying the time to an event (e.g., time to death, relapse).
+Assumptions: Proportional hazards assumption, meaning the effect of the predictor on the hazard rate is constant over time.
+Example Application: Analyzing the impact of age, treatment type, and other covariates on patient survival times.
+
+##### Multivariable regression
+
+Purpose: An extension of linear or logistic regression with more than one predictor variable.
+Assumptions: Similar to linear and logistic regression, but more complex due to multiple predictors.
+Example Application: Predicting a health outcome (e.g., cholesterol levels) based on multiple lifestyle factors (e.g., diet, exercise, genetics).
+
+### Mixed Effects Models
+
+Purpose: Mixed effects models allow for the inclusion of both fixed and random effects, providing flexibility for hierarchical or grouped data. They are especially useful when there is variation between groups or subjects.
+
+Key Features
+
+Fixed effects: These are the main predictors of interest (e.g., treatment, age, etc.), which are assumed to have the same effect across all groups.
+Random effects: These account for variability across groups or clusters (e.g., random intercepts for subjects or random slopes for measurements over time).
+
+Assumptions
+
+* Random effects are independent and identically distributed.
+* Fixed effects have a linear relationship with the response variable.
+
+Common Applications
+
+* Longitudinal data: When measurements are taken repeatedly on the same subjects over time (e.g., repeated measurements on patients).
+* Clustered data: When observations are grouped into clusters (e.g., students within schools, patients within hospitals).
+
+### Generalized Additive Models (GAMs)
+
+Purpose: GAMs extend GLMs by allowing for non-linear relationships between predictors and the outcome. This is useful when the relationship between the independent and dependent variables is not linear.
+
+Key Features
+
+Non-linear terms: Uses smooth functions (e.g., splines) for predictors, allowing for flexibility in modeling.
+
+Additive structure: The model assumes that the total effect is an additive combination of linear and smooth non-linear terms.
+
+Link function: Like GLMs, GAMs can use different link functions depending on the distribution of the outcome variable.
+
+Common Applications: Modeling complex relationships in patient data where the effect of treatment or time may not be linear.
+
+### Generalized Additive Mixed Models (GAMMs)
+
+Purpose: GAMMs combine the flexibility of GAMs with random effects, useful for hierarchical or clustered data.
+
+Key Features: Like GAMs, but with the inclusion of random effects to account for variability between groups.
+
+Applications: Ideal for longitudinal studies or hierarchical data where both non-linear relationships and random effects are present.
+
+Assumptions
+
+* Additivity: The total effect is a sum of the individual effects of predictors (this can be both linear and smooth).
+* Normality or appropriate error distribution: Depending on the type of outcome (e.g., Poisson for count data, binomial for binary data).
+* Random effects: If included, random effects account for variations between groups or subjects.
+
+Example Application: Analyzing patient data where outcomes are influenced by both individual patient characteristics and random hospital-specific effects (e.g., variability between hospitals).
 
 \newpage
 

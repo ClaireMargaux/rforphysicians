@@ -11,7 +11,7 @@
 
 <meta name="author" content="Claire Descombes" />
 
-<meta name="date" content="2025-04-13" />
+<meta name="date" content="2025-06-03" />
 
 <title>Chapter 4</title>
 
@@ -2904,46 +2904,461 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Chapter 4</h1>
 <h3 class="subtitle">R for physicians</h3>
 <h4 class="author">Claire Descombes</h4>
-<h4 class="date">2025-04-13</h4>
+<h4 class="date">2025-06-03</h4>
 
 </div>
 
 
-<p><strong>Author</strong></p>
-<p>Claire Descombes, Universitätsklinik für Neurochirurgie des
-Inselspitals Bern, MSc Statistics and Data Science UniBe, <a href="mailto:claire.descombes@insel.ch">claire.descombes@insel.ch</a>.</p>
-<div id="good-practices" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Good practices</h1>
-<div id="primary-vs-secondary-outcomes" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Primary vs Secondary
-outcomes</h2>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="78%" />
+</colgroup>
+<thead>
+<tr>
+<th align="left">Author</th>
+<th align="left"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Name</td>
+<td align="left">Claire Descombes</td>
+</tr>
+<tr>
+<td align="left">Affiliation</td>
+<td align="left">Universitätsklinik für Neurochirurgie, Inselspital
+Bern</td>
+</tr>
+<tr>
+<td align="left">Degree</td>
+<td align="left">MSc Statistics and Data Science, University of
+Bern</td>
+</tr>
+<tr>
+<td align="left">Contact</td>
+<td align="left"><a href="mailto:claire.descombes@insel.ch">claire.descombes@insel.ch</a></td>
+</tr>
+</tbody>
+</table>
+<p>The reference material for this course, as well as some useful
+literature to deepen your knowledge of R, can be found at the bottom of
+the page.</p>
+<div id="most-commonly-used-statistical-tests" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Most commonly used
+statistical tests</h1>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="25%" />
+<col width="40%" />
+</colgroup>
+<thead>
+<tr>
+<th>Section</th>
+<th>Topic</th>
+<th>Subtopics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>4.1 Tests for comparing two groups</strong></td>
+<td>Tests comparing means or proportions between two groups</td>
+<td>Student’s t-Test, Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test),
+Fisher’s Exact Test, McNemar Test</td>
+</tr>
+<tr>
+<td><strong>4.2 Tests for more than two groups</strong></td>
+<td>Tests for comparing multiple groups</td>
+<td>Kruskal-Wallis Test, Friedman Test, Pearson’s Chi-Square Test</td>
+</tr>
+<tr>
+<td><strong>4.3 Tests for distribution and normality</strong></td>
+<td>Tests for distribution of data</td>
+<td>Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test</td>
+</tr>
+<tr>
+<td><strong>4.4 Tests for survival analysis</strong></td>
+<td>Tests for time-to-event data</td>
+<td>Logrank/ Log-Rank Test</td>
+</tr>
+<tr>
+<td><strong>4.5 Correlation and association tests</strong></td>
+<td>Tests for relationships between variables</td>
+<td>Correlation test by Pearson, Correlation test by Spearman</td>
+</tr>
+<tr>
+<td><strong>4.6 Predictive modeling and regression</strong></td>
+<td>Predictive models and regression techniques</td>
+<td>Generalized Linear Models (GLMs) (Linear Regression - Logistic
+Regression - Cox Proportional Hazards Regression - Multivariable
+Regression) Mixed Effects Models, Generalized Additive Models (GAMs),
+Generalized Additive Mixed Models (GAMMs)</td>
+</tr>
+</tbody>
+</table>
+<div id="overview" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Overview</h2>
+<table>
+<colgroup>
+<col width="5%" />
+<col width="13%" />
+<col width="21%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>1 Sample</th>
+<th>2 Paired Samples</th>
+<th>2 Unpaired Samples</th>
+<th>&gt;2 Paired Samples</th>
+<th>&gt;2 Unpaired Samples</th>
+<th>Continuous Predictor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Binary</strong></td>
+<td>Binomial test</td>
+<td>McNemar test</td>
+<td>Chi-square test, Fisher’s exact test</td>
+<td>Cochran’s Q test</td>
+<td>Chi-square test, extensions of Fisher’s test</td>
+<td>Logistic regression</td>
+</tr>
+<tr>
+<td><strong>Nominal</strong></td>
+<td>Chi-square goodness of fit test</td>
+<td></td>
+<td>Chi-square test, extensions of Fisher’s test</td>
+<td></td>
+<td>Chi-square test</td>
+<td>Multinomial regression</td>
+</tr>
+<tr>
+<td><strong>Ordinal</strong></td>
+<td>Wilcoxon signed-rank test, sign test</td>
+<td>Sign test or Wilcoxon signed-rank test on differences</td>
+<td>Mann-Whitney U test (Wilcoxon rank-sum test)</td>
+<td>Friedman test</td>
+<td>Kruskal–Wallis test</td>
+<td>Ordinal regression</td>
+</tr>
+<tr>
+<td><strong>Continuous</strong></td>
+<td>One-sample t-test</td>
+<td>Paired t-test or Wilcoxon signed-rank test on differences</td>
+<td>Two-sample t-test</td>
+<td>Repeated measures ANOVA</td>
+<td>ANOVA</td>
+<td>Linear regression</td>
+</tr>
+<tr>
+<td><strong>Time-to-event</strong></td>
+<td>One-sample log-rank test</td>
+<td></td>
+<td>Log-rank test</td>
+<td></td>
+<td></td>
+<td>Cox regression, Weibull regression</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="how-to-deal-with-missing-data" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> How to deal with
-missing data</h2>
+<div id="tests-for-comparing-two-groups" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Tests for comparing
+two groups</h2>
+<div id="students-t-test" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Student’s
+t-Test</h3>
+<p>Basis for comparing means of two groups. Introduce first as it’s
+widely used and foundational.</p>
+</div>
+<div id="wilcoxon-mann-whitney-test-mann-whitney-u-test" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span>
+Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test)</h3>
+<p>Presented as the non-parametric alternative to the t-Test.</p>
+</div>
+<div id="fishers-exact-test" class="section level3" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> Fisher’s Exact
+Test</h3>
+<p>Focus on categorical variables and small sample sizes.</p>
+</div>
+<div id="mcnemar-test" class="section level3" number="1.2.4">
+<h3><span class="header-section-number">1.2.4</span> McNemar Test</h3>
+<p>Highlight its application for paired categorical data.</p>
+</div>
+</div>
+<div id="tests-for-more-than-two-groups" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Tests for more than
+two groups</h2>
+<div id="kruskal-wallis-test" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Kruskal-Wallis
+Test</h3>
+<p>Generalization of Wilcoxon-Mann-Whitney for more than two groups.</p>
+</div>
+<div id="friedman-test" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Friedman Test</h3>
+<p>Generalization of paired tests (e.g., Wilcoxon) for more than two
+related groups.</p>
+</div>
+<div id="pearsons-chi-square-test" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> Pearson’s
+Chi-Square Test</h3>
+<p>Complement Fisher’s Exact Test, emphasizing it’s better suited for
+larger samples.</p>
+</div>
+</div>
+<div id="tests-for-distribution-and-normality" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Tests for
+distribution and normality</h2>
+<div id="lilliefors-kolmogorov-smirnov-lilliefors-test" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Lilliefors/
+Kolmogorov-Smirnov-Lilliefors Test:</h3>
+<p>Test for deviations from normality, set the stage for determining
+when to use parametric vs. non-parametric tests.</p>
+</div>
+</div>
+<div id="tests-for-survival-analysis" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Tests for survival
+analysis</h2>
+<div id="logrank-log-rank-test" class="section level3" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> Logrank/ Log-Rank
+Test:</h3>
+<p>For analyzing time-to-event data. Mention Kaplan-Meier curves for
+context.</p>
+</div>
+</div>
+<div id="correlation-and-association-tests" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Correlation and
+association tests</h2>
+<div id="correlation-test-by-pearson" class="section level3" number="1.6.1">
+<h3><span class="header-section-number">1.6.1</span> Correlation test by
+Pearson</h3>
+<p>Basis for understanding relationships between two continuous,
+normally distributed variables.</p>
+</div>
+<div id="correlation-test-by-spearman" class="section level3" number="1.6.2">
+<h3><span class="header-section-number">1.6.2</span> Correlation test by
+spearman:</h3>
+<p>Non-parametric alternative for monotonic relationships.</p>
+</div>
+</div>
+<div id="predictive-modeling-and-regression" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Predictive modeling
+and regression</h2>
+<div id="generalized-linear-models-glms" class="section level3" number="1.7.1">
+<h3><span class="header-section-number">1.7.1</span> Generalized Linear
+Models (GLMs)</h3>
+<p>Purpose: GLMs are an extension of linear models that allow for
+non-normal distributions of the response variable (e.g., binary, count,
+or categorical outcomes). They offer more flexibility than traditional
+linear regression by using different link functions and error
+distributions.</p>
+<p>Key Features:</p>
+<p>Linear relationship: GLMs assume a linear relationship between the
+predictors and the transformed response variable.</p>
+<p>Link function: Links the linear predictor to the mean of the
+distribution. Common link functions:</p>
+<ul>
+<li>Identity link for normal distribution (linear regression)</li>
+<li>Logit link for binomial distribution (logistic regression)</li>
+<li>Log link for Poisson distribution (Poisson regression)</li>
+</ul>
+<p>Error distributions: GLMs can be applied with various error
+distributions: * Normal for continuous data (linear regression) *
+Binomial for binary data (logistic regression) * Poisson for count
+data</p>
+<p>Assumptions</p>
+<ul>
+<li>Independence: Observations must be independent.</li>
+<li>Distribution: The response variable follows an appropriate
+distribution (e.g., binomial for binary outcomes, Poisson for count
+data).</li>
+</ul>
+<p>Common Applications</p>
+<ul>
+<li>Linear regression: Predicting a continuous outcome.</li>
+<li>Logistic regression: Predicting binary outcomes (e.g., yes/no,
+success/failure).</li>
+<li>Poisson regression: Modeling count data (e.g., number of events in a
+fixed time period).</li>
+<li>Cox regression: A form of survival analysis used to model
+time-to-event data, often with censored observations. It is based on the
+proportional hazards assumption and estimates the effect of predictor
+variables on the hazard (event occurrence rate).</li>
+</ul>
+<div id="linear-regression" class="section level4" number="1.7.1.1">
+<h4><span class="header-section-number">1.7.1.1</span> Linear
+regression</h4>
+<p>Purpose: Used to model the relationship between a continuous
+dependent variable and one or more independent variables. Assumptions:
+Linearity, normality of residuals, homoscedasticity, independence.
+Example Application: Predicting the price of a house based on square
+footage, number of rooms, etc.</p>
+</div>
+<div id="logistic-regression" class="section level4" number="1.7.1.2">
+<h4><span class="header-section-number">1.7.1.2</span> Logistic
+regression</h4>
+<p>Purpose: Used when the dependent variable is binary (e.g., yes/no,
+success/failure). Assumptions: Linear relationship between the log-odds
+of the outcome and predictors. Example Application: Predicting the
+likelihood of a disease based on age, gender, and other factors.</p>
+</div>
+<div id="cox-proportional-hazards-regression" class="section level4" number="1.7.1.3">
+<h4><span class="header-section-number">1.7.1.3</span> Cox proportional
+hazards regression</h4>
+<p>Purpose: Used for survival analysis, particularly when studying the
+time to an event (e.g., time to death, relapse). Assumptions:
+Proportional hazards assumption, meaning the effect of the predictor on
+the hazard rate is constant over time. Example Application: Analyzing
+the impact of age, treatment type, and other covariates on patient
+survival times.</p>
+<div id="multivariable-regression" class="section level5" number="1.7.1.3.1">
+<h5><span class="header-section-number">1.7.1.3.1</span> Multivariable
+regression</h5>
+<p>Purpose: An extension of linear or logistic regression with more than
+one predictor variable. Assumptions: Similar to linear and logistic
+regression, but more complex due to multiple predictors. Example
+Application: Predicting a health outcome (e.g., cholesterol levels)
+based on multiple lifestyle factors (e.g., diet, exercise,
+genetics).</p>
+</div>
+</div>
+</div>
+<div id="mixed-effects-models" class="section level3" number="1.7.2">
+<h3><span class="header-section-number">1.7.2</span> Mixed Effects
+Models</h3>
+<p>Purpose: Mixed effects models allow for the inclusion of both fixed
+and random effects, providing flexibility for hierarchical or grouped
+data. They are especially useful when there is variation between groups
+or subjects.</p>
+<p>Key Features</p>
+<p>Fixed effects: These are the main predictors of interest (e.g.,
+treatment, age, etc.), which are assumed to have the same effect across
+all groups. Random effects: These account for variability across groups
+or clusters (e.g., random intercepts for subjects or random slopes for
+measurements over time).</p>
+<p>Assumptions</p>
+<ul>
+<li>Random effects are independent and identically distributed.</li>
+<li>Fixed effects have a linear relationship with the response
+variable.</li>
+</ul>
+<p>Common Applications</p>
+<ul>
+<li>Longitudinal data: When measurements are taken repeatedly on the
+same subjects over time (e.g., repeated measurements on patients).</li>
+<li>Clustered data: When observations are grouped into clusters (e.g.,
+students within schools, patients within hospitals).</li>
+</ul>
+</div>
+<div id="generalized-additive-models-gams" class="section level3" number="1.7.3">
+<h3><span class="header-section-number">1.7.3</span> Generalized
+Additive Models (GAMs)</h3>
+<p>Purpose: GAMs extend GLMs by allowing for non-linear relationships
+between predictors and the outcome. This is useful when the relationship
+between the independent and dependent variables is not linear.</p>
+<p>Key Features</p>
+<p>Non-linear terms: Uses smooth functions (e.g., splines) for
+predictors, allowing for flexibility in modeling.</p>
+<p>Additive structure: The model assumes that the total effect is an
+additive combination of linear and smooth non-linear terms.</p>
+<p>Link function: Like GLMs, GAMs can use different link functions
+depending on the distribution of the outcome variable.</p>
+<p>Common Applications: Modeling complex relationships in patient data
+where the effect of treatment or time may not be linear.</p>
+</div>
+<div id="generalized-additive-mixed-models-gamms" class="section level3" number="1.7.4">
+<h3><span class="header-section-number">1.7.4</span> Generalized
+Additive Mixed Models (GAMMs)</h3>
+<p>Purpose: GAMMs combine the flexibility of GAMs with random effects,
+useful for hierarchical or clustered data.</p>
+<p>Key Features: Like GAMs, but with the inclusion of random effects to
+account for variability between groups.</p>
+<p>Applications: Ideal for longitudinal studies or hierarchical data
+where both non-linear relationships and random effects are present.</p>
+<p>Assumptions</p>
+<ul>
+<li>Additivity: The total effect is a sum of the individual effects of
+predictors (this can be both linear and smooth).</li>
+<li>Normality or appropriate error distribution: Depending on the type
+of outcome (e.g., Poisson for count data, binomial for binary
+data).</li>
+<li>Random effects: If included, random effects account for variations
+between groups or subjects.</li>
+</ul>
+<p>Example Application: Analyzing patient data where outcomes are
+influenced by both individual patient characteristics and random
+hospital-specific effects (e.g., variability between hospitals).</p>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-alexander_henzi_programming_2021" class="csl-entry">
+Alexander Henzi. 2021. <span>“Programming and Data Analysis with
+<span>R</span>.”</span> Lecture notes.
+</div>
+<div id="ref-burns_patrick_r_nodate" class="csl-entry">
+Burns, Patrick. n.d. <em>The <span>R</span> <span>Inferno</span></em>.
+Accessed May 8, 2025. <a href="https://www.burns-stat.com/documents/books/the-r-inferno/">https://www.burns-stat.com/documents/books/the-r-inferno/</a>.
+</div>
 <div id="ref-noauthor_chatgpt_nodate" class="csl-entry">
 <span>“<span>ChatGPT</span>.”</span> n.d. Accessed January 26, 2025. <a href="https://chatgpt.com">https://chatgpt.com</a>.
+</div>
+<div id="ref-christopher_j_endres_introducing_2025" class="csl-entry">
+Christopher J. Endres. 2025. <span>“Introducing <span class="nocase">nhanesA</span>.”</span> <a href="https://cran.r-project.org/web/packages/nhanesA/vignettes/Introducing_nhanesA.html">https://cran.r-project.org/web/packages/nhanesA/vignettes/Introducing_nhanesA.html</a>.
 </div>
 <div id="ref-noauthor_create_nodate" class="csl-entry">
 <span>“Create <span>Elegant</span> <span>Data</span>
 <span>Visualisations</span> <span>Using</span> the <span>Grammar</span>
 of <span>Graphics</span>.”</span> n.d. Accessed January 26, 2025. <a href="https://ggplot2.tidyverse.org/">https://ggplot2.tidyverse.org/</a>.
 </div>
-<div id="ref-noauthor_rstudio_nodate" class="csl-entry">
-<span>“<span>RStudio</span> <span>Tutorial</span> for
-<span>Beginners</span>: <span>A</span> <span>Complete</span>
-<span>Guide</span>.”</span> n.d. Accessed January 26, 2025. <a href="https://www.datacamp.com/tutorial/r-studio-tutorial">https://www.datacamp.com/tutorial/r-studio-tutorial</a>.
+<div id="ref-david_birt_2016" class="csl-entry">
+David, Author. 2016. <span>“<span>BIRT</span>
+<span>Joins</span>.”</span> <em>MBSE Chaos</em>. <a href="https://mbsechaos.wordpress.com/2016/05/24/birt-joins/">https://mbsechaos.wordpress.com/2016/05/24/birt-joins/</a>.
+</div>
+<div id="ref-elena_kosourova_rstudio_nodate" class="csl-entry">
+Elena Kosourova. n.d. <span>“<span>RStudio</span> <span>Tutorial</span>
+for <span>Beginners</span>: <span>A</span> <span>Complete</span>
+<span>Guide</span>.”</span> Accessed January 26, 2025. <a href="https://www.datacamp.com/tutorial/r-studio-tutorial">https://www.datacamp.com/tutorial/r-studio-tutorial</a>.
+</div>
+<div id="ref-grolemund_r_nodate" class="csl-entry">
+Grolemund, Hadley Wickham and Garrett. n.d. <em>R for <span>Data</span>
+<span>Science</span></em>. Accessed May 8, 2025. <a href="https://r4ds.had.co.nz/introduction.html">https://r4ds.had.co.nz/introduction.html</a>.
+</div>
+<div id="ref-mayer_mayer79statistical_computing_material_2025" class="csl-entry">
+Mayer, Michael. 2025.
+<span>“Mayer79/Statistical_computing_material.”</span> <a href="https://github.com/mayer79/statistical_computing_material">https://github.com/mayer79/statistical_computing_material</a>.
+</div>
+<div id="ref-patrick_burns_impatient_nodate" class="csl-entry">
+Patrick Burns. n.d. <em>Impatient <span>R</span></em>. Accessed May 8,
+2025. <a href="https://www.burns-stat.com/documents/tutorials/impatient-r/">https://www.burns-stat.com/documents/tutorials/impatient-r/</a>.
+</div>
+<div id="ref-noauthor_synthetic_nodate" class="csl-entry">
+<span>“Synthetic Dataset for <span>AI</span> in Healthcare.”</span> n.d.
+Accessed May 9, 2025. <a href="https://www.kaggle.com/datasets/smmmmmmmmmmmm/synthetic-dataset-for-ai-in-healthcare">https://www.kaggle.com/datasets/smmmmmmmmmmmm/synthetic-dataset-for-ai-in-healthcare</a>.
 </div>
 <div id="ref-noauthor_comprehensive_nodate" class="csl-entry">
 <span>“The <span>Comprehensive</span> <span>R</span>
 <span>Archive</span> <span>Network</span>.”</span> n.d. Accessed January
 26, 2025. <a href="https://stat.ethz.ch/CRAN/">https://stat.ethz.ch/CRAN/</a>.
+</div>
+<div id="ref-w_n_venables_d_m_smith_and_the_r_core_team_introduction_nodate" class="csl-entry">
+W. N. Venables, D. M. Smith and the R Core Team. n.d. <span>“An
+<span>Introduction</span> to <span>R</span>.”</span> Accessed May 8,
+2025. <a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html">https://cran.r-project.org/doc/manuals/r-release/R-intro.html</a>.
+</div>
+<div id="ref-wickham_advanced_nodate" class="csl-entry">
+Wickham, Hadley. n.d. <em>Advanced <span>R</span></em>. Accessed May 8,
+2025. <a href="https://adv-r.hadley.nz/introduction.html">https://adv-r.hadley.nz/introduction.html</a>.
 </div>
 </div>
 </div>

@@ -1,0 +1,55 @@
+---
+title: "Chapter 5"
+author: "Claire Descombes"
+date: "`r Sys.Date()`"
+contact: claire.descombes@insel.ch
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+    df_print: paged
+    theme: paper
+    code_folding: show
+    math_method: katex
+subtitle: "R for physicians"
+bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+link-citations: yes
+editor_options: 
+  chunk_output_type: console
+knit: (function(input, ...) {rmarkdown::render(input)})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE,
+  message = FALSE, 
+  fig.height = 5,
+  fig.width = 6,
+  eval = TRUE
+)
+library(ggplot2)
+```
+
+| Author           |                                                                 |
+|:-----------------|:----------------------------------------------------------------|
+| Name             | Claire Descombes                                                |
+| Affiliation      | Universitätsklinik für Neurochirurgie, Inselspital Bern         |
+| Degree           | MSc Statistics and Data Science, University of Bern             |
+| Contact          | [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch)   |
+The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
+
+# Good practices
+
+## Primary vs Secondary outcomes
+
+## How to deal with missing data
+
+\newpage
+
+# References
+
+---
+nocite: '@*'
+...

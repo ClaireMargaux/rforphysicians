@@ -41,38 +41,155 @@ library(ggplot2)
 
 The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
 
-# Including plots using ggplot2
+***************
 
-The base `plot()` function works well and is easy to use, but is not as good looking as the geom functions provided by the `ggplot2` package.
+The base R plotting functions are effective and user-friendly, so we will begin by exploring their features.
 
-**ggplot2** is a system for declaratively creating graphics, based on The Grammar of Graphics. You provide the data, tell ggplot2 how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+Next, we will take a look at the functions offered by `ggplot2`, a system for declarative graphics creation. You provide the data and specify how to map variables to aesthetics and which graphical primitives to use; ggplot2 then takes care of the details. Although it is slightly more technical than base R, it produces very aesthetically pleasing results.
 
-\vspace{0.2cm}
-
-```{r, echo=TRUE, eval=FALSE}
-# The easiest way to get ggplot2 is to install the whole tidyverse:
-install.packages("tidyverse")
-
-# Alternatively, install just ggplot2:
-install.packages("ggplot2")
-```
-
-To explore the potential of `ggplot2`, we start by importing data sets (which are included in Base R).
-
-\vspace{0.2cm}
+TTo explore R’s plotting capabilities, we’ll continue working with the NHANES datasets. Specifically, we’ll use the merged data frame that combines the `demo`, `bpx`, `bmx` and `smq` data sets. If you still have it loaded from Chapter 2, you can use it directly. Otherwise, you can download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
 
 ```{r, echo=TRUE}
-data.iris <- iris
-head(data.iris) # to have a look at the first few rows
-data.cars <- cars
-head(data.cars)
+# Load the merged_nhanes CSV file
+merged_nhanes <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
 ```
 
-**Iris**: *This famous (Fisher's or Anderson's) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica.*
+# Including plots using base R
 
-**Cars**: *The data give the speed of cars and the distances taken to stop. Note that the data were recorded in the 1920s.*
+## Scatter plots
 
-ggplot2 is based on the grammar of graphics, the idea that you can build every graph from the same components: 
+```{r, out.width="75%"}
+plot(x = merged_nhanes$RIDAGEYR, y = merged_nhanes$BPXSY1,
+     xlab = "Age of participant",
+     ylab = "Systolic blood pressure (1st reading)",
+     main = "Scatterplot of Age vs. Systolic BP")
+```
+
+## Box plots
+
+```{r, out.width="75%"}
+boxplot(merged_nhanes$BPXSY1 ~ merged_nhanes$RIAGENDR,
+        names = c("Male", "Female"),
+        xlab = "Gender",
+        ylab = "Systolic blood pressure (1st reading)",
+        main = "Blood Pressure by Gender",
+        col = c("salmon", "skyblue"))
+```
+
+## Bar plots
+
+```{r, out.width="75%"}
+age_groups <- cut(merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
+avg_bp <- tapply(merged_nhanes$BPXSY1, age_groups, mean, na.rm = TRUE)
+barplot(avg_bp,
+        xlab = "Age group",
+        ylab = "Average Systolic BP",
+        main = "Average Systolic BP by Age Group",
+        col = "steelblue")
+```
+
+## Histograms
+
+```{r, out.width="75%"}
+hist(merged_nhanes$BMXBMI,
+     breaks = 30,
+     col = "steelblue",
+     xlab = "Body Mass Index (BMI)",
+     main = "Histogram of BMI")
+```
+
+## Line plots
+
+```{r, out.width="75%"}
+age_groups <- cut(merged_nhanes$RIDAGEYR, breaks = seq(0, 80, 10))
+avg_bp <- tapply(merged_nhanes$BPXSY1, age_groups, mean, na.rm = TRUE)
+
+# Extract midpoints of the intervals
+midpoints <- seq(5, 75, 10)
+
+plot(midpoints, avg_bp, type = "b",
+     xlab = "Age (midpoint of group)",
+     ylab = "Average Systolic BP",
+     main = "Average Systolic BP by Age Group")
+```
+
+## Pie charts
+
+```{r, out.width="75%"}
+pie(table(merged_nhanes$RIAGENDR),
+    labels = c("Male", "Female"),
+    col = c("salmon", "skyblue"),
+    main = "Gender Distribution")
+```
+
+## Mosaic plots
+
+```{r, out.width="75%"}
+mosaicplot(table(merged_nhanes$RIAGENDR, merged_nhanes$SMQ020)[,c("Yes","No")],
+           main = "Smoking Status by Gender",
+           xlab = "Gender",
+           ylab = "Smoked at least 100 cigarettes?",
+           col = c("steelblue"))
+```
+
+## Forest plots
+
+Base R does not include a built-in function for forest plots, but you can use the `forestplot` package for that.
+
+```{r, out.width="75%"}
+library(forestplot)
+
+# Calculate summary statistics by gender
+genders <- unique(merged_nhanes$RIAGENDR)
+means <- numeric(length(genders))
+sds <- numeric(length(genders))
+ns <- numeric(length(genders))
+lowers <- numeric(length(genders))
+uppers <- numeric(length(genders))
+gender_labels <- character(length(genders))
+
+for (i in seq_along(genders)) {
+  group_data <- merged_nhanes$BPXSY1[merged_nhanes$RIAGENDR == genders[i]]
+  group_data <- group_data[!is.na(group_data)]
+  means[i] <- mean(group_data)
+  sds[i] <- sd(group_data)
+  ns[i] <- length(group_data)
+  lowers[i] <- means[i] - 1.96 * sds[i] / sqrt(ns[i])
+  uppers[i] <- means[i] + 1.96 * sds[i] / sqrt(ns[i])
+  gender_labels[i] <- genders
+}
+
+# Prepare the table text for the forest plot
+tabletext <- cbind(
+  c("Gender", gender_labels),
+  c("Mean systolic BP", sprintf("%.1f", means))
+)[-1, ]
+
+# Create the forest plot
+forestplot(labeltext = tabletext,
+           mean = means,
+           lower = lowers,
+           upper = uppers,
+           zero = 120,
+           xlog = FALSE,
+           boxsize = 0.2,
+           col = fpColors(box = "steelblue", line = "steelblue"),
+           title = "Systolic Blood Pressure by Gender")
+```
+
+# Including plots using `ggplot2`
+
+```{r, echo=TRUE, eval=FALSE}
+# Start by installing ggplot2
+install.packages("ggplot2")
+library(ggplot2) # after installation
+
+# Note that the ggplot2 package is included in some R package collections, e.g. the tidyverse collection, which is specifically designed for data science.
+install.packages("tidyverse")
+library(tidyverse) # after installation
+```
+
+`ggplot2` is based on the grammar of graphics, the idea that you can build every graph from the same components: 
 
 * a data set, 
 * a coordinate system, 
@@ -92,48 +209,235 @@ Absolutely unavoidable are the
 
 The geom function must be chosen according to the type of data examined (two continuous variables, one categorical and one continuous variable, etc.).
 
-The best way to understand how to use ggplot2 is to look at some examples.
+## Scatter plots
 
 ```{r, out.width="75%"}
-# For comparison, let us start by plotting the petal length against the petal width using
-# the Base R plot() function.
-plot(x = data.iris$Sepal.Length, y = data.iris$Sepal.Width)
-
-# Now we will use the ggplot2 package. We plot again the petal length against the petal 
-# width.
-plot <- ggplot(data = data.iris) +
-  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width))
-plot
-
-# Our plot can be made much nicer using optional features.
-nice.plot <- ggplot(data = data.iris) +
-  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, color = Species)) +
-  labs(x = "Petal length (cm)", y = "Petal width (cm)", 
-       title = "Petal length against petal width") +
+ggplot(merged_nhanes, aes(x = RIDAGEYR, y = BPXSY1)) +
+  geom_point(alpha = 0.5) +
+  labs(title = "Scatterplot of Age vs. Systolic BP",
+       x = "Age of participant",
+       y = "Systolic blood pressure (1st reading)") +
   theme_minimal()
-nice.plot
-
-plot2 <- ggplot(data = data.cars) +
-  geom_line(mapping = aes(x = speed, y = dist), color = "brown1", linewidth = 1) +
-  geom_point(mapping = aes(x = speed, y = dist), color = "brown2", size = 1) +
-  theme(legend.position = "top") +
-  theme_minimal() +
-  labs(x = "Speed (mph)", y = "Distance to stop (ft)", 
-       title = "Relationship between speed and stopping distance")
-plot2
-
-plot3 <- ggplot(data = data.iris) +
-  geom_histogram(mapping = aes(Petal.Length, fill = Species), 
-                 color = "white", bins = 20) +
-  theme(legend.position = "top") +
-  theme_minimal() +
-  labs(x = "Petal length (cm)", y = "Petal width (cm)", 
-       title = "Petal length distribution by species") +
-  facet_wrap(~ Species)
-plot3
 ```
 
-\newpage
+## Box plots
+
+```{r, out.width="75%"}
+ggplot(merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female")), y = BPXSY1, fill = factor(RIAGENDR))) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("salmon", "skyblue")) +
+  labs(title = "Blood Pressure by Gender",
+       x = "Gender",
+       y = "Systolic blood pressure (1st reading)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+## Bar plots 
+
+```{r, out.width="75%"}
+# Create age groups
+merged_nhanes$age_group <- cut(merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
+
+# Compute the mean systolic BP per age group using aggregate
+avg_bp <- aggregate(BPXSY1 ~ age_group, data = merged_nhanes, FUN = function(x) mean(x, na.rm = TRUE))
+
+ggplot(avg_bp, aes(x = age_group, y = BPXSY1)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Average Systolic BP by Age Group",
+       x = "Age group",
+       y = "Average Systolic BP") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Histograms
+
+```{r, out.width="75%"}
+ggplot(merged_nhanes, aes(x = BMXBMI)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  labs(title = "Histogram of BMI",
+       x = "Body Mass Index (BMI)",
+       y = "Count") +
+  theme_minimal()
+```
+
+## Line plots
+
+```{r, out.width="75%"}
+avg_bp$midpoint <- seq(15, 75, 10)  # midpoint of intervals
+
+ggplot(avg_bp, aes(x = midpoint, y = BPXSY1)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Average Systolic BP by Age Group",
+       x = "Age (midpoint of group)",
+       y = "Average Systolic BP") +
+  theme_minimal()
+```
+
+## Pie charts
+
+```{r, out.width="75%"}
+# Remove NAs from RIAGENDR
+gender_data <- merged_nhanes[!is.na(merged_nhanes$RIAGENDR), ]
+
+# Count gender
+gender_counts_table <- table(gender_data$RIAGENDR)
+
+# Convert to data frame
+gender_counts <- as.data.frame(gender_counts_table)
+colnames(gender_counts) <- c("RIAGENDR", "n")
+
+# Assign gender labels
+gender_counts$Gender <- gender_counts$RIAGENDR
+
+# Compute proportions
+gender_counts$prop <- gender_counts$n / sum(gender_counts$n)
+
+# Compute y positions for labels (center of each slice)
+gender_counts$ypos <- cumsum(gender_counts$prop) - 0.5 * gender_counts$prop
+
+ggplot(gender_counts, aes(x = "", y = prop, fill = Gender)) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  geom_text(aes(y = ypos, label = scales::percent(prop)), color = "white") +
+  scale_fill_manual(values = c("salmon", "skyblue")) +
+  labs(title = "Gender Distribution") +
+  theme_void()
+```
+
+## Mosaic plots
+
+`ggplot2` does not include a built-in function for mosaic plots, but you can use the `vcd` package for that.
+
+```{r, out.width="75%"}
+library(vcd)
+
+# Keep only rows where SMQ020 is 1 (Yes) or 2 (No) and RIAGENDR is 1 or 2
+valid_idx <- merged_nhanes$SMQ020 %in% c("Yes", "No") & merged_nhanes$RIAGENDR %in% c("Male", "Female")
+valid_data <- merged_nhanes[valid_idx, ]
+
+# Create labeled contingency table
+smoke_gender_table <- table(
+  Gender = factor(valid_data$RIAGENDR, labels = c("Male", "Female")),
+  Smoked_100_cigs = factor(valid_data$SMQ020, labels = c("Yes", "No"))
+)
+
+# Plot mosaic
+mosaic(smoke_gender_table, shade = TRUE, legend = TRUE,
+       main = "Smoking Status by Gender")
+```
+
+## Forest plots
+
+```{r, out.width="75%"}
+# Remove rows with missing gender or BP
+clean_data <- merged_nhanes[!is.na(merged_nhanes$RIAGENDR) & !is.na(merged_nhanes$BPXSY1), ]
+
+# Assign factor labels for gender
+clean_data$Gender <- factor(clean_data$RIAGENDR, labels = c("Male", "Female"))
+
+# Get unique gender levels
+genders <- levels(clean_data$Gender)
+
+# Initialize vectors
+means <- numeric(length(genders))
+sds <- numeric(length(genders))
+ns <- numeric(length(genders))
+lowers <- numeric(length(genders))
+uppers <- numeric(length(genders))
+
+# Loop over gender groups to compute stats
+for (i in seq_along(genders)) {
+  group_data <- clean_data$BPXSY1[clean_data$Gender == genders[i]]
+  means[i] <- mean(group_data)
+  sds[i] <- sd(group_data)
+  ns[i] <- length(group_data)
+  lowers[i] <- means[i] - 1.96 * sds[i] / sqrt(ns[i])
+  uppers[i] <- means[i] + 1.96 * sds[i] / sqrt(ns[i])
+}
+
+# Create result data frame
+forest_df <- data.frame(
+  Gender = genders,
+  mean = means,
+  sd = sds,
+  n = ns,
+  lower = lowers,
+  upper = uppers
+)
+
+ggplot(forest_df, aes(x = mean, y = Gender)) +
+  geom_point(size = 3, color = "steelblue") +
+  geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.2, color = "steelblue") +
+  geom_vline(xintercept = 120, linetype = "dashed") +
+  labs(title = "Systolic Blood Pressure by Gender",
+       x = "Mean Systolic BP (95% CI)",
+       y = "") +
+  theme_minimal()
+```
+
+# Solutions to the exercises
+
+# NHANES data sets
+
+Here are listed some of the variables from the NHANES data sets.
+
+## Demographics (DEMO_G)
+
+| Variable Name | Description                                           |
+| ------------- | ----------------------------------------------------- |
+| RIDAGEYR      | Participant's age in years                            |
+| RIAGENDR      | Participant's gender                                  |
+| DMDHHSIZ      | Total number of people in the household               |
+| DMDHHSZA      | Number of children aged 5 or younger in the household |
+| DMDHRAGE      | Age of the household reference person                 |
+| DMDHRMAR      | Marital status of the household reference person      |
+| DMDHRGND      | Gender of the household reference person              |
+| AIALANGA      | Language of the interview                             |
+
+## Blood Pressure (BPX_G)
+
+| Variable Name | Description                                        |
+| ------------- | -------------------------------------------------- |
+| BPXSY1        | Systolic blood pressure (first reading) in mm Hg   |
+| BPXSY2        | Systolic blood pressure (second reading) in mm Hg  |
+| BPXSY3        | Systolic blood pressure (third reading) in mm Hg   |
+| BPXDI1        | Diastolic blood pressure (first reading) in mm Hg  |
+| BPXDI2        | Diastolic blood pressure (second reading) in mm Hg |
+| BPXDI3        | Diastolic blood pressure (third reading) in mm Hg  |
+| BPXPULS       | Pulse rate (beats per minute)                      |
+| BPXPLS        | 60-second pulse (30-second pulse multiplied by 2)  |
+| BPXPTY        | Pulse type (e.g., regular or irregular)            |
+| BPXML1        | Maximum inflation level (mm Hg)                    |
+
+## Body Measures (BMX_G)
+
+| Variable Name | Description                  |
+| ------------- | ---------------------------- |
+| BMXWT         | Weight (kg)                  |
+| BMXHT         | Standing height (cm)         |
+| BMXBMI        | Body Mass Index (kg/m²)      |
+| BMXWAIST      | Waist circumference (cm)     |
+| BMXHIP        | Hip circumference (cm)       |
+| BMXARML       | Upper arm length (cm)        |
+| BMXARMC       | Upper arm circumference (cm) |
+| BMXLEG        | Upper leg length (cm)        |
+
+## Smoking Questionnaire (SMQ_G)
+
+| Variable Name | Description                                 |
+| ------------- | ------------------------------------------- |
+| SMQ020        | Smoked at least 100 cigarettes in life      |
+| SMQ040        | Do you now smoke cigarettes?                |
+| SMQ050Q       | Average number of cigarettes smoked per day |
+| SMD030        | Age when first smoked cigarettes regularly  |
+| SMD070        | Age when last smoked cigarettes regularly   |
+| SMQ680        | Smoked cigars in the past 5 days            |
+| SMQ690        | Smoked pipes in the past 5 days             |
+| SMQ700        | Smoked chewing tobacco in the past 5 days   |
+| SMQ710        | Smoked snuff in the past 5 days             |
 
 # References
 

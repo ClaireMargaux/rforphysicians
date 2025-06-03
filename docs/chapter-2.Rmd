@@ -48,7 +48,7 @@ The reference material for this course, as well as some useful literature to dee
 When you get a file from somewhere on your computer (e.g. a dataset), you can either 
 
 * have it in your **R working directory** (see below), in which case you don't need to specify the full path to the file when you import it, 
-* or you can get files in different folders, by always specifying the full path.
+* or you can get files in different folders, by always **specifying the full path**.
 
 The advantage of putting the files in the folder that contains your script and is set as the working directory is that you can easily move the folder around on your computer without getting any problems with your script: just set the working directory to your source file every time you open it, and you'll be fine.
 
@@ -65,12 +65,6 @@ The advantage of always giving the full path to a file is that you can get data 
 data <- read.csv("~/path/to/your/folder/testdata.csv")
 ```
 
-To find out what your current working directory is, you can use the function `getwd()`.
-
-```{r}
-getwd()
-```
-
 **Working directory**
 
 To tell R which folder you are working in (e.g., where your data is stored), you have several options:
@@ -79,11 +73,11 @@ To tell R which folder you are working in (e.g., where your data is stored), you
   + Use `setwd("path/to/your/folder")` in your script.
   + Or, the most convenient for script-based work: go to *Session > Set Working Directory > To Source File Location* to automatically set the working directory to the location of your script.
 
-💡 I recommend placing both your script and your data files in the same folder, and setting that folder as your working directory. This helps avoid errors caused by R not finding your data.
+💡 Tip: To avoid file path errors and keep your project organized, it’s best to store your script and data files in the same folder — or at least place your data files in a subfolder like `data_sets` within your project directory. Then, set that folder as your working directory in R. This ensures that your code can reliably find and save your files.
 
 ```{r, eval=FALSE}
-getwd()                       # Displays the current working directory
-setwd("path/to/your/folder")  # Sets the working directory
+getwd()                         # Displays the current working directory
+setwd("~/path/to/your/folder")  # Sets the working directory
 ```
 
 ## Importing data
@@ -104,7 +98,7 @@ dataset <- read.csv("~/path/to/your/folder/data.csv")
 Another widely used data format is the Excel file (`.xlsx`). For these, you can use the `readxl` package to import the data:
 
 ```{r, eval=FALSE}
-# Load the readxl package
+# Load the readxl package (after installing it)
 library(readxl)
 
 # Read the first sheet of an Excel file
@@ -115,7 +109,7 @@ dataset <- read_excel("~/path/to/your/folder/data.xlsx")
 
 ## Handling data frames
 
-Let us now look at real data frames to learn how to call or modify their elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets folder` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
+Let us now look at real data frames to learn how to call or modify their elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
 
 | Dataset               | NHANES Code | Description                                           | CSV File     |
 | --------------------- | ----------- | ----------------------------------------------------- | ------------ |
@@ -131,17 +125,11 @@ demo <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/DEMO_G.
 bpx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BPX_G.csv") # Blood pressure
 bmx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BMX_G.csv") # Body measures
 smq  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/SMQ_G.csv") # Smoking questionnaire
-
-# Check the structure of the data frames
-str(demo)
-str(bpx)
-str(bmx) 
-str(smq) 
 ```
 
-✏️ Exercise on the `NHANES` data sets n°1: import the `demo`, `bpx`, `bmx` and `smq` data sets from the [`data_sets folder` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) into R.
+✏️ Exercise on the `NHANES` data sets n°1: import the `demo`, `bpx`, `bmx` and `smq` data sets from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) into R.
 
-💡 The codebook for each dataset can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in R using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data). You’ll find more details about installing packages at the end of this chapter.
+💡 The codebook for each data set can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in `R` using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data). You’ll also find a summary of key variables from each data set at the end of this chapter.
 
 ### Accessing elements in data frames
 
@@ -230,7 +218,7 @@ aggregate(DMDHHSIZ ~ DMDHRGND, data = demo, FUN = median, na.rm = TRUE) # Median
 #### Full overview
 
 ```{r}
-summary(demo)
+summary(demo)[,1:5] # only for the first 5 variables
 ```
 
 ### Modifying data frames
@@ -289,22 +277,28 @@ extended_df[nrow(extended_df),]
 Use `merge()` to combine data frames based on a common column, similar to SQL joins (see figure below for a reminder on the different types of joins).
 
 ```{r}
-# Merge by participant ID `SEQN` (inner join by default)
-merged_df <- merge(demo, bmx, by = "SEQN")
-head(merged_df)
+# Merge two data frames by participant ID `SEQN` (inner join by default)
+merged_demo_bpx <- merge(demo, bpx, by = "SEQN")
+
+# In base R, you can use the Reduce() function to iteratively merge a list of data frames
+data_list <- list(demo, bpx, bmx) # list of data frames to merge
+merged_demo_bpx_bmx <- Reduce(function(x, y) merge(x, y, by = "SEQN"), data_list) # perform an inner join on all data frames by 'SEQN'
 ``` 
 
-You can also specify the type of join:
+You should specify the type of join you are looking for:
 
-  + Left join: keep all rows from demo: `left_join_df <- merge(demo, bmx, by = "SEQN", all.x = TRUE)`
-  + Left join: keep all rows from bmx: `left_join_df <- merge(demo, bmx, by = "SEQN", all.y = TRUE)`
-  + Full outer join: keep all rows from both data frames: `full_join_df <- merge(demo, bmx, by = "SEQN", all = TRUE)`
+  + Inner join (default): keep only rows with matching `SEQN` in both data frames: `inner_join_df <- merge(demo, bmx, by = "SEQN")`
+  + Left (outer) join: keep all rows from `demo` and only matching rows from `bmx`: `left_join_df <- merge(demo, bmx, by = "SEQN", all.x = TRUE)`
+  + Right (outer) join: keep all rows from `bmx` and only matching rows from `demo`: `left_join_df <- merge(demo, bmx, by = "SEQN", all.y = TRUE)`
+  + Full (outer) join: keep all rows from both `demo` and `bmx`, filling with NA where there are no matches: `full_join_df <- merge(demo, bmx, by = "SEQN", all = TRUE)`
 
 ```{r, echo=FALSE, out.width = "50%"}
 knitr::include_graphics(path = "images/joins.png")
 ```
 
-#### Dealing with NAs
+💡 `merge()` in base R is flexible but can be a bit verbose. For simpler syntax, you can also use the `dplyr` package with `left_join()`, `right_join()`, `inner_join()`, and `full_join()`.
+
+### Dealing with NAs
 
 Handling missing data (NAs) is a common task in data analysis. Before deciding how to treat them, it's important to understand where and how often they occur.
 
@@ -339,7 +333,39 @@ head(demo_no_na)
 
 💡 For our `demo` data set, this removes all the rows! Another reminder to be very careful when removing NA values.
 
-\newpage
+## Saving data frames
+
+You can save data sets in different formats, depending on how you want to use them later:
+
+  + CSV – human-readable and widely supported (e.g. by Excel, Python, etc.)
+  + RDS – R-specific format for saving a single R object (more compact than CSV, preserves data types)
+  + RData – used to save multiple R objects into a single file
+
+Let us save a data frame in all those different formats.
+
+```{r, eval=FALSE}
+# Specify the directory for the data
+directory <- "~/Documents/GitHub/rforphysicians/data_sets/"
+
+# Save as CSV
+write.csv(merged_demo_bpx_bmx, file = file.path(directory,"merged_demo_bpx_bmx.csv"), row.names = FALSE)
+
+# Save as RDS (recommended for re-loading in R)
+saveRDS(merged_demo_bpx_bmx, file = file.path(directory,"merged_demo_bpx_bmx.rds"))
+
+# Save as RData (can contain multiple objects)
+save(merged_demo_bpx_bmx, file = file.path(directory,"merged_demo_bpx_bmx.RData"))
+```
+
+💡 `file.path()` constructs the path to a file from components in a platform-independent way. It concatenates paths and filenames, and automatically uses the correct file separator (/ on Unix/macOS, \\ on Windows), making your code more robust and portable.
+
+💡 You can load these later using:
+
+   + `read.csv("merged_demo_bpx_bmx.csv")`
+   + `readRDS("merged_demo_bpx_bmx.rds")`
+   + `load("merged_demo_bpx_bmx.RData")`
+
+✏️ Exercise on the `NHANES` data sets n°4: merge the 4 data sets `demo`, `bpx`, `bmx` and `smq` into a single data set `merged_nhanes` by performing an inner join on the `SEQN` ID and using the `dplyr` package. Then, save the resulting data frame in your working directory in both .csv and .rds formats.
 
 # Solutions to the exercises
 
@@ -385,22 +411,83 @@ demo_filtered[, ind]
 
 💡 Note: When filtering on a variable that contains missing values (e.g., `AIALANGA`), you must explicitly exclude NAs using `!is.na(...)`. This is because comparisons like demo$AIALANGA == "Spanish" return NA for missing values, not FALSE, so those rows aren't properly excluded from the subset.
 
-\newpage
+☑️ Exercise on the `NHANES` data sets n°4:
+
+```{r, eval=FALSE}
+# If necessary, install the dplyr package
+install.packages("dplyr")
+
+# Load the dplyr package
+library(dplyr)
+
+# Merge the datasets using inner joins by SEQN
+data_list <- list(demo, bpx, bmx, smq)
+merged_nhanes <- Reduce(function(x, y) inner_join(x, y, by = "SEQN"), data_list)
+
+# Save the merged dataset in your working directory
+# Click on Session > Set Working Directory > To Source File Location, or use file.path()
+write.csv(merged_nhanes, "merged_nhanes.csv", row.names = FALSE)
+saveRDS(merged_nhanes, "merged_nhanes.rds")
+```
 
 # NHANES data sets
 
-Here are listed some of the variables from the NHANES data sets used in this course that are being used in the examples.
+Here are listed some of the variables from the NHANES data sets.
 
-| **`demo` data set** |                                                           |
-|:--------------------|:----------------------------------------------------------|
-| RIDAGEYR            | Participant's age in years                                |
-| RIAGENDR            | Participant's gender                                      |
-| DMDHHSIZ            | Total number of people in the household                   |
-| DMDHHSZA            | Number of children aged 5 or younger in the household     |
-| DMDHRAGE            | Age of the household reference person                     |
-| DMDHRMAR            | Marital status of the household reference person          |
-| DMDHRGND            | Gender of the household reference person                  |
-| AIALANGA            | Language of the interview                                 |
+## Demographics (DEMO_G)
+
+| Variable Name | Description                                           |
+| ------------- | ----------------------------------------------------- |
+| RIDAGEYR      | Participant's age in years                            |
+| RIAGENDR      | Participant's gender                                  |
+| DMDHHSIZ      | Total number of people in the household               |
+| DMDHHSZA      | Number of children aged 5 or younger in the household |
+| DMDHRAGE      | Age of the household reference person                 |
+| DMDHRMAR      | Marital status of the household reference person      |
+| DMDHRGND      | Gender of the household reference person              |
+| AIALANGA      | Language of the interview                             |
+
+## Blood Pressure (BPX_G)
+
+| Variable Name | Description                                        |
+| ------------- | -------------------------------------------------- |
+| BPXSY1        | Systolic blood pressure (first reading) in mm Hg   |
+| BPXSY2        | Systolic blood pressure (second reading) in mm Hg  |
+| BPXSY3        | Systolic blood pressure (third reading) in mm Hg   |
+| BPXDI1        | Diastolic blood pressure (first reading) in mm Hg  |
+| BPXDI2        | Diastolic blood pressure (second reading) in mm Hg |
+| BPXDI3        | Diastolic blood pressure (third reading) in mm Hg  |
+| BPXPULS       | Pulse rate (beats per minute)                      |
+| BPXPLS        | 60-second pulse (30-second pulse multiplied by 2)  |
+| BPXPTY        | Pulse type (e.g., regular or irregular)            |
+| BPXML1        | Maximum inflation level (mm Hg)                    |
+
+## Body Measures (BMX_G)
+
+| Variable Name | Description                  |
+| ------------- | ---------------------------- |
+| BMXWT         | Weight (kg)                  |
+| BMXHT         | Standing height (cm)         |
+| BMXBMI        | Body Mass Index (kg/m²)      |
+| BMXWAIST      | Waist circumference (cm)     |
+| BMXHIP        | Hip circumference (cm)       |
+| BMXARML       | Upper arm length (cm)        |
+| BMXARMC       | Upper arm circumference (cm) |
+| BMXLEG        | Upper leg length (cm)        |
+
+## Smoking Questionnaire (SMQ_G)
+
+| Variable Name | Description                                 |
+| ------------- | ------------------------------------------- |
+| SMQ020        | Smoked at least 100 cigarettes in life      |
+| SMQ040        | Do you now smoke cigarettes?                |
+| SMQ050Q       | Average number of cigarettes smoked per day |
+| SMD030        | Age when first smoked cigarettes regularly  |
+| SMD070        | Age when last smoked cigarettes regularly   |
+| SMQ680        | Smoked cigars in the past 5 days            |
+| SMQ690        | Smoked pipes in the past 5 days             |
+| SMQ700        | Smoked chewing tobacco in the past 5 days   |
+| SMQ710        | Smoked snuff in the past 5 days             |
 
 \newpage
 

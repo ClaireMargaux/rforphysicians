@@ -412,7 +412,8 @@ uppers <- numeric(length(genders))
 
 # Loop over gender groups to compute stats
 for (i in seq_along(genders)) {
-  group_data <- merged_nhanes$BPXSY1[merged_nhanes$Gender == genders[i]]
+  group_data <- merged_nhanes$BPXSY1[merged_nhanes$RIAGENDR == genders[i]]
+  group_data <- group_data[!is.na(group_data)]
   means[i] <- mean(group_data)
   sds[i] <- sd(group_data)
   ns[i] <- length(group_data)

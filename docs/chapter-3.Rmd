@@ -60,10 +60,13 @@ merged_nhanes <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_set
 
 ```{r, out.width="75%"}
 plot(x = merged_nhanes$RIDAGEYR, y = merged_nhanes$BPXSY1,
-     xlab = "Age of participant",
-     ylab = "Systolic blood pressure (1st reading)",
-     main = "Scatterplot of Age vs. Systolic BP")
+     xlab = "Age of participant [years]",
+     ylab = "Systolic blood pressure (1st reading) [mmHg]",
+     main = "Scatterplot of age vs. systolic BP",
+     col = c("steelblue"))
 ```
+
+💡 The arguments `xlab` and `ylab` allow fyou to define a label for the x and y axes respectively. The argument `main` defines the main title of the plot.
 
 ## Box plots
 
@@ -71,62 +74,95 @@ plot(x = merged_nhanes$RIDAGEYR, y = merged_nhanes$BPXSY1,
 boxplot(merged_nhanes$BPXSY1 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
         xlab = "Gender",
-        ylab = "Systolic blood pressure (1st reading)",
-        main = "Blood Pressure by Gender",
+        ylab = "Systolic blood pressure (1st reading) [mmHg]",
+        main = "Boxplot of BP by gender",
         col = c("salmon", "skyblue"))
 ```
 
 ## Bar plots
 
 ```{r, out.width="75%"}
-age_groups <- cut(merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
-avg_bp <- tapply(merged_nhanes$BPXSY1, age_groups, mean, na.rm = TRUE)
+# We define the age groups in which to calculate the mean systolic blood pressure
+age_groups <- cut(x = merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
+head(age_groups)
+
+# We calculate the mean systolic blood pressure by age group
+(avg_bp <- tapply(X = merged_nhanes$BPXSY1, INDEX = age_groups, FUN = mean, na.rm = TRUE))
+
 barplot(avg_bp,
-        xlab = "Age group",
-        ylab = "Average Systolic BP",
-        main = "Average Systolic BP by Age Group",
+        xlab = "Age group [years]",
+        ylab = "Average systolic BP [mmHg]",
+        main = "Bar plot of average systolic BP by age group",
         col = "steelblue")
 ```
+
+💡 `cut()` divides the range of the imputed vector into intervals and codes its values according to which interval they fall. The leftmost interval corresponds to level one, the next leftmost to level two and so on.
+
+💡  `tapply()` applies some function to an object, grouped by a list of factors. It uses the following basic syntax: `tapply(X, INDEX, FUN, ..)`, where: X = object to apply a function to, INDEX = vector of factors to group by, FUN = function to apply. It returns a multi-way array containing the values.
 
 ## Histograms
 
 ```{r, out.width="75%"}
 hist(merged_nhanes$BMXBMI,
      breaks = 30,
+     freq = TRUE,
      col = "steelblue",
      xlab = "Body Mass Index (BMI)",
      main = "Histogram of BMI")
 ```
 
+💡 The argument `breaks` is a vector giving the breakpoints between histogram cells or a function to compute the vector of breakpoints.
+💡 The argument `freq` is a logical: if TRUE, the histogram graphic is a representation of frequencies, the counts component of the result; if FALSE, probability densities, component density, are plotted.
+
 ## Line plots
 
 ```{r, out.width="75%"}
-age_groups <- cut(merged_nhanes$RIDAGEYR, breaks = seq(0, 80, 10))
-avg_bp <- tapply(merged_nhanes$BPXSY1, age_groups, mean, na.rm = TRUE)
+# We define the age groups in which to calculate the mean systolic blood pressure
+age_groups <- cut(x = merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
+head(age_groups)
 
-# Extract midpoints of the intervals
-midpoints <- seq(5, 75, 10)
+# We calculate the mean systolic blood pressure by age group
+(avg_bp <- tapply(X = merged_nhanes$BPXSY1, INDEX = age_groups, FUN = mean, na.rm = TRUE))
+
+# We define the midpoints of the intervals
+midpoints <- seq(15, 75, 10)
 
 plot(midpoints, avg_bp, type = "b",
-     xlab = "Age (midpoint of group)",
-     ylab = "Average Systolic BP",
-     main = "Average Systolic BP by Age Group")
+     xlab = "Age (midpoint of group) [years]",
+     ylab = "Mean systolic BP [mmHg]",
+     main = "Mean systolic BP by age group",
+     col = "steelblue")
 ```
+
+💡 The argument `type` is 1-character string giving the type of plot desired. The following values are possible:
+
+  + "p" for *points*
+  + "l" for *lines*
+  + "b" for *both points and lines*
+  + "c" for empty points joined by lines
+  + "o" for overplotted points and lines
+  + "s" and "S" for stair steps and "h" for histogram-like vertical lines
 
 ## Pie charts
 
 ```{r, out.width="75%"}
-pie(table(merged_nhanes$RIAGENDR),
-    labels = c("Male", "Female"),
-    col = c("salmon", "skyblue"),
+(gender_table <- table(merged_nhanes$RIAGENDR))
+pie(x = gender_table,
+    labels = c("Female", "Male"),
+    col = c("skyblue", "salmon"),
     main = "Gender Distribution")
 ```
+
+💡 `table()` uses cross-classifying factors to build a contingency table of the counts at each combination of factor levels.
+
+Personally, I would recommend *avoiding* pie charts, as the human eye is not very good at recognising angle ratios. I favour bar plots, for example.
 
 ## Mosaic plots
 
 ```{r, out.width="75%"}
-mosaicplot(table(merged_nhanes$RIAGENDR, merged_nhanes$SMQ020)[,c("Yes","No")],
-           main = "Smoking Status by Gender",
+(smoking_gender_table <- table(merged_nhanes$RIAGENDR, merged_nhanes$SMQ020))
+mosaicplot(smoking_gender_table[,c("Yes","No")], # we select only the 'yes/no' answers
+           main = "Mosaic plot of smoking status by gender",
            xlab = "Gender",
            ylab = "Smoked at least 100 cigarettes?",
            col = c("steelblue"))
@@ -134,7 +170,7 @@ mosaicplot(table(merged_nhanes$RIAGENDR, merged_nhanes$SMQ020)[,c("Yes","No")],
 
 ## Forest plots
 
-Base R does not include a built-in function for forest plots, but you can use the `forestplot` package for that.
+Base R does not include a built-in function for forest plots, but you can use a package like `forestplot` for that, or `ggplot2` (see below).
 
 ```{r, out.width="75%"}
 library(forestplot)
@@ -148,6 +184,7 @@ lowers <- numeric(length(genders))
 uppers <- numeric(length(genders))
 gender_labels <- character(length(genders))
 
+# Loop over gender groups to compute stats
 for (i in seq_along(genders)) {
   group_data <- merged_nhanes$BPXSY1[merged_nhanes$RIAGENDR == genders[i]]
   group_data <- group_data[!is.na(group_data)]
@@ -156,25 +193,20 @@ for (i in seq_along(genders)) {
   ns[i] <- length(group_data)
   lowers[i] <- means[i] - 1.96 * sds[i] / sqrt(ns[i])
   uppers[i] <- means[i] + 1.96 * sds[i] / sqrt(ns[i])
-  gender_labels[i] <- genders
+  gender_labels[i] <- genders[i]
 }
 
-# Prepare the table text for the forest plot
-tabletext <- cbind(
-  c("Gender", gender_labels),
-  c("Mean systolic BP", sprintf("%.1f", means))
-)[-1, ]
-
 # Create the forest plot
-forestplot(labeltext = tabletext,
+forestplot(labeltext = c("Male","Female"),
            mean = means,
            lower = lowers,
            upper = uppers,
            zero = 120,
-           xlog = FALSE,
-           boxsize = 0.2,
+           grid = TRUE,
+           ci.vertices = TRUE,
+           xlab = "Systolic BP (95% CI) [mmHg]",
            col = fpColors(box = "steelblue", line = "steelblue"),
-           title = "Systolic Blood Pressure by Gender")
+           title = "Forest plot of systolic BP by gender")
 ```
 
 # Including plots using `ggplot2`
@@ -184,28 +216,38 @@ forestplot(labeltext = tabletext,
 install.packages("ggplot2")
 library(ggplot2) # after installation
 
-# Note that the ggplot2 package is included in some R package collections, e.g. the tidyverse collection, which is specifically designed for data science.
+# Note that the ggplot2 package is included in some R package collections, e.g. the tidyverse collection, which is specifically designed for data science and also contains other useful packages like dplyr.
 install.packages("tidyverse")
 library(tidyverse) # after installation
 ```
 
-`ggplot2` is based on the grammar of graphics, the idea that you can build every graph from the same components: 
+`ggplot2` is based on the grammar of graphics — the idea that every graph can be built from the same basic components:
 
-* a data set, 
-* a coordinate system, 
-* and geoms—visual marks that represent data points.
+* a *data set*, 
+* a *coordinate system*, and
+* *geoms*: visual marks (like points, lines, bars) that represent data.
  
-To display values, map variables in the data to visual properties of the geom (aesthetics) like size, color, and x and y locations.
+Structure of a `ggplot2` graph:
 
-```{r ggplot2-structure, echo=FALSE, out.width="50%"}
+```{r ggplot2-structure, echo=FALSE, out.width="75%"}
 knitr::include_graphics(path = "images/ggplot2-structure.png")
 ```
 
-Absolutely unavoidable are the 
+How to build a plot:
 
-* data: our data set
-* geom function: geom_point(), geom_line(), geom_histogram(), geom_bar(), geom_qq(), etc.
-* and mappings: color, filling, linetype, linewidth, etc.
+  1. Start with `ggplot()`, where you provide the dataset (and optionally the aesthetic mapping).
+  2. Add layers, such as:
+
+  + `geom_point()` (scatter plot)
+  + `geom_histogram()` (histogram)
+  + `geom_line()` (line plot)
+  + `scales` (e.g., scale_y_log10())
+  + `faceting` (e.g., facet_wrap())
+  + `coordinate systems` (e.g., coord_flip())
+
+  3. Define aesthetics using `aes()`: these describe how variables in the data are mapped to visual properties like: x, y, color, fill, linetype, size, etc.
+
+💡 You can place `aes()` either in `ggplot()` (to apply it *globally*) or inside the individual `geom_*()` functions (to apply it *locally*).
 
 The geom function must be chosen according to the type of data examined (two continuous variables, one categorical and one continuous variable, etc.).
 
@@ -213,22 +255,33 @@ The geom function must be chosen according to the type of data examined (two con
 
 ```{r, out.width="75%"}
 ggplot(merged_nhanes, aes(x = RIDAGEYR, y = BPXSY1)) +
-  geom_point(alpha = 0.5) +
-  labs(title = "Scatterplot of Age vs. Systolic BP",
-       x = "Age of participant",
-       y = "Systolic blood pressure (1st reading)") +
+  geom_point(alpha = 0.5, col = "steelblue") +
+  labs(title = "Scatterplot of age vs. systolic BP",
+       x = "Age of participant [years]",
+       y = "Systolic blood pressure (1st reading) [mmHg]") +
+  theme_minimal()
+```
+
+Or equivalently:
+
+```{r, out.width="75%"}
+ggplot(merged_nhanes) +
+  geom_point(aes(x = RIDAGEYR, y = BPXSY1), alpha = 0.5, col = "steelblue") +
+  labs(title = "Scatterplot of age vs. systolic BP",
+       x = "Age of participant [years]",
+       y = "Systolic blood pressure (1st reading) [mmHg]") +
   theme_minimal()
 ```
 
 ## Box plots
 
 ```{r, out.width="75%"}
-ggplot(merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female")), y = BPXSY1, fill = factor(RIAGENDR))) +
+ggplot(data = merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female")), y = BPXSY1, fill = factor(RIAGENDR))) +
   geom_boxplot() +
   scale_fill_manual(values = c("salmon", "skyblue")) +
-  labs(title = "Blood Pressure by Gender",
+  labs(title = "Box plot of systolic BP by gender",
        x = "Gender",
-       y = "Systolic blood pressure (1st reading)") +
+       y = "Systolic BP (1st reading) [mmHg]") +
   theme_minimal() +
   theme(legend.position = "none")
 ```
@@ -236,20 +289,23 @@ ggplot(merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female")), y 
 ## Bar plots 
 
 ```{r, out.width="75%"}
-# Create age groups
-merged_nhanes$age_group <- cut(merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
+# We define the age groups in which to calculate the mean systolic blood pressure
+age_groups <- cut(x = merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
+head(age_groups)
 
-# Compute the mean systolic BP per age group using aggregate
-avg_bp <- aggregate(BPXSY1 ~ age_group, data = merged_nhanes, FUN = function(x) mean(x, na.rm = TRUE))
+# We calculate the mean systolic blood pressure by age group
+(avg_bp <- aggregate(BPXSY1 ~ age_groups, data = merged_nhanes, FUN = function(x) mean(x, na.rm = TRUE)))
 
-ggplot(avg_bp, aes(x = age_group, y = BPXSY1)) +
+ggplot(avg_bp, aes(x = age_groups, y = BPXSY1)) +
   geom_bar(stat = "identity", fill = "steelblue") +
-  labs(title = "Average Systolic BP by Age Group",
-       x = "Age group",
-       y = "Average Systolic BP") +
+  labs(title = "Bar plot of mean systolic BP by age group",
+       x = "Age group [years]",
+       y = "Mean systolic BP [mmHg]") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+💡 `aggregate()` splits the data into subsets, computes summary statistics for each, and returns the result as a data frame.
 
 ## Histograms
 
@@ -262,35 +318,53 @@ ggplot(merged_nhanes, aes(x = BMXBMI)) +
   theme_minimal()
 ```
 
+💡 A quick reminder that the number of bins in a histogram is extremely important and should be given careful consideration, as the appearance of the data can vary significantly depending on this choice, which could potentially be misleading.
+
+An example with the age of the household reference person:
+
+```{r, out.width="75%"}
+ggplot(merged_nhanes, aes(x = DMDHRAGE)) +
+  geom_histogram(bins = 40, fill = "steelblue", color = "white") +
+  labs(title = "Histogram of age of the household reference person (40 bins)",
+       x = "Age [years]",
+       y = "Count") +
+  theme_minimal()
+
+ggplot(merged_nhanes, aes(x = DMDHRAGE)) +
+  geom_histogram(bins = 20, fill = "steelblue", color = "white") +
+  labs(title = "Histogram of age of the household reference person (20 bins)",
+       x = "Age [years]",
+       y = "Count") +
+  theme_minimal()
+
+ggplot(merged_nhanes, aes(x = DMDHRAGE)) +
+  geom_histogram(bins = 10, fill = "steelblue", color = "white") +
+  labs(title = "Histogram of age of the household reference person (10 bins)",
+       x = "Age [years]",
+       y = "Count") +
+  theme_minimal()
+```
+
 ## Line plots
 
 ```{r, out.width="75%"}
 avg_bp$midpoint <- seq(15, 75, 10)  # midpoint of intervals
 
 ggplot(avg_bp, aes(x = midpoint, y = BPXSY1)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "Average Systolic BP by Age Group",
-       x = "Age (midpoint of group)",
-       y = "Average Systolic BP") +
+  geom_line(col = "steelblue") +
+  geom_point(col = "steelblue") +
+  labs(title = "Mean systolic BP by age group",
+       x = "Age (midpoint of group) [years]",
+       y = "Mean systolic BP [mmHg]") +
   theme_minimal()
 ```
 
 ## Pie charts
 
 ```{r, out.width="75%"}
-# Remove NAs from RIAGENDR
-gender_data <- merged_nhanes[!is.na(merged_nhanes$RIAGENDR), ]
-
 # Count gender
-gender_counts_table <- table(gender_data$RIAGENDR)
-
-# Convert to data frame
-gender_counts <- as.data.frame(gender_counts_table)
-colnames(gender_counts) <- c("RIAGENDR", "n")
-
-# Assign gender labels
-gender_counts$Gender <- gender_counts$RIAGENDR
+gender_counts <- as.data.frame(table(merged_nhanes$RIAGENDR))
+colnames(gender_counts) <- c("Gender", "n")
 
 # Compute proportions
 gender_counts$prop <- gender_counts$n / sum(gender_counts$n)
@@ -298,50 +372,38 @@ gender_counts$prop <- gender_counts$n / sum(gender_counts$n)
 # Compute y positions for labels (center of each slice)
 gender_counts$ypos <- cumsum(gender_counts$prop) - 0.5 * gender_counts$prop
 
+# Resulting data frame
+gender_counts
+
 ggplot(gender_counts, aes(x = "", y = prop, fill = Gender)) +
   geom_col(width = 1) +
   coord_polar(theta = "y") +
   geom_text(aes(y = ypos, label = scales::percent(prop)), color = "white") +
   scale_fill_manual(values = c("salmon", "skyblue")) +
-  labs(title = "Gender Distribution") +
+  labs(title = "Pie chart of gender distribution") +
   theme_void()
 ```
 
 ## Mosaic plots
 
-`ggplot2` does not include a built-in function for mosaic plots, but you can use the `vcd` package for that.
+`ggplot2` does not include a built-in function for mosaic plots, but can be extended with the `ggmoisaic` package for that.
 
 ```{r, out.width="75%"}
-library(vcd)
+library(ggmosaic)
 
-# Keep only rows where SMQ020 is 1 (Yes) or 2 (No) and RIAGENDR is 1 or 2
-valid_idx <- merged_nhanes$SMQ020 %in% c("Yes", "No") & merged_nhanes$RIAGENDR %in% c("Male", "Female")
-valid_data <- merged_nhanes[valid_idx, ]
-
-# Create labeled contingency table
-smoke_gender_table <- table(
-  Gender = factor(valid_data$RIAGENDR, labels = c("Male", "Female")),
-  Smoked_100_cigs = factor(valid_data$SMQ020, labels = c("Yes", "No"))
-)
-
-# Plot mosaic
-mosaic(smoke_gender_table, shade = TRUE, legend = TRUE,
-       main = "Smoking Status by Gender")
+ggplot(data = merged_nhanes[merged_nhanes$SMQ020 %in% c("Yes","No"),]) +
+  geom_mosaic(aes(x = product(RIAGENDR), fill = SMQ020)) +
+  scale_fill_manual(values = c("salmon", "skyblue")) +
+  labs(x = "Gender", y = "Smoked at least 100 cigarettes?", title = "Mosaic plot of smoking status by gender") +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
 ## Forest plots
 
 ```{r, out.width="75%"}
-# Remove rows with missing gender or BP
-clean_data <- merged_nhanes[!is.na(merged_nhanes$RIAGENDR) & !is.na(merged_nhanes$BPXSY1), ]
-
-# Assign factor labels for gender
-clean_data$Gender <- factor(clean_data$RIAGENDR, labels = c("Male", "Female"))
-
-# Get unique gender levels
-genders <- levels(clean_data$Gender)
-
-# Initialize vectors
+# Calculate summary statistics by gender
+genders <- unique(merged_nhanes$RIAGENDR)
 means <- numeric(length(genders))
 sds <- numeric(length(genders))
 ns <- numeric(length(genders))
@@ -350,7 +412,7 @@ uppers <- numeric(length(genders))
 
 # Loop over gender groups to compute stats
 for (i in seq_along(genders)) {
-  group_data <- clean_data$BPXSY1[clean_data$Gender == genders[i]]
+  group_data <- merged_nhanes$BPXSY1[merged_nhanes$Gender == genders[i]]
   means[i] <- mean(group_data)
   sds[i] <- sd(group_data)
   ns[i] <- length(group_data)
@@ -359,21 +421,21 @@ for (i in seq_along(genders)) {
 }
 
 # Create result data frame
-forest_df <- data.frame(
+(forest_df <- data.frame(
   Gender = genders,
   mean = means,
   sd = sds,
   n = ns,
   lower = lowers,
   upper = uppers
-)
+))
 
 ggplot(forest_df, aes(x = mean, y = Gender)) +
   geom_point(size = 3, color = "steelblue") +
   geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.2, color = "steelblue") +
   geom_vline(xintercept = 120, linetype = "dashed") +
-  labs(title = "Systolic Blood Pressure by Gender",
-       x = "Mean Systolic BP (95% CI)",
+  labs(title = "Forest plot of systolic BP by gender",
+       x = "Systolic BP (95% CI) [mmHg]",
        y = "") +
   theme_minimal()
 ```

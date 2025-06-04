@@ -371,13 +371,20 @@ frac <- function(numerator, denominator) {
   return(result)
 }
 
-frac(6, 2)  # Calling the function
+frac(numerator = 6, denominator = 2) # Calling the function
 ```
+
+💡 A function takes inputs called arguments. These can be:
+
+  + *Explicitly specified*, e.g., `frac(numerator = 6, denominator = 2)`, or
+  + *Implicitly given in order*, e.g., `frac(6, 2)`.
+  
+I strongly recommend explicitly naming arguments, because it increases clarity, prevents order-related mistakes, and gives you flexibility in argument order: `frac(denominator = 2, numerator = 6)` works just as well. In contrast, when arguments are unnamed, order matters strictly — and a small mistake can completely change the result: `frac(2, 6)` is interpreted as `frac(numerator = 2, denominator = 6)`!
 
 ✏️ Write a function `sum_squared` that takes two integers and returns the sum of their squared values.
 ```{r, eval=FALSE}
 # Example
-sum_squared(2,3)
+sum_squared(int1 = 2, int2 = 3)
 # The output should be:
 13
 ```
@@ -391,6 +398,8 @@ There are a set of standard (or base) packages which are considered part of the 
 ```{r, eval=FALSE}
 # To install a package, you can use the function 
 install.packages("dplyr")
+
+# Alternatively, you can click on 'Packages' in the bottom right pane, then click on 'Install' and type in the name of the package you want to install.
 
 # To load a package you've already install, just load it using the library() function
 library(dplyr)
@@ -440,7 +449,7 @@ sum_squared <- function(int1, int2){
   return(sum_of_squares)
 }
 
-sum_squared(3, 5)
+sum_squared(int1 = 3, int2 = 5)
 ```
 
 \newpage

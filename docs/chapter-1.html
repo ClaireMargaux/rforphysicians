@@ -11,7 +11,7 @@
 
 <meta name="author" content="Claire Descombes" />
 
-<meta name="date" content="2025-06-03" />
+<meta name="date" content="2025-06-04" />
 
 <title>Chapter 1</title>
 
@@ -2904,7 +2904,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Chapter 1</h1>
 <h3 class="subtitle">R for physicians</h3>
 <h4 class="author">Claire Descombes</h4>
-<h4 class="date">2025-06-03</h4>
+<h4 class="date">2025-06-04</h4>
 
 </div>
 
@@ -3330,14 +3330,14 @@ data frame.</li>
                  group = sample(c(&quot;exp&quot;,&quot;control&quot;), size = 5, replace = TRUE)))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["val"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"4","3":"control"},{"1":"2","2":"5","3":"exp"},{"1":"3","2":"2","3":"exp"},{"1":"4","2":"6","3":"control"},{"1":"5","2":"5","3":"control"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["val"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"4","3":"control"},{"1":"2","2":"5","3":"control"},{"1":"3","2":"2","3":"exp"},{"1":"4","2":"6","3":"control"},{"1":"5","2":"5","3":"exp"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>str(d)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    5 obs. of  3 variables:
 ##  $ id   : int  1 2 3 4 5
 ##  $ val  : num  4 5 2 6 5
-##  $ group: chr  &quot;control&quot; &quot;exp&quot; &quot;exp&quot; &quot;control&quot; ...</code></pre>
+##  $ group: chr  &quot;control&quot; &quot;control&quot; &quot;exp&quot; &quot;control&quot; ...</code></pre>
 <p>✏️ Create a data frame with 10 rows and the columns <code>id</code>,
 <code>blood_pressure</code>, and <code>group</code>. – <code>id</code>:
 integers from 1 to 10 – <code>blood_pressure</code>: random values from
@@ -3367,12 +3367,26 @@ compute mean and standard deviation of a vector. You can use
   return(result)
 }
 
-frac(6, 2)  # Calling the function</code></pre>
+frac(numerator = 6, denominator = 2) # Calling the function</code></pre>
 <pre><code>## [1] 3</code></pre>
+<p>💡 A function takes inputs called arguments. These can be:</p>
+<ul>
+<li><em>Explicitly specified</em>, e.g.,
+<code>frac(numerator = 6, denominator = 2)</code>, or</li>
+<li><em>Implicitly given in order</em>, e.g.,
+<code>frac(6, 2)</code>.</li>
+</ul>
+<p>I strongly recommend explicitly naming arguments, because it
+increases clarity, prevents order-related mistakes, and gives you
+flexibility in argument order:
+<code>frac(denominator = 2, numerator = 6)</code> works just as well. In
+contrast, when arguments are unnamed, order matters strictly — and a
+small mistake can completely change the result: <code>frac(2, 6)</code>
+is interpreted as <code>frac(numerator = 2, denominator = 6)</code>!</p>
 <p>✏️ Write a function <code>sum_squared</code> that takes two integers
 and returns the sum of their squared values.</p>
 <pre class="r"><code># Example
-sum_squared(2,3)
+sum_squared(int1 = 2, int2 = 3)
 # The output should be:
 13</code></pre>
 </div>
@@ -3392,8 +3406,10 @@ You can install packages using the install.packages() function.</p>
 <pre class="r"><code># To install a package, you can use the function 
 install.packages(&quot;dplyr&quot;)
 
+# Alternatively, you can click on &#39;Packages&#39; in the bottom right pane, then click on &#39;Install&#39; and type in the name of the package you want to install.
+
 # To load a package you&#39;ve already install, just load it using the library() function
-library(dyplr)</code></pre>
+library(dplyr)</code></pre>
 <p>✏️ Exercise on packages: install the <code>ggplot2</code> package. We
 will need it for Chapter 2.</p>
 <div style="page-break-after: always;"></div>
@@ -3419,7 +3435,7 @@ eligible</code></pre>
                  group = factor(sample(c(&quot;drug 1&quot;, &quot;drug 2&quot;, &quot;obs arm&quot;), 10, replace = TRUE))))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"1","2":"123.2241","3":"drug 2"},{"1":"2","2":"119.5954","3":"drug 1"},{"1":"3","2":"119.1761","3":"drug 2"},{"1":"4","2":"130.0579","3":"obs arm"},{"1":"5","2":"121.6460","3":"drug 2"},{"1":"6","2":"120.5584","3":"drug 1"},{"1":"7","2":"119.0112","3":"obs arm"},{"1":"8","2":"117.7956","3":"drug 1"},{"1":"9","2":"105.0769","3":"obs arm"},{"1":"10","2":"115.5306","3":"obs arm"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"1","2":"114.5578","3":"drug 2"},{"1":"2","2":"109.9384","3":"drug 1"},{"1":"3","2":"122.0528","3":"drug 2"},{"1":"4","2":"128.0142","3":"drug 1"},{"1":"5","2":"114.4659","3":"drug 1"},{"1":"6","2":"134.3127","3":"obs arm"},{"1":"7","2":"129.6933","3":"drug 1"},{"1":"8","2":"113.8830","3":"drug 1"},{"1":"9","2":"117.9319","3":"drug 1"},{"1":"10","2":"120.0289","3":"obs arm"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code># Compute standardized scores for blood pressure
@@ -3432,7 +3448,7 @@ df$stand_score_2 &lt;- (df$blood_pressure - mean(df$blood_pressure))/sd(df$blood
 df</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stand_score"],"name":[4],"type":["dbl[,1]"],"align":["right"]},{"label":["stand_score_2"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"123.2241","3":"drug 2","4":"0.644140041","5":"0.644140041"},{"1":"2","2":"119.5954","3":"drug 1","4":"0.067988726","5":"0.067988726"},{"1":"3","2":"119.1761","3":"drug 2","4":"0.001406359","5":"0.001406359"},{"1":"4","2":"130.0579","3":"obs arm","4":"1.729193174","5":"1.729193174"},{"1":"5","2":"121.6460","3":"drug 2","4":"0.393577779","5":"0.393577779"},{"1":"6","2":"120.5584","3":"drug 1","4":"0.220890451","5":"0.220890451"},{"1":"7","2":"119.0112","3":"obs arm","4":"-0.024767907","5":"-0.024767907"},{"1":"8","2":"117.7956","3":"drug 1","4":"-0.217784096","5":"-0.217784096"},{"1":"9","2":"105.0769","3":"obs arm","4":"-2.237231537","5":"-2.237231537"},{"1":"10","2":"115.5306","3":"obs arm","4":"-0.577412989","5":"-0.577412989"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stand_score"],"name":[4],"type":["dbl[,1]"],"align":["right"]},{"label":["stand_score_2"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"114.5578","3":"drug 2","4":"-0.74643752","5":"-0.74643752"},{"1":"2","2":"109.9384","3":"drug 1","4":"-1.32788487","5":"-1.32788487"},{"1":"3","2":"122.0528","3":"drug 2","4":"0.19697780","5":"0.19697780"},{"1":"4","2":"128.0142","3":"drug 1","4":"0.94735475","5":"0.94735475"},{"1":"5","2":"114.4659","3":"drug 1","4":"-0.75799692","5":"-0.75799692"},{"1":"6","2":"134.3127","3":"obs arm","4":"1.74014532","5":"1.74014532"},{"1":"7","2":"129.6933","3":"drug 1","4":"1.15870260","5":"1.15870260"},{"1":"8","2":"113.8830","3":"drug 1","4":"-0.83136739","5":"-0.83136739"},{"1":"9","2":"117.9319","3":"drug 1","4":"-0.32172275","5":"-0.32172275"},{"1":"10","2":"120.0289","3":"obs arm","4":"-0.05777103","5":"-0.05777103"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>☑️ Write a function <code>sum_squared</code>:</p>
@@ -3441,7 +3457,7 @@ df</code></pre>
   return(sum_of_squares)
 }
 
-sum_squared(3, 5)</code></pre>
+sum_squared(int1 = 3, int2 = 5)</code></pre>
 <pre><code>## [1] 34</code></pre>
 <div style="page-break-after: always;"></div>
 </div>

@@ -449,7 +449,7 @@ ggplot(forest_df, aes(x = mean, y = Gender)) +
   theme_minimal()
 ```
 
-# Exercises
+## Exercises
 
 ✏️ Exercise on plotting with `ggplot2`: Using the same age groups as in the examples, create a bar plot showing the median BMI by age group. Then produce two further bar plots showing the same data for each gender, and display them in the same output panel, using the same y-axis to allow for better comparison.
 

@@ -109,6 +109,101 @@ dataset <- read_excel("~/path/to/your/folder/data.xlsx")
 
 ## Handling data frames
 
+### Base R vs `tidyverse`
+
+Base R, without any additional packages, already provides many functions that are very handy for data handling. However, some contributed packages make data preparation much easier and more readable.
+
+I’ll introduce two such packages here, before diving into concrete data handling examples. Both are part of a larger and very powerful collection of packages for data science called the `tidyverse`, which I use for nearly all my analyses.
+
+#### The pipe
+
+One of the most downloaded contributed extension packages of all times is `magrittr`. It provides a very useful operator, the forward pipe operator `%>%`, which passes the object on its left as the first argument to the function on its right. This is much easier to understand with an example.
+
+```{r, run=FALSE}
+# The easiest way to get magrittr is to install the whole tidyverse
+install.packages("tidyverse")
+```
+
+```{r}
+library(tidyverse)
+
+# Let's do the same operation twice: once using the pipe, once without
+
+# No pipe:
+str(c(1,2,3,4))
+
+# With pipe:
+c(1,2,3,4) %>%
+  str()
+
+# Not too exciting yet, but consider a more complex case:
+summary(log(sqrt(na.omit(c(1, 4, NA, 16, 25)))))
+
+# With the pipe, we can rewrite this more readably:
+c(1, 4, NA, 16, 25) %>%
+  na.omit() %>%
+  sqrt() %>%
+  log() %>%
+  summary()
+```
+
+The pipe helps turn nested function calls into a sequence of simpler, linear steps. This makes code easier to read, write, and debug. The pipe becomes especially powerful when used with functions from the `dplyr` package for data manipulation.
+
+#### `dplyr`
+
+Another helpful R package is `dplyr`. It is a grammar of data manipulation, providing a consistent set of verbs that helps solve the most common data manipulation challenges. 
+
+Let’s illustrate this with a simple example. Our goal: Group the cars dataset (contained in base R) by speed groups (e.g. low/medium/high), and for each group, compute (1) the average stopping distance and (2) the number of observations.
+
+```{r}
+# Base R (no dplyr, no pipe)
+
+cars$speed_group <- cut(cars$speed, breaks = c(0, 10, 20, 30), 
+                        labels = c("Low", "Medium", "High"))
+
+avg_dist <- aggregate(dist ~ speed_group, data = cars, mean)
+n_obs <- aggregate(dist ~ speed_group, data = cars, length)
+names(n_obs)[2] <- "n"
+
+summary_df <- merge(avg_dist, n_obs, by = "speed_group")
+summary_df
+```
+
+```{r}
+# With dplyr, no pipe:
+
+cars <- mutate(cars, speed_group = cut(speed, breaks = c(0, 10, 20, 30), labels = c("Low", "Medium", "High")))
+
+summary_df <- summarise(group_by(cars, speed_group),
+                        avg_dist = mean(dist),
+                        n = n())
+summary_df
+```
+
+```{r}
+# With dplyr and the pipe
+cars %>%
+  mutate(speed_group = cut(speed, breaks = c(0, 10, 20, 30), 
+                           labels = c("Low", "Medium","High"))) %>%
+  group_by(speed_group) %>%
+  summarise(
+    avg_dist = mean(dist),
+    n = n()
+  )
+```
+
+💡 `cut(x, ...)` divides the range of `x` into intervals (the `breaks`) and codes the values in x according to which interval they fall. `labels` are the levels of the resulting category. If `labels = FALSE`, simple integer codes are returned instead of a factor.
+
+As you can see, using `dplyr` and the pipe can make your life much easier.
+
+In the following chapter, we’ll use both base R and `tidyverse` functions without always noting which package they belong to. If you're ever unsure, you can check the top-left corner of the function's help page.
+
+```{r, echo=FALSE, out.width = "70%"}
+knitr::include_graphics(path = "images/documentation.png")
+```
+
+### Loading a data frame into R
+
 Let us now look at real data frames to learn how to call or modify their elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
 
 | Dataset               | NHANES Code | Description                                           | CSV File     |
@@ -117,7 +212,6 @@ Let us now look at real data frames to learn how to call or modify their element
 | Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings | `BPX_G.csv`  |
 | Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference              | `BMX_G.csv`  |
 | Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke          | `SMQ_G.csv`  |
-
 
 ```{r}
 # Load the necessary CSV files into data frames

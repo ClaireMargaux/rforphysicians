@@ -34,7 +34,7 @@ The lecture is structured into five main chapters and two appendices:
 ## 🚀 Getting Started
 
 To begin, access the full lecture notes via the following link:
-👉 R for Physicians Website
+👉 [R for physicians](https://clairemargaux.github.io/rforphysicians/)  Website
 <sub><sup>(Tip: Right-click to open in a new tab)</sup></sub>
 
 No installation is required — just follow along in your browser.

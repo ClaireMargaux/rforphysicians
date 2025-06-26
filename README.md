@@ -1,10 +1,10 @@
-# 🩺 R for Physicians
+# 🩺 R for physicians
 
-Welcome to R for Physicians, a gentle introduction to coding and data analysis in R designed specifically for healthcare professionals and researchers. This project contains interactive lecture notes and practical resources to help you get started with data in R — no prior coding experience required.
+Welcome to R for physicians, a gentle introduction to coding and data analysis in R designed specifically for healthcare professionals and researchers. This project contains interactive lecture notes and practical resources to help you get started with data in R — no prior coding experience required.
 
 ## 📘 Contents
 
-The lecture is structured into five main chapters and two appendices:
+The lecture is structured into diffents chapters and appendices:
 
     Chapter 1 – Getting Started with R and RStudio
     Learn the basics of R syntax, RStudio, and how to write clean, readable code.
@@ -27,15 +27,16 @@ The lecture is structured into five main chapters and two appendices:
     Appendix B – Reference Lists of Useful Functions
     A quick-access catalog of essential functions for data handling and plotting.
 
-## 🚀 Getting Started
+## 🚀 Getting started
 
 To begin, access the full lecture notes via the following link:
+
 👉 [R for physicians](https://clairemargaux.github.io/rforphysicians/) Website
 <sub><sup>(Tip: Right-click to open in a new tab)</sup></sub>
 
 No installation is required — just follow along in your browser.
 
-## 📁 Project Structure
+## 📁 Project structure
 
 This repository is organized into folders and files that support the creation and sharing of lecture materials.
 📂 Folders

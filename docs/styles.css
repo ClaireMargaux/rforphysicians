@@ -106,3 +106,14 @@ ul li a:hover {
   background-color: #d0d8de;
   font-weight: bold;
 }
+
+.github-link {
+  color: #666;               /* subtle grey */
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.github-link:hover {
+  color: #004d3d;            /* match your hover theme */
+  text-decoration: underline;
+}

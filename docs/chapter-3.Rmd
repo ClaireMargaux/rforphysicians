@@ -119,7 +119,7 @@ hist(merged_nhanes$BMXBMI,
 
 ```{r, out.width="75%"}
 # We define the age groups in which to calculate the mean systolic blood pressure and calculate the mean systolic blood pressure by age group
-avg_bp_df <- merged_nhanes %>%
+avg_bp_with_midpoints <- merged_nhanes %>%
   filter(!is.na(BPXSY1), !is.na(RIDAGEYR)) %>%
   mutate(age_group = cut(RIDAGEYR, breaks = seq(10, 80, 10))) %>%
   group_by(age_group) %>%
@@ -130,7 +130,7 @@ avg_bp_df <- merged_nhanes %>%
     age_mid = seq(15, 75, 10)
   )
 
-plot(avg_bp_df$age_mid, avg_bp_df$mean_bp, type = "b",
+plot(avg_bp_with_midpoints$age_mid, avg_bp_with_midpoints$mean_bp, type = "b",
      xlab = "Age (midpoint of group) [years]",
      ylab = "Mean systolic BP [mmHg]",
      main = "Mean systolic BP by age group",
@@ -192,10 +192,10 @@ summary_stats <- merged_nhanes %>%
   ungroup()
 
 # Create the forest plot
-forestplot(labeltext = c("Male","Female"),
-           mean = means,
-           lower = lowers,
-           upper = uppers,
+forestplot(labeltext = c("Female","Male"),
+           mean = summary_stats$mean,
+           lower = summary_stats$lower,
+           upper = summary_stats$upper,
            zero = 120,
            grid = TRUE,
            ci.vertices = TRUE,
@@ -292,14 +292,6 @@ ggplot(data = merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female
 ## Bar plots 
 
 ```{r, out.width="75%"}
-# We define the age groups in which to calculate the mean systolic blood pressure and calculate the mean systolic blood pressure by age group
-avg_bp <- merged_nhanes %>%
-  filter(!is.na(BPXSY1), !is.na(RIDAGEYR)) %>%             # Remove NAs
-  mutate(age_group = cut(RIDAGEYR, breaks = seq(10, 80, 10))) %>%  # Define age groups
-  group_by(age_group) %>%
-  summarise(mean_bp = mean(BPXSY1, na.rm = TRUE)) %>%
-  ungroup()
-
 ggplot(avg_bp, aes(x = age_group, y = mean_bp)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(title = "Bar plot of mean systolic BP by age group",
@@ -350,7 +342,7 @@ ggplot(merged_nhanes, aes(x = DMDHRAGE)) +
 ## Line plots
 
 ```{r, out.width="75%"}
-ggplot(avg_bp, aes(x = midpoint, y = mean_bp)) +
+ggplot(avg_bp_with_midpoints, aes(x = age_mid, y = mean_bp)) +
   geom_line(col = "steelblue") +
   geom_point(col = "steelblue") +
   labs(title = "Mean systolic BP by age group",

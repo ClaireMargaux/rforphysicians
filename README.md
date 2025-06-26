@@ -1,7 +1,3 @@
-<span style="float: left; margin-right: 10px;">
-  <img src="docs/logo.png" alt="Logo" width="400">
-</span>
-
 # 🩺 R for Physicians
 
 Welcome to R for Physicians, a gentle introduction to coding and data analysis in R designed specifically for healthcare professionals and researchers. This project contains interactive lecture notes and practical resources to help you get started with data in R — no prior coding experience required.
@@ -34,7 +30,7 @@ The lecture is structured into five main chapters and two appendices:
 ## 🚀 Getting Started
 
 To begin, access the full lecture notes via the following link:
-👉 [R for physicians](https://clairemargaux.github.io/rforphysicians/)  Website
+👉 [R for physicians](https://clairemargaux.github.io/rforphysicians/) Website
 <sub><sup>(Tip: Right-click to open in a new tab)</sup></sub>
 
 No installation is required — just follow along in your browser.

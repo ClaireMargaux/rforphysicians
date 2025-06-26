@@ -14,4 +14,4 @@ This introduction to R for physicians contains
 -   Appendix A: the NHANES data sets
 -   Appendix B: lists of useful functions for data handling and plotting
 
-To get started, access the lecture notes via the following link: [R for physicians](https://clairemargaux.github.io/rforphysicians/)
+To get started, access the lecture notes via the following link: [R for physicians](https://clairemargaux.github.io/rforphysicians/) (right-click to open in new tab)

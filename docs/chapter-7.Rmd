@@ -1,0 +1,129 @@
+---
+title: "Appendix B"
+author: "Claire Descombes"
+date: "`r Sys.Date()`"
+contact: claire.descombes@insel.ch
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+    df_print: paged
+    theme: paper
+    code_folding: show
+    math_method: katex
+subtitle: "R for physicians"
+bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+link-citations: yes
+editor_options: 
+  chunk_output_type: console
+knit: (function(input, ...) {rmarkdown::render(input)})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE,
+  message = FALSE, 
+  fig.height = 5,
+  fig.width = 6,
+  eval = TRUE
+)
+library(tidyverse)
+```
+
+| Author           |                                                                 |
+|:-----------------|:----------------------------------------------------------------|
+| Name             | Claire Descombes                                                |
+| Affiliation      | Universitätsklinik für Neurochirurgie, Inselspital Bern         |
+| Degree           | MSc Statistics and Data Science, University of Bern             |
+| Contact          | [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch)   |
+The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
+
+# Useful functions for efficient data handling
+
+| Function(s)                                               | Package        | Description                                                                 |
+|-----------------------------------------------------------|----------------|-----------------------------------------------------------------------------|
+| **Selecting and filtering**                               |                |                                                                             |
+| `subset()`                                                | base R         | Select rows and columns of a data frame                                     |
+| `select()`, `rename()`                                    | dplyr          | Select or rename columns                                                    |
+| `filter()`                                                | dplyr          | Select rows by condition                                                    |
+| `slice()`                                                 | dplyr          | Select rows by position                                                     |
+| `distinct()`                                              | dplyr          | Return unique/distinct rows                                                 |
+| `duplicated()`                                            | base R         | Logical vector: is row duplicated?                                          |
+|                                                           |                |                                                                             |
+| **Sorting and ordering**                                  |                |                                                                             |
+| `order()`, `rank()`                                       | base R         | Sort indices or compute ranks                                               |
+| `arrange()`                                               | dplyr          | Sort by one or more columns                                                 |
+|                                                           |                |                                                                             |
+| **Creating or transforming variables**                    |                |                                                                             |
+| `transform()`                                             | base R         | Add or overwrite columns in a data frame                                    |
+| `mutate()`, `transmute()`                                 | dplyr          | Create or overwrite columns; `transmute()` returns only new ones            |
+| `cumsum()`                                                | base R         | Cumulative sum of a vector                                                  |
+| `with()`                                                  | base R         | Evaluate expressions using data frame columns directly                      |
+| `across()`                                                | dplyr          | Apply function(s) to multiple columns (within `mutate()` or `summarize()`)  |
+|                                                           |                |                                                                             |
+| **Grouped operations**                                    |                |                                                                             |
+| `aggregate()`, `tapply()`, `rowsum()`, `by()`             | base R         | Perform grouped calculations                                                |
+| `ave()`                                                   | base R         | Grouped transformations (e.g., group-wise mean)                             |
+| `group_by()`, `ungroup()`                                 | dplyr          | Group rows by variable levels                                               |
+| `summarize()`                                             | dplyr          | Compute summary statistics (often after `group_by()`)                       |
+|                                                           |                |                                                                             |
+| **Combining data**                                        |                |                                                                             |
+| `rbind()`, `cbind()`                                      | base R         | Bind rows or columns                                                        |
+| `merge()`                                                 | base R         | Join data frames by key                                                     |
+| `bind_rows()`, `bind_cols()`                              | dplyr          | Bind data frames by row or column                                           |
+| `left_join()`, `inner_join()`, `right_join()`             | dplyr          | Join data frames by key                                                     |
+|                                                           |                |                                                                             |
+| **Reshaping data**                                        |                |                                                                             |
+| `reshape()`                                               | base R         | Reshape data (complex interface)                                            |
+| `expand.grid()`                                           | base R         | Create all combinations (cross-join)                                        |
+| `pivot_wider()`, `pivot_longer()`                         | tidyr          | Reshape data between wide and long formats                                  |
+|                                                           |                |                                                                             |
+| **Descriptive statistics**                                |                |                                                                             |
+| `mean()`, `median()`, `sd()`, `quantile()`, `min()`, `max()` | base R       | Univariate statistics                                                       |
+| `rowSums()`, `rowMeans()`, `colSums()`, `colMeans()`      | base R         | Row- or column-wise statistics of data frames or matrices                   |
+| `summary()`                                               | base R         | Summarize object (e.g., per column of data frame)                           |
+| `table()`, `prop.table()`, `addmargins()`                 | base R         | Absolute and relative frequency tables                                      |
+| `cor()`, `cov()`                                          | base R         | Bivariate statistics (correlation, covariance)                              |
+|                                                           |                |                                                                             |
+| **Exploration and structure**                             |                |                                                                             |
+| `head()`, `tail()`                                        | base R         | Show first or last elements of an object                                    |
+| `nrow()`, `ncol()`, `dim()`                               | base R         | Number of rows, columns, or both                                            |
+| `str()`                                                   | base R         | Display structure of an object                                              |
+|                                                           |                |                                                                             |
+| **Apply functions and utilities**                         |                |                                                                             |
+| `lapply()`                                                | base R         | Apply a function over list/data frame elements                              |
+| `match()`, `%in%`                                         | base R         | Matching and membership testing                                             |
+| `match.arg()`                                             | base R         | Match a value against a set of allowed values (useful in functions)         |
+
+# Useful functions for plotting
+
+| Function          | Package  | Description                                    |
+|-------------------|----------|------------------------------------------------|
+| `plot()`          | base R   | General-purpose plotting (scatter, lines, etc.)|
+| `boxplot()`       | base R   | Box plots by groups                             |
+| `pie()`           | base R   | Pie charts from frequency tables               |
+| `barplot()`       | base R   | Bar plots for summary statistics                |
+| `mosaicplot()`    | base R   | Mosaic plot for contingency tables             |
+| `hist()`          | base R   | Histogram of numeric data                       |
+| `forestplot()`    | forestplot | Forest plot with advanced features            |
+| `ggplot()`        | ggplot2  | Initialize a ggplot object                      |
+| `aes()`           | ggplot2  | Define aesthetics mappings (x, y, color, fill) |
+| `geom_point()`    | ggplot2  | Scatter plot layer                              |
+| `geom_line()`     | ggplot2  | Line plot layer                                 |
+| `geom_histogram()`| ggplot2  | Histogram layer                                 |
+| `geom_bar()`      | ggplot2  | Bar plot layer (can be stacked, grouped)       |
+| `geom_boxplot()`  | ggplot2  | Box plot layer                                 |
+| `geom_mosaic()`   | ggmoisaic| Moisaic plot layer                             |
+| `labs()`          | ggplot2  | Add titles and axis labels                      |
+| `scale_fill_manual()` | ggplot2 | Manual fill color scale                        |
+| `theme_minimal()` | ggplot2  | Minimalistic plot theme                         |
+
+\newpage
+
+# References
+
+---
+nocite: '@*'
+...

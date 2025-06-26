@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
   fig.width = 6,
   eval = TRUE
 )
-library(ggplot2)
+library(tidyverse)
 ```
 
 | Author           |                                                                 |
@@ -88,12 +88,27 @@ CSV stands for Comma-Separated Values. In a `.csv` file, the values are stored a
 
 After setting your working directory or determining the path to your CSV file, you can use the `read.csv()` function to import the data. This will create a data frame, which is one of the most commonly used structures in R for handling datasets.
 
+💡 I recommend to use data frames as data type for your data — they are generally easier to work with than matrices, especially for beginners.
+
 ```{r, eval=FALSE}
 # Import a CSV file into a data frame
 dataset <- read.csv("~/path/to/your/folder/data.csv")
 ```
 
-💡 I recommend using data frames — they are generally easier to work with than matrices, especially for beginners.
+The function `read.csv()` has several useful arguments, including:
+
+  + `sep`: The field separator used in the file. For `read.csv()`, the default is a comma (`,`), which is standard for CSV files.
+  
+  + `row.names`: Specifies the row names of the data frame. It can be:
+    + a vector of row names,
+    + a number indicating the column to use as row names,
+    + a character string naming the column with row names.
+    
+    If a header is present and the first row has one fewer field than the number of columns, the first column is used as row names. Otherwise, rows are automatically numbered. Use `row.names = NULL` to force default numbering.
+  
+  + `col.names`: Optional vector of column names. If not provided, default names like "V1", "V2", etc., are assigned.
+  
+  + `stringsAsFactors`: TRUE/FALSE; should character vectors be converted to factors?
 
 Another widely used data format is the Excel file (`.xlsx`). For these, you can use the `readxl` package to import the data:
 
@@ -109,24 +124,15 @@ dataset <- read_excel("~/path/to/your/folder/data.xlsx")
 
 ### Load the NHANES data sets
 
-Let us now look at real data frames to learn how to call or modify their elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
+Let us now look at real data frames to learn how to call or modify their elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets). More details on these data sets can be found in the Appendix A.
 
-| Dataset               | NHANES Code | Description                                           | CSV File     |
-| --------------------- | ----------- | ----------------------------------------------------- | ------------ |
-| Demographics          | DEMO\_G     | Age, sex, race/ethnicity, income, education           | `DEMO_G.csv` |
-| Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings | `BPX_G.csv`  |
-| Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference              | `BMX_G.csv`  |
-| Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke          | `SMQ_G.csv`  |
-
-```{r}
+```{r, echo=FALSE}
 # Load the necessary CSV files into data frames
 demo <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/DEMO_G.csv") # Demographics (cycle G = 2011–2012)
 bpx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BPX_G.csv") # Blood pressure
 bmx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BMX_G.csv") # Body measures
 smq  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/SMQ_G.csv") # Smoking questionnaire
 ```
-
-💡 The codebook for each data set can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in `R` using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data). You’ll also find a summary of key variables from each data set at the end of this chapter.
 
 ## Exercises
 
@@ -139,6 +145,8 @@ smq  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/SMQ_G.c
 Base R, without any additional packages, already provides many functions that are very handy for data handling. However, some contributed packages make data preparation much easier and more readable.
 
 I’ll introduce two such packages here, before diving into concrete data handling examples. Both are part of a larger and very powerful collection of packages for data science called the `tidyverse`, which I use for nearly all my analyses.
+
+💡 In the Appendix B, you will find a table containing useful functions from both Base R and the `tidyverse` that facilitate efficient data handling.
 
 ### The pipe
 
@@ -276,6 +284,32 @@ head(demo[, "RIDAGEYR"])  # All rows in the age column
 demo[1, ]  # Row 1 (all columns)
 ```
 
+### `dplyr` syntax
+
+With `dplyr`, you can achieve the same things more readably, especially for filtering rows and selecting columns.
+
+```{r}
+# Select columns
+select(demo, RIDAGEYR, RIAGENDR)
+
+# Filter rows based on a condition
+filter(demo, RIDAGEYR > 50)
+
+# Combine filtering and selecting
+filter(demo, RIDAGEYR > 50 & RIAGENDR == "Female") %>%
+  select(RIDAGEYR, RIAGENDR)
+```
+
+💡 Using the pipe (`%>%`), the structure becomes more linear: first say what data you’re working on, then what to do with it.
+
+```{r}
+demo %>%
+  filter(DMDHHSIZ < 3 | RIAGENDR == "Male") %>%
+  select(DMDHHSIZ, RIAGENDR)
+```
+
+This syntax avoids nested brackets and makes your code easier to read, especially as operations grow more complex.
+
 ## Basic descriptive statistics
 
 R makes it simple to compute basic descriptive statistics for exploring your dataset. Below are a few useful examples.
@@ -289,6 +323,14 @@ median(demo$DMDHHSIZ, na.rm = TRUE)               # Median household size
 
 💡 The `na.rm` argument in those functions allows for ignoring the NA values.
 
+With `dplyr`, you can combine `summarise()` with the pipe for clearer syntax:
+
+```{r}
+demo %>%
+  summarise(mean_age = mean(RIDAGEYR, na.rm = TRUE),
+            median_household_size = median(DMDHHSIZ, na.rm = TRUE))
+```
+
 ### Dispersion: standard deviation, min, max, and range
 
 ```{r}
@@ -296,6 +338,15 @@ sd(demo$RIDAGEYR, na.rm = TRUE)                     # Standard deviation of age
 range(demo$DMDHHSZA, na.rm = TRUE)                  # Range of number of young children
 min(demo$DMDHRAGE, na.rm = TRUE)                    # Minimum age of household reference person
 max(demo$DMDHRAGE, na.rm = TRUE)                    # Maximum age of household reference person
+```
+
+Also possible with `summarise()`:
+
+```{r}
+demo %>%
+  summarise(sd_age = sd(RIDAGEYR, na.rm = TRUE),
+            min_age = min(DMDHRAGE, na.rm = TRUE),
+            max_age = max(DMDHRAGE, na.rm = TRUE))
 ```
 
 ### Frequency tables and proportions
@@ -307,11 +358,36 @@ table(demo$AIALANGA)                                # Language of interview
 prop.table(table(demo$AIALANGA))                    # Proportional distribution of interview languages
 ```
 
+With `dplyr`, you get frequencies directly:
+
+```{r}
+demo %>%
+  count(RIAGENDR)
+
+demo %>%
+  count(AIALANGA) %>%
+  mutate(prop = n / sum(n))  # Proportional distribution
+```
+
+💡 `n()` gives the current group size.
+
 ### Group-wise summaries
 
 ```{r}
 aggregate(DMDHRAGE ~ DMDHRMAR, data = demo, FUN = mean, na.rm = TRUE)   # Mean age of household reference person by marital status
 aggregate(DMDHHSIZ ~ DMDHRGND, data = demo, FUN = median, na.rm = TRUE) # Median household size by gender of reference person
+```
+
+Or using `dplyr`:
+
+```{r}
+demo %>%
+  group_by(DMDHRMAR) %>%
+  summarise(mean_age = mean(DMDHRAGE, na.rm = TRUE))
+
+demo %>%
+  group_by(DMDHRGND) %>%
+  summarise(median_household_size = median(DMDHHSIZ, na.rm = TRUE))
 ```
 
 ### Full overview
@@ -339,6 +415,20 @@ demo_mod[!is.na(demo_mod$RIDAGEYR) & demo_mod$RIDAGEYR < 18, ]$RIDAGEYR <- 18  #
 demo_mod[1:10, 1:5]
 ```
 
+### `dplyr` syntax
+
+With `mutate()` and `case_when()` from `dplyr`, the logic becomes slightly more readable, especially for multiple conditions:
+
+```{r}
+demo_mod <- demo %>%
+  mutate(RIDAGEYR = case_when(
+    !is.na(RIDAGEYR) & RIDAGEYR < 18 ~ 18,
+    TRUE ~ RIDAGEYR  # leave other values unchanged
+  ))
+```
+
+💡 `case_when()` is like a vectorised `ifelse()` on steroids — it's handy for multiple conditions and clear logic.
+
 ## Dealing with NAs
 
 Handling missing data (NAs) is a common task in data analysis. Before deciding how to treat them, it's important to understand where and how often they occur.
@@ -348,11 +438,11 @@ colSums(is.na(demo))              # Number of NAs per column
 sum(complete.cases(demo))         # Number of rows without any NAs
 ```
 
-💡 `is.na()` returns a logical matrix where TRUE indicates a missing value (NA) and FALSE indicates a non-missing value. `colSums()` takes this logical matrix and sums up the TRUE values (which are treated as 1), giving you the count of missing values for each column.
+💡 `is.na()` returns a logical matrix where `TRUE` indicates a missing value (`NA`) and `FALSE` indicates a non-missing value. `colSums()` takes this logical matrix and sums up the `TRUE` values (which are treated as 1), giving you the count of missing values for each column.
 
 💡 `complete.cases()` returns a logical vector: TRUE if a row has no missing values, and FALSE otherwise. Using `sum(complete.cases(...))` counts the number of rows with no missing data.
 
-One way to handle missing data is to remove rows containing NAs for the variable(s) you are interested in. This can be appropriate in some cases, but it should be done with care, as it may introduce bias or reduce sample size. We’ll discuss this further in chapter 4.
+One way to handle missing data is to remove rows containing NAs for the variable(s) you are interested in. This can be appropriate in some cases, but it should be done with care, as it may introduce bias or reduce sample size. We’ll discuss this further in Chapter 5.
 
 ```{r}
 # Remove rows with any missing values in the DMDHRMAR column
@@ -374,6 +464,22 @@ head(demo_no_na)
 
 💡 For our `demo` data set, this removes all the rows! Another reminder to be very careful when removing NA values.
 
+### `dplyr` syntax
+
+The `filter()` function makes row-wise filtering more intuitive:
+
+```{r}
+# Keep only rows where DMDHRMAR is not missing
+demo_DMDHRMAR <- demo %>%
+  filter(!is.na(DMDHRMAR))
+
+# Remove all rows with any missing values
+demo_no_na <- demo %>%
+  filter(complete.cases(.))
+```
+
+💡 Using `filter()` keeps the logic clear and readable, especially when chaining multiple conditions with the pipe.
+
 ## Exercises
 
 ✏️ Exercise on the `NHANES` data sets n°2: inspect the structure of the `demo` data set, look at different entries, get familiar with those commands.
@@ -384,9 +490,9 @@ head(demo_no_na)
 
 In practice, data is often spread across multiple data frames that need to be combined. Depending on the structure and goal, there are different ways to combine data frames:
 
-## Column binding with cbind()
+## Column binding 
 
-Use `cbind()` to add columns side-by-side. The data frames must have the same number of rows.
+To add columns side-by-side, the data frames must have the same number of rows.
 
 ```{r}
 # Extract one column from demo to create an additional data frame with the same number of rows
@@ -395,11 +501,15 @@ extra_info <- demo$RIDRETH1
 # Combine using cbind
 combined_df <- cbind(demo, extra_info)
 combined_df[1, ]
+
+# Add a new column directly to demo with mutate() from dplyr
+combined_df <- demo %>%
+  mutate(extra_info = RIDRETH1)
 ```
 
-## Row binding with rbind()
+## Row binding
 
-Use `rbind()` to stack data frames vertically. The data frames must have the same column names and types.
+To stack data frames vertically, the data frames must have the same column names and types.
 
 ```{r}
 # Extract one column from demo to create an additional data frame with the same structure (column names and types)
@@ -408,11 +518,18 @@ Use `rbind()` to stack data frames vertically. The data frames must have the sam
 # Combine using rbind
 extended_df <- rbind(demo, new_participant)
 extended_df[nrow(extended_df),]
+
+# Alternative with dplyr (bind_rows())
+extended_df <- bind_rows(demo, new_participant)
+extended_df %>%
+  slice(n())  # Show last row
 ```
 
-## Merging with merge() (Join)
+💡 `n()` gives the current group size.
 
-Use `merge()` to combine data frames based on a common column, similar to SQL joins (see figure below for a reminder on the different types of joins).
+## Merging / Joins
+
+`merge()` combines data frames based on a common column, similar to SQL joins (see figure below for a reminder on the different types of joins).
 
 ```{r}
 # Merge two data frames by participant ID `SEQN` (inner join by default)
@@ -434,7 +551,25 @@ You should specify the type of join you are looking for:
 knitr::include_graphics(path = "images/joins.png")
 ```
 
-💡 `merge()` in base R is flexible but can be a bit verbose. For simpler syntax, you can also use the `dplyr` package with `left_join()`, `right_join()`, `inner_join()`, and `full_join()`.
+💡 `merge()` in base R is flexible but can be a bit verbose. For simpler syntax, you can also use the `dplyr` functions `left_join()`, `right_join()`, `inner_join()`, and `full_join()`.
+
+```{r}
+# Inner join
+inner_join_df <- demo %>%
+  inner_join(bmx, by = "SEQN")
+
+# Left join
+left_join_df <- demo %>%
+  left_join(bmx, by = "SEQN")
+
+# Right join
+right_join_df <- demo %>%
+  right_join(bmx, by = "SEQN")
+
+# Full join
+full_join_df <- demo %>%
+  full_join(bmx, by = "SEQN")
+```
 
 ## Exercises
 
@@ -466,12 +601,24 @@ save(merged_demo_bpx_bmx, file = file.path(directory,"merged_demo_bpx_bmx.RData"
 
 💡 `file.path()` constructs the path to a file from components in a platform-independent way. It concatenates paths and filenames, and automatically uses the correct file separator (/ on Unix/macOS, \\ on Windows), making your code more robust and portable.
 
-💡 You can load these later using:
+You can load these later using:
 
-   + `read.csv("merged_demo_bpx_bmx.csv")`
-   + `readRDS("merged_demo_bpx_bmx.rds")`
-   + `load("merged_demo_bpx_bmx.RData")`
-   
+```{r, eval=FALSE}
+# Read CSV
+df_csv <- read.csv(file.path(directory, "merged_demo_bpx_bmx.csv"))
+
+# Alternative: use readr for CSV (from tidyverse package)
+df_csv2 <- read_csv(file.path(directory, "merged_demo_bpx_bmx.csv"))
+
+# Read RDS
+df_rds <- readRDS(file.path(directory, "merged_demo_bpx_bmx.rds"))
+
+# Load RData (loads objects into the environment)
+load(file.path(directory, "merged_demo_bpx_bmx.RData"))
+```
+
+💡 When loading RData, check which objects got loaded with `ls()` (returns a vector of character strings giving the names of the objects in the specified environment).
+
 ## Exercises
 
 ✏️ Exercise on the `NHANES` data sets n°5: Save the data frame resulting from Exercise n°4 in your working directory in both .csv and .rds formats.
@@ -480,7 +627,18 @@ save(merged_demo_bpx_bmx, file = file.path(directory,"merged_demo_bpx_bmx.RData"
 
 Please not that those are only examples, there are always many ways to solve the same task!
 
-☑️ Exercise on the `NHANES` data sets n°1: If you have trouble importing the data sets into R, let me know, I'd be glad to help.
+☑️ Exercise on the `NHANES` data sets n°1: 
+
+```{r, echo=FALSE}
+# Load the necessary CSV files into data frames
+
+directory <- "/home/claire/Documents/GitHub/rforphysicians/data_sets/" # Use your own working directory here
+
+demo <- read.csv(paste0(directory,"DEMO_G.csv")) # Demographics (cycle G = 2011–2012)
+bpx  <- read.csv(paste0(directory,"BPX_G.csv")) # Blood pressure
+bmx  <- read.csv(paste0(directory,"BMX_G.csv")) # Body measures
+smq  <- read.csv(paste0(directory,"SMQ_G.csv")) # Smoking questionnaire
+```
 
 ☑️ Exercise on the `NHANES` data sets n°2: Did you manage to select a specific column you were interested in? Were you able to check how many men and women are included in the data set? Here are a few examples of operations you can use to explore the data set.
 
@@ -538,71 +696,12 @@ merged_nhanes <- Reduce(function(x, y) inner_join(x, y, by = "SEQN"), data_list)
 
 ☑️ Exercise on the `NHANES` data sets n°5:
 
-```{r}
+```{r, eval=FALSE}
 # Save the merged dataset in your working directory
 # Click on Session > Set Working Directory > To Source File Location, or use file.path()
 write.csv(merged_nhanes, "merged_nhanes.csv", row.names = FALSE)
 saveRDS(merged_nhanes, "merged_nhanes.rds")
 ```
-
-# NHANES data sets
-
-Here are listed some of the variables from the NHANES data sets.
-
-## Demographics (DEMO_G)
-
-| Variable Name | Description                                           |
-| ------------- | ----------------------------------------------------- |
-| RIDAGEYR      | Participant's age in years                            |
-| RIAGENDR      | Participant's gender                                  |
-| DMDHHSIZ      | Total number of people in the household               |
-| DMDHHSZA      | Number of children aged 5 or younger in the household |
-| DMDHRAGE      | Age of the household reference person                 |
-| DMDHRMAR      | Marital status of the household reference person      |
-| DMDHRGND      | Gender of the household reference person              |
-| AIALANGA      | Language of the interview                             |
-
-## Blood Pressure (BPX_G)
-
-| Variable Name | Description                                        |
-| ------------- | -------------------------------------------------- |
-| BPXSY1        | Systolic blood pressure (first reading) in mm Hg   |
-| BPXSY2        | Systolic blood pressure (second reading) in mm Hg  |
-| BPXSY3        | Systolic blood pressure (third reading) in mm Hg   |
-| BPXDI1        | Diastolic blood pressure (first reading) in mm Hg  |
-| BPXDI2        | Diastolic blood pressure (second reading) in mm Hg |
-| BPXDI3        | Diastolic blood pressure (third reading) in mm Hg  |
-| BPXPULS       | Pulse rate (beats per minute)                      |
-| BPXPLS        | 60-second pulse (30-second pulse multiplied by 2)  |
-| BPXPTY        | Pulse type (e.g., regular or irregular)            |
-| BPXML1        | Maximum inflation level (mm Hg)                    |
-
-## Body Measures (BMX_G)
-
-| Variable Name | Description                  |
-| ------------- | ---------------------------- |
-| BMXWT         | Weight (kg)                  |
-| BMXHT         | Standing height (cm)         |
-| BMXBMI        | Body Mass Index (kg/m²)      |
-| BMXWAIST      | Waist circumference (cm)     |
-| BMXHIP        | Hip circumference (cm)       |
-| BMXARML       | Upper arm length (cm)        |
-| BMXARMC       | Upper arm circumference (cm) |
-| BMXLEG        | Upper leg length (cm)        |
-
-## Smoking Questionnaire (SMQ_G)
-
-| Variable Name | Description                                 |
-| ------------- | ------------------------------------------- |
-| SMQ020        | Smoked at least 100 cigarettes in life      |
-| SMQ040        | Do you now smoke cigarettes?                |
-| SMQ050Q       | Average number of cigarettes smoked per day |
-| SMD030        | Age when first smoked cigarettes regularly  |
-| SMD070        | Age when last smoked cigarettes regularly   |
-| SMQ680        | Smoked cigars in the past 5 days            |
-| SMQ690        | Smoked pipes in the past 5 days             |
-| SMQ700        | Smoked chewing tobacco in the past 5 days   |
-| SMQ710        | Smoked snuff in the past 5 days             |
 
 \newpage
 

@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
   fig.width = 6,
   eval = TRUE
 )
-library(ggplot2)
+library(tidyverse)
 ```
 
 | Author           |                                                                 |
@@ -82,14 +82,16 @@ boxplot(merged_nhanes$BPXSY1 ~ merged_nhanes$RIAGENDR,
 ## Bar plots
 
 ```{r, out.width="75%"}
-# We define the age groups in which to calculate the mean systolic blood pressure
-age_groups <- cut(x = merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
-head(age_groups)
+# We define the age groups in which to calculate the mean systolic blood pressure and calculate the mean systolic blood pressure by age group
+avg_bp <- merged_nhanes %>%
+  filter(!is.na(BPXSY1), !is.na(RIDAGEYR)) %>%             # Remove NAs
+  mutate(age_group = cut(RIDAGEYR, breaks = seq(10, 80, 10))) %>%  # Define age groups
+  group_by(age_group) %>%
+  summarise(mean_bp = mean(BPXSY1, na.rm = TRUE)) %>%
+  ungroup()
 
-# We calculate the mean systolic blood pressure by age group
-(avg_bp <- tapply(X = merged_nhanes$BPXSY1, INDEX = age_groups, FUN = mean, na.rm = TRUE))
-
-barplot(avg_bp,
+barplot(height = avg_bp$mean_bp,
+        names.arg = avg_bp$age_group,
         xlab = "Age group [years]",
         ylab = "Average systolic BP [mmHg]",
         main = "Bar plot of average systolic BP by age group",
@@ -97,8 +99,6 @@ barplot(avg_bp,
 ```
 
 💡 `cut()` divides the range of the imputed vector into intervals and codes its values according to which interval they fall. The leftmost interval corresponds to level one, the next leftmost to level two and so on.
-
-💡  `tapply()` applies some function to an object, grouped by a list of factors. It uses the following basic syntax: `tapply(X, INDEX, FUN, ..)`, where: X = object to apply a function to, INDEX = vector of factors to group by, FUN = function to apply. It returns a multi-way array containing the values.
 
 ## Histograms
 
@@ -112,22 +112,25 @@ hist(merged_nhanes$BMXBMI,
 ```
 
 💡 The argument `breaks` is a vector giving the breakpoints between histogram cells or a function to compute the vector of breakpoints.
+
 💡 The argument `freq` is a logical: if TRUE, the histogram graphic is a representation of frequencies, the counts component of the result; if FALSE, probability densities, component density, are plotted.
 
 ## Line plots
 
 ```{r, out.width="75%"}
-# We define the age groups in which to calculate the mean systolic blood pressure
-age_groups <- cut(x = merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
-head(age_groups)
+# We define the age groups in which to calculate the mean systolic blood pressure and calculate the mean systolic blood pressure by age group
+avg_bp_df <- merged_nhanes %>%
+  filter(!is.na(BPXSY1), !is.na(RIDAGEYR)) %>%
+  mutate(age_group = cut(RIDAGEYR, breaks = seq(10, 80, 10))) %>%
+  group_by(age_group) %>%
+  summarise(mean_bp = mean(BPXSY1)) %>%
+  ungroup() %>%
+  mutate(
+    # Add midpoints
+    age_mid = seq(15, 75, 10)
+  )
 
-# We calculate the mean systolic blood pressure by age group
-(avg_bp <- tapply(X = merged_nhanes$BPXSY1, INDEX = age_groups, FUN = mean, na.rm = TRUE))
-
-# We define the midpoints of the intervals
-midpoints <- seq(15, 75, 10)
-
-plot(midpoints, avg_bp, type = "b",
+plot(avg_bp_df$age_mid, avg_bp_df$mean_bp, type = "b",
      xlab = "Age (midpoint of group) [years]",
      ylab = "Mean systolic BP [mmHg]",
      main = "Mean systolic BP by age group",
@@ -176,25 +179,17 @@ Base R does not include a built-in function for forest plots, but you can use a 
 library(forestplot)
 
 # Calculate summary statistics by gender
-genders <- unique(merged_nhanes$RIAGENDR)
-means <- numeric(length(genders))
-sds <- numeric(length(genders))
-ns <- numeric(length(genders))
-lowers <- numeric(length(genders))
-uppers <- numeric(length(genders))
-gender_labels <- character(length(genders))
-
-# Loop over gender groups to compute stats
-for (i in seq_along(genders)) {
-  group_data <- merged_nhanes$BPXSY1[merged_nhanes$RIAGENDR == genders[i]]
-  group_data <- group_data[!is.na(group_data)]
-  means[i] <- mean(group_data)
-  sds[i] <- sd(group_data)
-  ns[i] <- length(group_data)
-  lowers[i] <- means[i] - 1.96 * sds[i] / sqrt(ns[i])
-  uppers[i] <- means[i] + 1.96 * sds[i] / sqrt(ns[i])
-  gender_labels[i] <- genders[i]
-}
+summary_stats <- merged_nhanes %>%
+  filter(!is.na(BPXSY1)) %>%                      # Remove NAs for BPXSY1
+  group_by(RIAGENDR) %>%                          # Group by gender
+  summarise(
+    mean = mean(BPXSY1),
+    sd = sd(BPXSY1),
+    n = n(),
+    lower = mean - 1.96 * sd / sqrt(n),
+    upper = mean + 1.96 * sd / sqrt(n)
+  ) %>%
+  ungroup()
 
 # Create the forest plot
 forestplot(labeltext = c("Male","Female"),
@@ -224,7 +219,7 @@ forestplot(labeltext = c("Male","Female"),
 install.packages("ggplot2")
 library(ggplot2) # after installation
 
-# Note that the ggplot2 package is included in some R package collections, e.g. the tidyverse collection, which is specifically designed for data science and also contains other useful packages like dplyr.
+# Note that the ggplot2 package is included in some R package collections, e.g. the tidyverse collection
 install.packages("tidyverse")
 library(tidyverse) # after installation
 ```
@@ -297,14 +292,15 @@ ggplot(data = merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female
 ## Bar plots 
 
 ```{r, out.width="75%"}
-# We define the age groups in which to calculate the mean systolic blood pressure
-age_groups <- cut(x = merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
-head(age_groups)
+# We define the age groups in which to calculate the mean systolic blood pressure and calculate the mean systolic blood pressure by age group
+avg_bp <- merged_nhanes %>%
+  filter(!is.na(BPXSY1), !is.na(RIDAGEYR)) %>%             # Remove NAs
+  mutate(age_group = cut(RIDAGEYR, breaks = seq(10, 80, 10))) %>%  # Define age groups
+  group_by(age_group) %>%
+  summarise(mean_bp = mean(BPXSY1, na.rm = TRUE)) %>%
+  ungroup()
 
-# We calculate the mean systolic blood pressure by age group
-(avg_bp <- aggregate(BPXSY1 ~ age_groups, data = merged_nhanes, FUN = function(x) mean(x, na.rm = TRUE)))
-
-ggplot(avg_bp, aes(x = age_groups, y = BPXSY1)) +
+ggplot(avg_bp, aes(x = age_group, y = mean_bp)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(title = "Bar plot of mean systolic BP by age group",
        x = "Age group [years]",
@@ -312,8 +308,6 @@ ggplot(avg_bp, aes(x = age_groups, y = BPXSY1)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-
-💡 `aggregate()` splits the data into subsets, computes summary statistics for each, and returns the result as a data frame.
 
 ## Histograms
 
@@ -356,9 +350,7 @@ ggplot(merged_nhanes, aes(x = DMDHRAGE)) +
 ## Line plots
 
 ```{r, out.width="75%"}
-avg_bp$midpoint <- seq(15, 75, 10)  # midpoint of intervals
-
-ggplot(avg_bp, aes(x = midpoint, y = BPXSY1)) +
+ggplot(avg_bp, aes(x = midpoint, y = mean_bp)) +
   geom_line(col = "steelblue") +
   geom_point(col = "steelblue") +
   labs(title = "Mean systolic BP by age group",
@@ -370,18 +362,14 @@ ggplot(avg_bp, aes(x = midpoint, y = BPXSY1)) +
 ## Pie charts
 
 ```{r, out.width="75%"}
-# Count gender
-gender_counts <- as.data.frame(table(merged_nhanes$RIAGENDR))
-colnames(gender_counts) <- c("Gender", "n")
-
-# Compute proportions
-gender_counts$prop <- gender_counts$n / sum(gender_counts$n)
-
-# Compute y positions for labels (center of each slice)
-gender_counts$ypos <- cumsum(gender_counts$prop) - 0.5 * gender_counts$prop
-
-# Resulting data frame
-gender_counts
+# Count proportions for each gender
+gender_counts <- merged_nhanes %>%
+  filter(!is.na(RIAGENDR)) %>%                     # Remove NAs if any
+  count(Gender = RIAGENDR) %>%                      # Count by gender, rename column to 'Gender'
+  mutate(
+    prop = n / sum(n),                              # Compute proportion
+    ypos = cumsum(prop) - 0.5 * prop                # Compute y position for label
+  )
 
 ggplot(gender_counts, aes(x = "", y = prop, fill = Gender)) +
   geom_col(width = 1) +
@@ -411,33 +399,17 @@ ggplot(data = merged_nhanes[merged_nhanes$SMQ020 %in% c("Yes","No"),]) +
 
 ```{r, out.width="75%"}
 # Calculate summary statistics by gender
-genders <- unique(merged_nhanes$RIAGENDR)
-means <- numeric(length(genders))
-sds <- numeric(length(genders))
-ns <- numeric(length(genders))
-lowers <- numeric(length(genders))
-uppers <- numeric(length(genders))
-
-# Loop over gender groups to compute stats
-for (i in seq_along(genders)) {
-  group_data <- merged_nhanes$BPXSY1[merged_nhanes$RIAGENDR == genders[i]]
-  group_data <- group_data[!is.na(group_data)]
-  means[i] <- mean(group_data)
-  sds[i] <- sd(group_data)
-  ns[i] <- length(group_data)
-  lowers[i] <- means[i] - 1.96 * sds[i] / sqrt(ns[i])
-  uppers[i] <- means[i] + 1.96 * sds[i] / sqrt(ns[i])
-}
-
-# Create result data frame
-(forest_df <- data.frame(
-  Gender = genders,
-  mean = means,
-  sd = sds,
-  n = ns,
-  lower = lowers,
-  upper = uppers
-))
+forest_df <- merged_nhanes %>%
+  filter(!is.na(BPXSY1), !is.na(RIAGENDR)) %>%
+  group_by(Gender = RIAGENDR) %>%
+  summarise(
+    mean = mean(BPXSY1),
+    sd = sd(BPXSY1),
+    n = n(),
+    lower = mean - 1.96 * sd / sqrt(n),
+    upper = mean + 1.96 * sd / sqrt(n),
+    .groups = "drop"
+  )
 
 ggplot(forest_df, aes(x = mean, y = Gender)) +
   geom_point(size = 3, color = "steelblue") +
@@ -676,66 +648,6 @@ ggsave(filename = "bar_plot_med_bmi_by_gender.png",
   units = c("in"),
   path = plotting_directory)
 ```
-
-
-# NHANES data sets
-
-Here are listed some of the variables from the NHANES data sets.
-
-## Demographics (DEMO_G)
-
-| Variable Name | Description                                           |
-| ------------- | ----------------------------------------------------- |
-| RIDAGEYR      | Participant's age in years                            |
-| RIAGENDR      | Participant's gender                                  |
-| DMDHHSIZ      | Total number of people in the household               |
-| DMDHHSZA      | Number of children aged 5 or younger in the household |
-| DMDHRAGE      | Age of the household reference person                 |
-| DMDHRMAR      | Marital status of the household reference person      |
-| DMDHRGND      | Gender of the household reference person              |
-| AIALANGA      | Language of the interview                             |
-
-## Blood Pressure (BPX_G)
-
-| Variable Name | Description                                        |
-| ------------- | -------------------------------------------------- |
-| BPXSY1        | Systolic blood pressure (first reading) in mm Hg   |
-| BPXSY2        | Systolic blood pressure (second reading) in mm Hg  |
-| BPXSY3        | Systolic blood pressure (third reading) in mm Hg   |
-| BPXDI1        | Diastolic blood pressure (first reading) in mm Hg  |
-| BPXDI2        | Diastolic blood pressure (second reading) in mm Hg |
-| BPXDI3        | Diastolic blood pressure (third reading) in mm Hg  |
-| BPXPULS       | Pulse rate (beats per minute)                      |
-| BPXPLS        | 60-second pulse (30-second pulse multiplied by 2)  |
-| BPXPTY        | Pulse type (e.g., regular or irregular)            |
-| BPXML1        | Maximum inflation level (mm Hg)                    |
-
-## Body Measures (BMX_G)
-
-| Variable Name | Description                  |
-| ------------- | ---------------------------- |
-| BMXWT         | Weight (kg)                  |
-| BMXHT         | Standing height (cm)         |
-| BMXBMI        | Body Mass Index (kg/m²)      |
-| BMXWAIST      | Waist circumference (cm)     |
-| BMXHIP        | Hip circumference (cm)       |
-| BMXARML       | Upper arm length (cm)        |
-| BMXARMC       | Upper arm circumference (cm) |
-| BMXLEG        | Upper leg length (cm)        |
-
-## Smoking Questionnaire (SMQ_G)
-
-| Variable Name | Description                                 |
-| ------------- | ------------------------------------------- |
-| SMQ020        | Smoked at least 100 cigarettes in life      |
-| SMQ040        | Do you now smoke cigarettes?                |
-| SMQ050Q       | Average number of cigarettes smoked per day |
-| SMD030        | Age when first smoked cigarettes regularly  |
-| SMD070        | Age when last smoked cigarettes regularly   |
-| SMQ680        | Smoked cigars in the past 5 days            |
-| SMQ690        | Smoked pipes in the past 5 days             |
-| SMQ700        | Smoked chewing tobacco in the past 5 days   |
-| SMQ710        | Smoked snuff in the past 5 days             |
 
 # References
 

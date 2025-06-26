@@ -1,0 +1,119 @@
+---
+title: "Appendix A"
+author: "Claire Descombes"
+date: "`r Sys.Date()`"
+contact: claire.descombes@insel.ch
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+    df_print: paged
+    theme: paper
+    code_folding: show
+    math_method: katex
+subtitle: "R for physicians"
+bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+link-citations: yes
+editor_options: 
+  chunk_output_type: console
+knit: (function(input, ...) {rmarkdown::render(input)})
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  warning = FALSE,
+  message = FALSE, 
+  fig.height = 5,
+  fig.width = 6,
+  eval = TRUE
+)
+library(tidyverse)
+```
+
+| Author           |                                                                 |
+|:-----------------|:----------------------------------------------------------------|
+| Name             | Claire Descombes                                                |
+| Affiliation      | Universitätsklinik für Neurochirurgie, Inselspital Bern         |
+| Degree           | MSc Statistics and Data Science, University of Bern             |
+| Contact          | [claire.descombes@insel.ch](mailto:claire.descombes@insel.ch)   |
+The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
+
+# NHANES data sets
+
+The National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012 assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
+
+| Dataset               | NHANES Code | Description                                           | CSV File     |
+| --------------------- | ----------- | ----------------------------------------------------- | ------------ |
+| Demographics          | DEMO\_G     | Age, sex, race/ethnicity, income, education           | `DEMO_G.csv` |
+| Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings | `BPX_G.csv`  |
+| Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference              | `BMX_G.csv`  |
+| Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke          | `SMQ_G.csv`  |
+
+💡 The codebook for each data set can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in `R` using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data).
+
+Follows a list of some of the key variables from the NHANES data sets.
+
+## Demographics (DEMO_G)
+
+| Variable Name | Description                                           |
+| ------------- | ----------------------------------------------------- |
+| RIDAGEYR      | Participant's age in years                            |
+| RIAGENDR      | Participant's gender                                  |
+| DMDHHSIZ      | Total number of people in the household               |
+| DMDHHSZA      | Number of children aged 5 or younger in the household |
+| DMDHRAGE      | Age of the household reference person                 |
+| DMDHRMAR      | Marital status of the household reference person      |
+| DMDHRGND      | Gender of the household reference person              |
+| AIALANGA      | Language of the interview                             |
+
+## Blood Pressure (BPX_G)
+
+| Variable Name | Description                                        |
+| ------------- | -------------------------------------------------- |
+| BPXSY1        | Systolic blood pressure (first reading) in mm Hg   |
+| BPXSY2        | Systolic blood pressure (second reading) in mm Hg  |
+| BPXSY3        | Systolic blood pressure (third reading) in mm Hg   |
+| BPXDI1        | Diastolic blood pressure (first reading) in mm Hg  |
+| BPXDI2        | Diastolic blood pressure (second reading) in mm Hg |
+| BPXDI3        | Diastolic blood pressure (third reading) in mm Hg  |
+| BPXPULS       | Pulse rate (beats per minute)                      |
+| BPXPLS        | 60-second pulse (30-second pulse multiplied by 2)  |
+| BPXPTY        | Pulse type (e.g., regular or irregular)            |
+| BPXML1        | Maximum inflation level (mm Hg)                    |
+
+## Body Measures (BMX_G)
+
+| Variable Name | Description                  |
+| ------------- | ---------------------------- |
+| BMXWT         | Weight (kg)                  |
+| BMXHT         | Standing height (cm)         |
+| BMXBMI        | Body Mass Index (kg/m²)      |
+| BMXWAIST      | Waist circumference (cm)     |
+| BMXHIP        | Hip circumference (cm)       |
+| BMXARML       | Upper arm length (cm)        |
+| BMXARMC       | Upper arm circumference (cm) |
+| BMXLEG        | Upper leg length (cm)        |
+
+## Smoking Questionnaire (SMQ_G)
+
+| Variable Name | Description                                 |
+| ------------- | ------------------------------------------- |
+| SMQ020        | Smoked at least 100 cigarettes in life      |
+| SMQ040        | Do you now smoke cigarettes?                |
+| SMQ050Q       | Average number of cigarettes smoked per day |
+| SMD030        | Age when first smoked cigarettes regularly  |
+| SMD070        | Age when last smoked cigarettes regularly   |
+| SMQ680        | Smoked cigars in the past 5 days            |
+| SMQ690        | Smoked pipes in the past 5 days             |
+| SMQ700        | Smoked chewing tobacco in the past 5 days   |
+| SMQ710        | Smoked snuff in the past 5 days             |
+
+\newpage
+
+# References
+
+---
+nocite: '@*'
+...

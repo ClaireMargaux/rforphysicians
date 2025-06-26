@@ -11,5 +11,7 @@ The aim of this introduction to R for physicians is to
 -   Chapter 3: a range of useful plotting functions
 -   Chapter 4: common statistical tests used in medical research
 -   Chapter 5: general best practices for working with data
+-   Appendix A: the NHANES data sets
+-   Appendix B: lists of useful functions for data handling and plotting
 
 To get started, access the lecture notes via the following link: [R for physicians](https://clairemargaux.github.io/rforphysicians/)

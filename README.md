@@ -2,21 +2,44 @@
   <img src="docs/logo.png" alt="Logo" width="400">
 </span>
 
-# Objectives
+# 🩺 R for Physicians
 
-This introduction to R for physicians contains
+Welcome to R for Physicians, a gentle introduction to coding and data analysis in R designed specifically for healthcare professionals and researchers. This project contains interactive lecture notes and practical resources to help you get started with data in R — no prior coding experience required.
 
--   Chapter 1: basics of coding in R using RStudio
--   Chapter 2: import and handling data frames
--   Chapter 3: a range of useful plotting functions
--   Chapter 4: common statistical tests used in medical research
--   Chapter 5: general best practices for working with data
--   Appendix A: the NHANES data sets
--   Appendix B: lists of useful functions for data handling and plotting
+## 📘 Contents
 
-To get started, access the lecture notes via the following link: [R for physicians](https://clairemargaux.github.io/rforphysicians/) (right-click to open in new tab)
+The lecture is structured into five main chapters and two appendices:
 
-📁 Project Structure
+    Chapter 1 – Getting Started with R and RStudio
+    Learn the basics of R syntax, RStudio, and how to write clean, readable code.
+
+    Chapter 2 – Importing and handling data
+    Read in data from files and learn how to wrangle and explore data frames efficiently.
+
+    Chapter 3 – Plotting in R
+    Discover a range of plotting options using both base R and ggplot2.
+
+    Chapter 4 – Statistical tests in medical research
+    Explore some of the most commonly used statistical tests in the medical field and learn how to perform them in R.
+
+    Chapter 5 – Best practices for working with data
+    Tips on data analysis, reproducibility, and organizing your code and results.
+
+    Appendix A – About the NHANES Data Sets
+    Background and structure of the National Health and Nutrition Examination Survey (NHANES) data used in the lecture.
+
+    Appendix B – Reference Lists of Useful Functions
+    A quick-access catalog of essential functions for data handling and plotting.
+
+## 🚀 Getting Started
+
+To begin, access the full lecture notes via the following link:
+👉 R for Physicians Website
+<sub><sup>(Tip: Right-click to open in a new tab)</sup></sub>
+
+No installation is required — just follow along in your browser.
+
+## 📁 Project Structure
 
 This repository is organized into folders and files that support the creation and sharing of lecture materials.
 📂 Folders

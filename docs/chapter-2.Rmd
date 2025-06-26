@@ -41,7 +41,7 @@ library(ggplot2)
 
 The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
 
-# Dealing with data sets
+# Importing data
 
 ## Working directory
 
@@ -80,7 +80,7 @@ getwd()                         # Displays the current working directory
 setwd("~/path/to/your/folder")  # Sets the working directory
 ```
 
-## Importing data
+## Import CSV and xlsx data
 
 We will first look at how to import a CSV file into R as a data frame.
 
@@ -107,21 +107,51 @@ dataset <- read_excel("~/path/to/your/folder/data.xlsx")
 
 ⚠️ Note: If your file is actually a CSV but mistakenly has a .xlsx extension, you should rename it to .csv and use read.csv() instead. Mixing up formats can lead to import errors.
 
-## Handling data frames
+### Load the NHANES data sets
 
-### Base R vs `tidyverse`
+Let us now look at real data frames to learn how to call or modify their elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
+
+| Dataset               | NHANES Code | Description                                           | CSV File     |
+| --------------------- | ----------- | ----------------------------------------------------- | ------------ |
+| Demographics          | DEMO\_G     | Age, sex, race/ethnicity, income, education           | `DEMO_G.csv` |
+| Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings | `BPX_G.csv`  |
+| Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference              | `BMX_G.csv`  |
+| Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke          | `SMQ_G.csv`  |
+
+```{r}
+# Load the necessary CSV files into data frames
+demo <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/DEMO_G.csv") # Demographics (cycle G = 2011–2012)
+bpx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BPX_G.csv") # Blood pressure
+bmx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BMX_G.csv") # Body measures
+smq  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/SMQ_G.csv") # Smoking questionnaire
+```
+
+💡 The codebook for each data set can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in `R` using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data). You’ll also find a summary of key variables from each data set at the end of this chapter.
+
+## Exercises
+
+✏️ Exercise on the `NHANES` data sets n°1: import the `demo`, `bpx`, `bmx` and `smq` data sets from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) into R.
+
+# Handling data
+
+## Base R vs `tidyverse`
 
 Base R, without any additional packages, already provides many functions that are very handy for data handling. However, some contributed packages make data preparation much easier and more readable.
 
 I’ll introduce two such packages here, before diving into concrete data handling examples. Both are part of a larger and very powerful collection of packages for data science called the `tidyverse`, which I use for nearly all my analyses.
 
-#### The pipe
+### The pipe
 
 One of the most downloaded contributed extension packages of all times is `magrittr`. It provides a very useful operator, the forward pipe operator `%>%`, which passes the object on its left as the first argument to the function on its right. This is much easier to understand with an example.
 
-```{r, run=FALSE}
+```{r, eval=FALSE}
 # The easiest way to get magrittr is to install the whole tidyverse
 install.packages("tidyverse")
+```
+
+```{r}
+# Once installed, a package has to be loaded to be used
+library(tidyverse)
 ```
 
 ```{r}
@@ -149,7 +179,7 @@ c(1, 4, NA, 16, 25) %>%
 
 The pipe helps turn nested function calls into a sequence of simpler, linear steps. This makes code easier to read, write, and debug. The pipe becomes especially powerful when used with functions from the `dplyr` package for data manipulation.
 
-#### `dplyr`
+### `dplyr`
 
 Another helpful R package is `dplyr`. It is a grammar of data manipulation, providing a consistent set of verbs that helps solve the most common data manipulation challenges. 
 
@@ -202,30 +232,7 @@ In the following chapter, we’ll use both base R and `tidyverse` functions with
 knitr::include_graphics(path = "images/documentation.png")
 ```
 
-### Loading a data frame into R
-
-Let us now look at real data frames to learn how to call or modify their elements. To do this, we will use multiple health data sets from the National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012. The survey assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
-
-| Dataset               | NHANES Code | Description                                           | CSV File     |
-| --------------------- | ----------- | ----------------------------------------------------- | ------------ |
-| Demographics          | DEMO\_G     | Age, sex, race/ethnicity, income, education           | `DEMO_G.csv` |
-| Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings | `BPX_G.csv`  |
-| Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference              | `BMX_G.csv`  |
-| Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke          | `SMQ_G.csv`  |
-
-```{r}
-# Load the necessary CSV files into data frames
-demo <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/DEMO_G.csv") # Demographics (cycle G = 2011–2012)
-bpx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BPX_G.csv") # Blood pressure
-bmx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BMX_G.csv") # Body measures
-smq  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/SMQ_G.csv") # Smoking questionnaire
-```
-
-✏️ Exercise on the `NHANES` data sets n°1: import the `demo`, `bpx`, `bmx` and `smq` data sets from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) into R.
-
-💡 The codebook for each data set can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in `R` using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data). You’ll also find a summary of key variables from each data set at the end of this chapter.
-
-### Accessing elements in data frames
+## Accessing elements in data frames
 
 Being able to access elements in a data frame is essential when working with data. Here are some common methods to select specific elements, rows, or columns.
 
@@ -269,13 +276,11 @@ head(demo[, "RIDAGEYR"])  # All rows in the age column
 demo[1, ]  # Row 1 (all columns)
 ```
 
-✏️ Exercise on the `NHANES` data sets n°2: inspect the structure of the `demo` data set, look at different entries, get familiar with those commands.
-
-### Basic descriptive statistics
+## Basic descriptive statistics
 
 R makes it simple to compute basic descriptive statistics for exploring your dataset. Below are a few useful examples.
 
-#### Central tendency: mean and median
+### Central tendency: mean and median
 
 ```{r}
 mean(demo$RIDAGEYR, na.rm = TRUE)                 # Average (mean) age of participants
@@ -284,7 +289,7 @@ median(demo$DMDHHSIZ, na.rm = TRUE)               # Median household size
 
 💡 The `na.rm` argument in those functions allows for ignoring the NA values.
 
-#### Dispersion: standard deviation, min, max, and range
+### Dispersion: standard deviation, min, max, and range
 
 ```{r}
 sd(demo$RIDAGEYR, na.rm = TRUE)                     # Standard deviation of age
@@ -293,7 +298,7 @@ min(demo$DMDHRAGE, na.rm = TRUE)                    # Minimum age of household r
 max(demo$DMDHRAGE, na.rm = TRUE)                    # Maximum age of household reference person
 ```
 
-#### Frequency tables and proportions
+### Frequency tables and proportions
 
 ```{r}
 table(demo$RIAGENDR)                                # Gender distribution
@@ -302,20 +307,20 @@ table(demo$AIALANGA)                                # Language of interview
 prop.table(table(demo$AIALANGA))                    # Proportional distribution of interview languages
 ```
 
-#### Group-wise summaries
+### Group-wise summaries
 
 ```{r}
 aggregate(DMDHRAGE ~ DMDHRMAR, data = demo, FUN = mean, na.rm = TRUE)   # Mean age of household reference person by marital status
 aggregate(DMDHHSIZ ~ DMDHRGND, data = demo, FUN = median, na.rm = TRUE) # Median household size by gender of reference person
 ```
 
-#### Full overview
+### Full overview
 
 ```{r}
 summary(demo)[,1:5] # only for the first 5 variables
 ```
 
-### Modifying data frames
+## Modifying elements in data frames
 
 Now, let us assume we want to modify/add/remove one or multiple entries/rows/columns in our data frame. The brackets really come in handy now. In this setting, I recommend defining a new data frame before modifying the original one.
 
@@ -334,65 +339,7 @@ demo_mod[!is.na(demo_mod$RIDAGEYR) & demo_mod$RIDAGEYR < 18, ]$RIDAGEYR <- 18  #
 demo_mod[1:10, 1:5]
 ```
 
-✏️ Exercise on the `NHANES` data sets n°3: generate a new data frame selecting only the female patients that are above 18 years old and that took the interview in Spanish.
-
-### Combining data frames
-
-In practice, data is often spread across multiple data frames that need to be combined. Depending on the structure and goal, there are different ways to combine data frames:
-
-#### Column binding with cbind()
-
-Use `cbind()` to add columns side-by-side. The data frames must have the same number of rows.
-
-```{r}
-# Extract one column from demo to create an additional data frame with the same number of rows
-extra_info <- demo$RIDRETH1
-
-# Combine using cbind
-combined_df <- cbind(demo, extra_info)
-combined_df[1, ]
-```
-
-#### Row binding with rbind()
-
-Use `rbind()` to stack data frames vertically. The data frames must have the same column names and types.
-
-```{r}
-# Extract one column from demo to create an additional data frame with the same structure (column names and types)
-(new_participant <- demo[18,])
-
-# Combine using rbind
-extended_df <- rbind(demo, new_participant)
-extended_df[nrow(extended_df),]
-```
-
-#### Merging with merge() (Join)
-
-Use `merge()` to combine data frames based on a common column, similar to SQL joins (see figure below for a reminder on the different types of joins).
-
-```{r}
-# Merge two data frames by participant ID `SEQN` (inner join by default)
-merged_demo_bpx <- merge(demo, bpx, by = "SEQN")
-
-# In base R, you can use the Reduce() function to iteratively merge a list of data frames
-data_list <- list(demo, bpx, bmx) # list of data frames to merge
-merged_demo_bpx_bmx <- Reduce(function(x, y) merge(x, y, by = "SEQN"), data_list) # perform an inner join on all data frames by 'SEQN'
-``` 
-
-You should specify the type of join you are looking for:
-
-  + Inner join (default): keep only rows with matching `SEQN` in both data frames: `inner_join_df <- merge(demo, bmx, by = "SEQN")`
-  + Left (outer) join: keep all rows from `demo` and only matching rows from `bmx`: `left_join_df <- merge(demo, bmx, by = "SEQN", all.x = TRUE)`
-  + Right (outer) join: keep all rows from `bmx` and only matching rows from `demo`: `left_join_df <- merge(demo, bmx, by = "SEQN", all.y = TRUE)`
-  + Full (outer) join: keep all rows from both `demo` and `bmx`, filling with NA where there are no matches: `full_join_df <- merge(demo, bmx, by = "SEQN", all = TRUE)`
-
-```{r, echo=FALSE, out.width = "50%"}
-knitr::include_graphics(path = "images/joins.png")
-```
-
-💡 `merge()` in base R is flexible but can be a bit verbose. For simpler syntax, you can also use the `dplyr` package with `left_join()`, `right_join()`, `inner_join()`, and `full_join()`.
-
-### Dealing with NAs
+## Dealing with NAs
 
 Handling missing data (NAs) is a common task in data analysis. Before deciding how to treat them, it's important to understand where and how often they occur.
 
@@ -427,7 +374,73 @@ head(demo_no_na)
 
 💡 For our `demo` data set, this removes all the rows! Another reminder to be very careful when removing NA values.
 
-## Saving data frames
+## Exercises
+
+✏️ Exercise on the `NHANES` data sets n°2: inspect the structure of the `demo` data set, look at different entries, get familiar with those commands.
+
+✏️ Exercise on the `NHANES` data sets n°3: generate a new data frame selecting only the female patients that are above 18 years old and that took the interview in Spanish.
+
+# Combining data
+
+In practice, data is often spread across multiple data frames that need to be combined. Depending on the structure and goal, there are different ways to combine data frames:
+
+## Column binding with cbind()
+
+Use `cbind()` to add columns side-by-side. The data frames must have the same number of rows.
+
+```{r}
+# Extract one column from demo to create an additional data frame with the same number of rows
+extra_info <- demo$RIDRETH1
+
+# Combine using cbind
+combined_df <- cbind(demo, extra_info)
+combined_df[1, ]
+```
+
+## Row binding with rbind()
+
+Use `rbind()` to stack data frames vertically. The data frames must have the same column names and types.
+
+```{r}
+# Extract one column from demo to create an additional data frame with the same structure (column names and types)
+(new_participant <- demo[18,])
+
+# Combine using rbind
+extended_df <- rbind(demo, new_participant)
+extended_df[nrow(extended_df),]
+```
+
+## Merging with merge() (Join)
+
+Use `merge()` to combine data frames based on a common column, similar to SQL joins (see figure below for a reminder on the different types of joins).
+
+```{r}
+# Merge two data frames by participant ID `SEQN` (inner join by default)
+merged_demo_bpx <- merge(demo, bpx, by = "SEQN")
+
+# In base R, you can use the Reduce() function to iteratively merge a list of data frames
+data_list <- list(demo, bpx, bmx) # list of data frames to merge
+merged_demo_bpx_bmx <- Reduce(function(x, y) merge(x, y, by = "SEQN"), data_list) # perform an inner join on all data frames by 'SEQN'
+``` 
+
+You should specify the type of join you are looking for:
+
+  + Inner join (default): keep only rows with matching `SEQN` in both data frames: `inner_join_df <- merge(demo, bmx, by = "SEQN")`
+  + Left (outer) join: keep all rows from `demo` and only matching rows from `bmx`: `left_join_df <- merge(demo, bmx, by = "SEQN", all.x = TRUE)`
+  + Right (outer) join: keep all rows from `bmx` and only matching rows from `demo`: `left_join_df <- merge(demo, bmx, by = "SEQN", all.y = TRUE)`
+  + Full (outer) join: keep all rows from both `demo` and `bmx`, filling with NA where there are no matches: `full_join_df <- merge(demo, bmx, by = "SEQN", all = TRUE)`
+
+```{r, echo=FALSE, out.width = "50%"}
+knitr::include_graphics(path = "images/joins.png")
+```
+
+💡 `merge()` in base R is flexible but can be a bit verbose. For simpler syntax, you can also use the `dplyr` package with `left_join()`, `right_join()`, `inner_join()`, and `full_join()`.
+
+## Exercises
+
+✏️ Exercise on the `NHANES` data sets n°4: merge the 4 data sets `demo`, `bpx`, `bmx` and `smq` into a single data set `merged_nhanes` by performing an inner join on the `SEQN` ID and using the `dplyr` package.
+
+# Saving data
 
 You can save data sets in different formats, depending on how you want to use them later:
 
@@ -458,8 +471,10 @@ save(merged_demo_bpx_bmx, file = file.path(directory,"merged_demo_bpx_bmx.RData"
    + `read.csv("merged_demo_bpx_bmx.csv")`
    + `readRDS("merged_demo_bpx_bmx.rds")`
    + `load("merged_demo_bpx_bmx.RData")`
+   
+## Exercises
 
-✏️ Exercise on the `NHANES` data sets n°4: merge the 4 data sets `demo`, `bpx`, `bmx` and `smq` into a single data set `merged_nhanes` by performing an inner join on the `SEQN` ID and using the `dplyr` package. Then, save the resulting data frame in your working directory in both .csv and .rds formats.
+✏️ Exercise on the `NHANES` data sets n°5: Save the data frame resulting from Exercise n°4 in your working directory in both .csv and .rds formats.
 
 # Solutions to the exercises
 
@@ -510,14 +525,20 @@ demo_filtered[, ind]
 ```{r, eval=FALSE}
 # If necessary, install the dplyr package
 install.packages("dplyr")
+```
 
+```{r}
 # Load the dplyr package
 library(dplyr)
 
 # Merge the datasets using inner joins by SEQN
 data_list <- list(demo, bpx, bmx, smq)
 merged_nhanes <- Reduce(function(x, y) inner_join(x, y, by = "SEQN"), data_list)
+```
 
+☑️ Exercise on the `NHANES` data sets n°5:
+
+```{r}
 # Save the merged dataset in your working directory
 # Click on Session > Set Working Directory > To Source File Location, or use file.path()
 write.csv(merged_nhanes, "merged_nhanes.csv", row.names = FALSE)

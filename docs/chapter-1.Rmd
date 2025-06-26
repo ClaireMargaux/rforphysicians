@@ -41,7 +41,7 @@ library(ggplot2)
 
 The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
 
-# Basics of coding in R
+# User interface
 
 **R** is a free and open source statistical computing and graphics software.
 **RStudio** is a user-friendly environment for R, designed to facilitate its accessibility. 
@@ -92,10 +92,6 @@ To start recording a script, click *File – New File – R Script*. This will o
 ```{r, echo=FALSE, out.width = "70%"}
 knitr::include_graphics(path = "images/rstudio-window.png")
 ```
-
-✏️ Create your own script. Feel free to take notes directly in it. You’ll use this script as a working document to complete various small tasks and exercises.
-
-☑️ All exercises have an example solution at the end of the chapter.
 
 💡 When your code starts to get long or complex, consider breaking it down into separate scripts with clear and specific purposes — for example:
 `1_data_import.R`, `2_data_cleaning.R`, `3_survival_analysis.R`, `4_qol_analysis.R`, etc.
@@ -153,9 +149,15 @@ setwd("C:/Users/I0343303/Documents/Forschung/TOSCAN2.0")
 
 💡 Use `----` after numbered headers in comments to make your code more navigable and readable in long scripts (this is a common R style convention).
 
-## Objects, data types, variables
+## Exercises
 
-In R, everything is an **object**. This means that every piece of data you work with, from a single number to a complex dataset, is represented as an object with specific properties and behaviours. An object has attributes like class (data type) and dimensions.
+✏️ Exercise 1: Create your own script. Feel free to take notes directly in it. You’ll use this script as a working document to complete various small tasks and exercises.
+
+☑️ All exercises have an example solution at the end of the chapter.
+
+# Objects, data types, variables
+
+In R, everything is an **object**. This means that every piece of data you work with, from a single number to a complex dataset, is represented as an object with specific properties and behaviours. An object has attributes like class (**data type**) and dimensions.
 
 **Variables** act as labels for objects. They are essentially pointers to the actual object stored in memory and appear in the Environment tab in RStudio.
 
@@ -170,7 +172,7 @@ vec <- 1:10
 
 💡 To assign values to an object, use the `<-` or `=` symbols.
 
-### Inspect an object
+## Inspect an object
 
 Before diving into data types and structures, it's helpful to know how to inspect objects in R. Several built-in functions can help you understand the structure and content of an object.
 
@@ -209,25 +211,25 @@ str(rownames(df)) # Structure of the row names (e.g., character vector)
 
 💡 The function `str()` provides a compact view of the internal structure of an R object, helping you understand its components and data types quickly.
 
-### Data types
+## Data types
 
 In R, data types define the kind of information a variable can hold. Here are some of the most common data types:
 
-#### Numeric: Represents real numbers (e.g., 3.14, -2.5, 0).
+### Numeric: Represents real numbers (e.g., 3.14, -2.5, 0).
 
 ```{r} 
 typeof(3.14)
 str(3.14)
 ```
 
-#### Integer: Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
+### Integer: Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
 
 ```{r} 
 typeof(2L) 
 str(2L)
 ```
 
-#### Logical: Represents Boolean values (TRUE or FALSE).
+### Logical: Represents Boolean values (TRUE or FALSE).
 
 ```{r} 
 typeof(TRUE)
@@ -241,23 +243,21 @@ above_five <- (values > 5)
 above_five
 ```
 
-✏️ Exercise on Booleans: Given a vector of ages (`ages <- c(35, 45, 60, 15, 50, 8)`), determine which patients are eligible for a treatment (age above 18). Return a Boolean vector indicating whether each patient meets the age criteria.
-
-#### Character: Represents text or strings (e.g., "hello", "world").
+### Character: Represents text or strings (e.g., "hello", "world").
 
 ```{r} 
 typeof("hello")
 str("hello")
 ```
 
-#### Complex: Represents complex numbers (e.g., 1 + 2i).
+### Complex: Represents complex numbers (e.g., 1 + 2i).
 
 ```{r} 
 typeof(1 + 2i) 
 str(1 + 2i)
 ```
 
-#### NAs/NANs
+### NAs/NANs
 
 In some cases the components of a vector may not be known. When an element or value is “not available” or a “missing value” in the statistical sense, a place within a vector may be reserved for it by assigning it the special value `NA`. In general any operation on an NA becomes an NA.
 
@@ -274,11 +274,11 @@ There is a second kind of “missing” values which are produced by numerical c
 Inf - Inf
 ```
 
-### Objects
+## Objects
 
 Objects are the entities that R operates on. These can be:
 
-#### Vectors
+### Vectors
   + The most fundamental data structure.
   + A one-dimensional array of elements of the same data type (e.g., numeric, character, logical).
   + Created using the `c()` function.
@@ -303,7 +303,7 @@ vec2[c(2, 3)]  # Elements at indices 2 and 3
 vec3[c(-2)]  # All elements except for the element at index 2
 ```
 
-#### Matrices
+### Matrices
   + Two-dimensional arrays of elements of the same data type.
   + Can be created using the `matrix()` function.
   
@@ -314,7 +314,7 @@ str(mat)
 
 💡 By enclosing the assignment in parentheses `()`, you not only create the object but also automatically print its value to the console — a useful shortcut. This is equivalent to writing `print(object)` or simply typing the object name (e.g., `object`), but it saves you an extra line of code.
 
-#### Arrays
+### Arrays
   + Generalization of matrices to more than two dimensions.
   
 ```{r, echo=TRUE}
@@ -322,7 +322,7 @@ str(mat)
 str(array)
 ```
 
-#### Lists
+### Lists
   + Ordered collections of objects, which may be of different types.
   + Lists can contain other lists as elements.
   
@@ -331,7 +331,7 @@ str(array)
 str(list)
 ```
 
-#### Factors
+### Factors
   + Categorical variables.
   + Represent data with a limited number of possible values.
 
@@ -340,7 +340,7 @@ str(list)
 str(fac)
 ```
 
-#### Data Frames
+### Data Frames
   + Two-dimensional tabular data structure.
   + Can contain columns of different data types, such as numeric, character, logical, or factor.
   + The most common data structure for representing datasets in R.
@@ -353,15 +353,7 @@ str(fac)
 str(d)
 ```
 
-✏️ Create a data frame with 10 rows and the columns `id`, `blood_pressure`, and `group`.
-– `id`: integers from 1 to 10
-– `blood_pressure`: random values from a normal distribution with mean 123 and standard deviation 8
-– `group`: a factor with levels "drug 1", "drug 2", and "obs arm" (you decide how to assign them, e.g. by using the function `sample()`)
-After creating that data frame, add a new column `stand_score` where you calculate a standardized score for each blood_pressure value. The standardized score is similar to a z-score but is calculated based on the mean and standard deviation of the `blood_pressure` values in the dataset (standardized score = (x−μ)/σ)).
-
-💡 Use the function `rnorm()` to simulate normal values. Use the function `scale()` to centre and scale a vector, or alternatively the functions `mean()` and `sd()` to compute mean and standard deviation of a vector. You can use `help()` to learn more about how these functions work.
-
-#### Functions
+### Functions
   + Reusable blocks of code that perform a specific task.
   + Also considered objects in R.
 
@@ -381,7 +373,20 @@ frac(numerator = 6, denominator = 2) # Calling the function
   
 I strongly recommend explicitly naming arguments, because it increases clarity, prevents order-related mistakes, and gives you flexibility in argument order: `frac(denominator = 2, numerator = 6)` works just as well. In contrast, when arguments are unnamed, order matters strictly — and a small mistake can completely change the result: `frac(2, 6)` is interpreted as `frac(numerator = 2, denominator = 6)`!
 
-✏️ Write a function `sum_squared` that takes two integers and returns the sum of their squared values.
+## Exercises
+
+✏️ Exercise 2: Given a vector of ages (`ages <- c(35, 45, 60, 15, 50, 8)`), determine which patients are eligible for a treatment (age above 18). Return a Boolean vector indicating whether each patient meets the age criteria.
+
+✏️ Exercise 3: Create a data frame with 10 rows and the columns `id`, `blood_pressure`, and `group`.
+– `id`: integers from 1 to 10
+– `blood_pressure`: random values from a normal distribution with mean 123 and standard deviation 8
+– `group`: a factor with levels "drug 1", "drug 2", and "obs arm" (you decide how to assign them, e.g. by using the function `sample()`)
+After creating that data frame, add a new column `stand_score` where you calculate a standardized score for each blood_pressure value. The standardized score is similar to a z-score but is calculated based on the mean and standard deviation of the `blood_pressure` values in the dataset (standardized score = (x−μ)/σ)).
+
+💡 Hint: Use the function `rnorm()` to simulate normal values. Use the function `scale()` to centre and scale a vector, or alternatively the functions `mean()` and `sd()` to compute mean and standard deviation of a vector. You can use `help()` to learn more about how these functions work.
+
+✏️ Exercise 4: Write a function `sum_squared` that takes two integers and returns the sum of their squared values.
+
 ```{r, eval=FALSE}
 # Example
 sum_squared(int1 = 2, int2 = 3)
@@ -389,23 +394,27 @@ sum_squared(int1 = 2, int2 = 3)
 13
 ```
 
-## Packages
+# Packages
 
-There are a set of standard (or base) packages which are considered part of the R source code and automatically available as part of your R installation. **Base packages** contain the basic functions that allow R to work, and enable standard statistical and graphical functions on datasets.
+**Packages** are collections of R functions, data, and compiled code in a well-defined format, created to add specific functionality.
 
-**Packages** are collections of R functions, data, and compiled code in a well-defined format, created to add specific functionality. There are 10,000+ user contributed packages and growing. You can install packages using the install.packages() function.
+There is a set of standard (or base) packages which are considered part of the R source code and automatically available as part of your R installation. **Base packages** contain the basic functions that allow R to work, and enable standard statistical and graphical functions on datasets.
+
+On top of that, there are 10,000+ **user contributed packages**. You can install packages using the install.packages() function.
 
 ```{r, eval=FALSE}
-# To install a package, you can use the function 
+# To install a package, you can use the function.
 install.packages("dplyr")
 
 # Alternatively, you can click on 'Packages' in the bottom right pane, then click on 'Install' and type in the name of the package you want to install.
 
-# To load a package you've already install, just load it using the library() function
+# To load a package you've already install, just load it using the library() function.
 library(dplyr)
 ```
 
-✏️ Exercise on packages: install the `ggplot2` package. We will need it for Chapter 2.
+## Exercises
+
+✏️ Exercise 5: install and load the `tidyverse` package. We will need it for Chapter 2.
 
 \newpage
 
@@ -413,9 +422,13 @@ library(dplyr)
 
 Please not that those are only examples, there are always many ways to solve the same task!
 
-☑️ Create your own script: I don't think any solution is necessary 😉.
+☑️ Exercise 1: 
 
-☑️ Exercise on Booleans:
+```{r, echo=FALSE, out.width = "70%"}
+knitr::include_graphics(path = "images/new-script.png")
+```
+
+☑️ Exercise 2:
 
 ```{r}
 ages <- c(35, 45, 60, 15, 50, 8)
@@ -423,7 +436,7 @@ eligible <- ages >= 18
 eligible
 ```
 
-☑️ Create a data frame and compute standardized scores of `blood_pressure`:
+☑️ Exercise 3:
 
 ```{r}
 # Create the data frame
@@ -441,7 +454,7 @@ df$stand_score_2 <- (df$blood_pressure - mean(df$blood_pressure))/sd(df$blood_pr
 df
 ```
 
-☑️ Write a function `sum_squared`:
+☑️ Exercise 4:
 
 ```{r}
 sum_squared <- function(int1, int2){
@@ -450,6 +463,16 @@ sum_squared <- function(int1, int2){
 }
 
 sum_squared(int1 = 3, int2 = 5)
+```
+
+☑️ Exercise 5:
+
+```{r, eval=FALSE}
+# To install the package, run the line:
+install.packages("tidyverse")
+
+# To load the package once installed, run the line:
+library(tidyverse)
 ```
 
 \newpage

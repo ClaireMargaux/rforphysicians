@@ -4,7 +4,7 @@
 
 # Objectives
 
-The aim of this introduction to R for physicians is to
+This introduction to R for physicians contains
 
 -   Chapter 1: basics of coding in R using RStudio
 -   Chapter 2: import and handling data frames

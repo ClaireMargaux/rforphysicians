@@ -215,21 +215,27 @@ str(rownames(df)) # Structure of the row names (e.g., character vector)
 
 In R, data types define the kind of information a variable can hold. Here are some of the most common data types:
 
-### Numeric: Represents real numbers (e.g., 3.14, -2.5, 0).
+### Numeric
+
+Represents real numbers (e.g., 3.14, -2.5, 0).
 
 ```{r} 
 typeof(3.14)
 str(3.14)
 ```
 
-### Integer: Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
+### Integer
+
+Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
 
 ```{r} 
 typeof(2L) 
 str(2L)
 ```
 
-### Logical: Represents Boolean values (TRUE or FALSE).
+### Logical
+
+Represents Boolean values (TRUE or FALSE).
 
 ```{r} 
 typeof(TRUE)
@@ -243,14 +249,18 @@ above_five <- (values > 5)
 above_five
 ```
 
-### Character: Represents text or strings (e.g., "hello", "world").
+### Character
+
+Represents text or strings (e.g., "hello", "world").
 
 ```{r} 
 typeof("hello")
 str("hello")
 ```
 
-### Complex: Represents complex numbers (e.g., 1 + 2i).
+### Complex
+
+Represents complex numbers (e.g., 1 + 2i).
 
 ```{r} 
 typeof(1 + 2i) 

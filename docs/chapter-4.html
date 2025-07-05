@@ -11,7 +11,7 @@
 
 <meta name="author" content="Claire Descombes" />
 
-<meta name="date" content="2025-06-26" />
+<meta name="date" content="2025-07-05" />
 
 <title>Chapter 4</title>
 
@@ -2904,7 +2904,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Chapter 4</h1>
 <h3 class="subtitle">R for physicians</h3>
 <h4 class="author">Claire Descombes</h4>
-<h4 class="date">2025-06-26</h4>
+<h4 class="date">2025-07-05</h4>
 
 </div>
 
@@ -2944,215 +2944,473 @@ Bern</td>
 <p>The reference material for this course, as well as some useful
 literature to deepen your knowledge of R, can be found at the bottom of
 the page.</p>
-<div id="most-commonly-used-statistical-tests" class="section level1" number="1">
+<hr />
+<p>To explore R’s statistical tools, we’ll continue working with the
+NHANES datasets. Specifically, we’ll use the merged data frame that
+combines the <code>demo</code>, <code>bpx</code>, <code>bmx</code> and
+<code>smq</code> data sets. If you still have it loaded from Chapters 2
+und 3, you can use it directly. Otherwise, you can download it from the
+<a href="https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets"><code>data_sets</code>
+folder</a> and import it into R.</p>
+<pre class="r"><code># Load the merged_nhanes CSV file
+merged_nhanes &lt;- read.csv(&quot;/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes.csv&quot;)</code></pre>
+<div id="most-commonly-used-statistical-tests-and-models" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Most commonly used
-statistical tests</h1>
-<table>
-<colgroup>
-<col width="33%" />
-<col width="25%" />
-<col width="40%" />
-</colgroup>
+statistical tests and models</h1>
+<p>This chapter will follow the structure outlined below. We will learn
+how to perform a selection of statistical tests and models in R,
+categorising them by their objective (e.g. comparing two means or
+analysing survival).</p>
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
 <thead>
 <tr>
-<th>Section</th>
-<th>Topic</th>
-<th>Subtopics</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Section
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Topic
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Subtopics
+</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>4.1 Tests for comparing two groups</strong></td>
-<td>Tests comparing means or proportions between two groups</td>
-<td>Student’s t-Test, Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test),
-Fisher’s Exact Test, McNemar Test</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>4.1 Tests for comparing two groups</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Tests comparing means or proportions between two groups
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Student’s t-test <br> • Wilcoxon-Mann-Whitney test
+(Mann-Whitney-U-test) <br> • Fisher’s exact test <br> • McNemar test
+</td>
 </tr>
 <tr>
-<td><strong>4.2 Tests for more than two groups</strong></td>
-<td>Tests for comparing multiple groups</td>
-<td>Kruskal-Wallis Test, Friedman Test, Pearson’s Chi-Square Test</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>4.2 Tests for more than two groups</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Tests for comparing multiple groups
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Kruskal-Wallis test <br> • Friedman test <br> • Pearson’s Chi-Square
+test
+</td>
 </tr>
 <tr>
-<td><strong>4.3 Tests for distribution and normality</strong></td>
-<td>Tests for distribution of data</td>
-<td>Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>4.3 Tests for distribution and normality</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Tests for distribution of data
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Lilliefors / Kolmogorov-Smirnov-Lilliefors test
+</td>
 </tr>
 <tr>
-<td><strong>4.4 Tests for survival analysis</strong></td>
-<td>Tests for time-to-event data</td>
-<td>Logrank/ Log-Rank Test</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>4.4 Tests for survival analysis</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Tests for time-to-event data
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Logrank test
+</td>
 </tr>
 <tr>
-<td><strong>4.5 Correlation and association tests</strong></td>
-<td>Tests for relationships between variables</td>
-<td>Correlation test by Pearson, Correlation test by Spearman</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>4.5 Correlation and association tests</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Tests for relationships between variables
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Correlation test by Pearson <br> • Correlation test by Spearman
+</td>
 </tr>
 <tr>
-<td><strong>4.6 Predictive modeling and regression</strong></td>
-<td>Predictive models and regression techniques</td>
-<td>Generalized Linear Models (GLMs) (Linear Regression - Logistic
-Regression - Cox Proportional Hazards Regression - Multivariable
-Regression) Mixed Effects Models, Generalized Additive Models (GAMs),
-Generalized Additive Mixed Models (GAMMs)</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>4.6 Predictive modelling and regression</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Predictive models and regression techniques
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Generalized Linear Models (GLMs): Linear regression, logistic
+regression, ordinal regression, Cox (proportional hazards) regression -
+Multivariable Regression <br> • Mixed Effects Models <br> • Generalized
+Additive Models (GAMs) <br> • Generalized Additive Mixed Models (GAMMs)
+</td>
 </tr>
 </tbody>
 </table>
-<div id="overview" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Overview</h2>
-<table>
-<colgroup>
-<col width="5%" />
-<col width="13%" />
-<col width="21%" />
-<col width="15%" />
-<col width="15%" />
-<col width="15%" />
-<col width="12%" />
-</colgroup>
+<div id="which-test-for-which-data" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Which test for which
+data?</h2>
+<p>Before we begin, here is an overview of the type of data required by
+each test/model. More tests and models are presented than will be
+discussed in the course, but I have included them for the sake of
+completeness. If you feel lost on that topic at any point in the
+chapter, just scroll up again to have a look at this table.</p>
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
 <thead>
 <tr>
-<th></th>
-<th>1 Sample</th>
-<th>2 Paired Samples</th>
-<th>2 Unpaired Samples</th>
-<th>&gt;2 Paired Samples</th>
-<th>&gt;2 Unpaired Samples</th>
-<th>Continuous Predictor</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+1 sample
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+2 paired samples
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+2 unpaired samples
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+&gt;2 paired samples
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+&gt;2 unpaired samples
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Continuous predictor
+</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Binary</strong></td>
-<td>Binomial test</td>
-<td>McNemar test</td>
-<td>Chi-square test, Fisher’s exact test</td>
-<td>Cochran’s Q test</td>
-<td>Chi-square test, extensions of Fisher’s test</td>
-<td>Logistic regression</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>Binary</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Binomial test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• McNemar test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Chi-square test<br>• Fisher’s exact test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Cochran’s Q test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Chi-square test<br>• Extensions of Fisher’s test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Logistic regression
+</td>
 </tr>
 <tr>
-<td><strong>Nominal</strong></td>
-<td>Chi-square goodness of fit test</td>
-<td></td>
-<td>Chi-square test, extensions of Fisher’s test</td>
-<td></td>
-<td>Chi-square test</td>
-<td>Multinomial regression</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>Nominal</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Chi-square goodness of fit test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Chi-square test<br>• Extensions of Fisher’s test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Chi-square test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Multinomial regression
+</td>
 </tr>
 <tr>
-<td><strong>Ordinal</strong></td>
-<td>Wilcoxon signed-rank test, sign test</td>
-<td>Sign test or Wilcoxon signed-rank test on differences</td>
-<td>Mann-Whitney U test (Wilcoxon rank-sum test)</td>
-<td>Friedman test</td>
-<td>Kruskal–Wallis test</td>
-<td>Ordinal regression</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>Ordinal</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Wilcoxon signed-rank test<br>• Sign test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Sign test<br>• Wilcoxon signed-rank test on differences
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Mann-Whitney U test (Wilcoxon rank-sum test)
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Friedman test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Kruskal–Wallis test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Ordinal regression
+</td>
 </tr>
 <tr>
-<td><strong>Continuous</strong></td>
-<td>One-sample t-test</td>
-<td>Paired t-test or Wilcoxon signed-rank test on differences</td>
-<td>Two-sample t-test</td>
-<td>Repeated measures ANOVA</td>
-<td>ANOVA</td>
-<td>Linear regression</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>Continuous</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• One-sample t-test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Paired t-test<br>• Wilcoxon signed-rank test on differences
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Two-sample t-test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Repeated measures ANOVA
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• ANOVA
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Linear regression
+</td>
 </tr>
 <tr>
-<td><strong>Time-to-event</strong></td>
-<td>One-sample log-rank test</td>
-<td></td>
-<td>Log-rank test</td>
-<td></td>
-<td></td>
-<td>Cox regression, Weibull regression</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+<strong>Time-to-event</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• One-sample log-rank test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Log-rank test
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+• Cox regression<br>• Weibull regression
+</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="tests-for-comparing-two-groups" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Tests for comparing
+<div id="what-is-a-statistical-test" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> What is a statistical
+test?</h2>
+<p>Before we start looking at many different statistical tests, let us
+recall the basic structure that they all share, by exploring more
+in-depth the Student’s t-test for two, independent continuous
+samples.</p>
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+<thead>
+<tr>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Generally
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Student’s t-test for two, independent samples
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+A test always wants to test some quantity of the data it is used on
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Working on two patients cohorts, the smokers and the non-smokers, one
+could ask her-/himself if they share the same mean on a variable,
+e.g. the BMI
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+The data itself is expected to fulfil some <strong>assumptions</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+As the BMI data is continuous, the cohorts are big (&gt; 100 patients
+each, of sizes m and n) and assumed to be independent, and there is no
+reason to assume they’d have a different variance in the BMI, a
+Student’s t-test appears to be the right choice
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+The ‘status quo’/no difference formulation of the quetion we’re asking
+is called the <strong>null hypothesis</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+The null hypothesis, in our example, is the hypothesis that our two
+cohorts (the smokers and the non-smokers) share the same mean BMI
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+The hypothesis we are usually interested to prove, the one showing a
+difference between two quantities, is called the <strong>alternative
+hypothesis</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+The alternative hypothesis, in our example, is the hypothesis that our
+two cohorts (the smokers and the non-smokers) do not share the same mean
+BMI
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Assuming the null hypothesis is true, a specific parameter, called the
+<strong>statistic</strong>, is expected to fall into a given
+<strong>distribution</strong>
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+If the null hypothesis is true, then the t statistic: [insert image
+here] follows a Student-t-distribution with n+m-2 degrees of freedom.
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+For any object of which the distribution is know, it is possible to
+compute its probability to fall within a certain range; for a given
+<strong>alpha level</strong> between 0 and 1, one can determine an
+interval in which the statistic has a probability of alpha to fall
+within
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+Letting alpha be 0.05, as it is common in medicine, we can determine
+that our t statistic has a probability of 95% to be in a given interval
+(that can be computed exactly)
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+If the statistic, after being computed, falls in the confidence
+interval, then we cannot reject the null hypothesis, and have to look
+for further evidence to prove our claim
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+If the t statistic falls into the range we computed, then we cannot say
+that we saw a significant difference in the means
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+If the statistic, after being computed, does not fall in the confidence
+interval, then we can reject the null hypothesis, say that the claim we
+made on the data is right with a 1-alpha confidence
+</td>
+<td style="border: 1px solid black; padding: 8px; vertical-align: top;">
+If the t statistic doesn’t fall into the range we computed, then we can
+say that we saw a significant difference in the means, with a confidence
+of 95%
+</td>
+</tr>
+</tbody>
+</table>
+<p>A few important comments:</p>
+<ul>
+<li>It is not possible to prove that the null hypothesis is true: it
+could always be that with a bigger effect size and/or a larger sample
+size, we could show statistically the difference we’re trying to
+demonstrate. So when a test comes out ‘negatively’ (no statistical
+significance, p=&gt;alpha), it doesn’t mean our supposition is
+necessarly wrong.</li>
+<li>On the other hand, even a significant test (p&lt;alpha) doesn’t mean
+that we proved the absolute truth: in a theoretical world, where we
+could repeat our experiment 100 times in the same conditions, even if
+our theory is wrong, we would always find a ‘positive’ result in alpha%
+of the cases. That is why consensus, in science, always relies on
+repeated experiments that (for the vast majority of them*) draw the same
+conclusion.</li>
+<li>* Why is that? Because again, even in a theoretical world, where we
+could repeat our experiment 100 times in the same conditions, even if
+our theory is right, we would always find a ‘negative’ result in alpha%
+of the cases.</li>
+</ul>
+</div>
+<div id="tests-for-comparing-two-groups" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Tests for comparing
 two groups</h2>
-<div id="students-t-test" class="section level3" number="1.2.1">
-<h3><span class="header-section-number">1.2.1</span> Student’s
+<div id="students-t-test" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Student’s
 t-Test</h3>
-<p>Basis for comparing means of two groups. Introduce first as it’s
-widely used and foundational.</p>
 </div>
-<div id="wilcoxon-mann-whitney-test-mann-whitney-u-test" class="section level3" number="1.2.2">
-<h3><span class="header-section-number">1.2.2</span>
+<div id="wilcoxon-mann-whitney-test-mann-whitney-u-test" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span>
 Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test)</h3>
 <p>Presented as the non-parametric alternative to the t-Test.</p>
 </div>
-<div id="fishers-exact-test" class="section level3" number="1.2.3">
-<h3><span class="header-section-number">1.2.3</span> Fisher’s Exact
+<div id="fishers-exact-test" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> Fisher’s Exact
 Test</h3>
 <p>Focus on categorical variables and small sample sizes.</p>
 </div>
-<div id="mcnemar-test" class="section level3" number="1.2.4">
-<h3><span class="header-section-number">1.2.4</span> McNemar Test</h3>
+<div id="mcnemar-test" class="section level3" number="1.3.4">
+<h3><span class="header-section-number">1.3.4</span> McNemar Test</h3>
 <p>Highlight its application for paired categorical data.</p>
 </div>
 </div>
-<div id="tests-for-more-than-two-groups" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> Tests for more than
+<div id="tests-for-more-than-two-groups" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Tests for more than
 two groups</h2>
-<div id="kruskal-wallis-test" class="section level3" number="1.3.1">
-<h3><span class="header-section-number">1.3.1</span> Kruskal-Wallis
+<div id="kruskal-wallis-test" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Kruskal-Wallis
 Test</h3>
 <p>Generalization of Wilcoxon-Mann-Whitney for more than two groups.</p>
 </div>
-<div id="friedman-test" class="section level3" number="1.3.2">
-<h3><span class="header-section-number">1.3.2</span> Friedman Test</h3>
+<div id="friedman-test" class="section level3" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Friedman Test</h3>
 <p>Generalization of paired tests (e.g., Wilcoxon) for more than two
 related groups.</p>
 </div>
-<div id="pearsons-chi-square-test" class="section level3" number="1.3.3">
-<h3><span class="header-section-number">1.3.3</span> Pearson’s
+<div id="pearsons-chi-square-test" class="section level3" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Pearson’s
 Chi-Square Test</h3>
 <p>Complement Fisher’s Exact Test, emphasizing it’s better suited for
 larger samples.</p>
 </div>
 </div>
-<div id="tests-for-distribution-and-normality" class="section level2" number="1.4">
-<h2><span class="header-section-number">1.4</span> Tests for
+<div id="tests-for-distribution-and-normality" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Tests for
 distribution and normality</h2>
-<div id="lilliefors-kolmogorov-smirnov-lilliefors-test" class="section level3" number="1.4.1">
-<h3><span class="header-section-number">1.4.1</span> Lilliefors/
+<div id="lilliefors-kolmogorov-smirnov-lilliefors-test" class="section level3" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> Lilliefors/
 Kolmogorov-Smirnov-Lilliefors Test:</h3>
 <p>Test for deviations from normality, set the stage for determining
 when to use parametric vs. non-parametric tests.</p>
 </div>
 </div>
-<div id="tests-for-survival-analysis" class="section level2" number="1.5">
-<h2><span class="header-section-number">1.5</span> Tests for survival
+<div id="tests-for-survival-analysis" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Tests for survival
 analysis</h2>
-<div id="logrank-log-rank-test" class="section level3" number="1.5.1">
-<h3><span class="header-section-number">1.5.1</span> Logrank/ Log-Rank
+<div id="logrank-log-rank-test" class="section level3" number="1.6.1">
+<h3><span class="header-section-number">1.6.1</span> Logrank/ Log-Rank
 Test:</h3>
 <p>For analyzing time-to-event data. Mention Kaplan-Meier curves for
 context.</p>
 </div>
 </div>
-<div id="correlation-and-association-tests" class="section level2" number="1.6">
-<h2><span class="header-section-number">1.6</span> Correlation and
+<div id="correlation-and-association-tests" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Correlation and
 association tests</h2>
-<div id="correlation-test-by-pearson" class="section level3" number="1.6.1">
-<h3><span class="header-section-number">1.6.1</span> Correlation test by
+<div id="correlation-test-by-pearson" class="section level3" number="1.7.1">
+<h3><span class="header-section-number">1.7.1</span> Correlation test by
 Pearson</h3>
 <p>Basis for understanding relationships between two continuous,
 normally distributed variables.</p>
 </div>
-<div id="correlation-test-by-spearman" class="section level3" number="1.6.2">
-<h3><span class="header-section-number">1.6.2</span> Correlation test by
+<div id="correlation-test-by-spearman" class="section level3" number="1.7.2">
+<h3><span class="header-section-number">1.7.2</span> Correlation test by
 spearman:</h3>
 <p>Non-parametric alternative for monotonic relationships.</p>
 </div>
 </div>
-<div id="predictive-modeling-and-regression" class="section level2" number="1.7">
-<h2><span class="header-section-number">1.7</span> Predictive modeling
+<div id="predictive-modeling-and-regression" class="section level2" number="1.8">
+<h2><span class="header-section-number">1.8</span> Predictive modeling
 and regression</h2>
-<div id="generalized-linear-models-glms" class="section level3" number="1.7.1">
-<h3><span class="header-section-number">1.7.1</span> Generalized Linear
+<div id="generalized-linear-models-glms" class="section level3" number="1.8.1">
+<h3><span class="header-section-number">1.8.1</span> Generalized Linear
 Models (GLMs)</h3>
 <p>Purpose: GLMs are an extension of linear models that allow for
 non-normal distributions of the response variable (e.g., binary, count,
@@ -3192,8 +3450,8 @@ time-to-event data, often with censored observations. It is based on the
 proportional hazards assumption and estimates the effect of predictor
 variables on the hazard (event occurrence rate).</li>
 </ul>
-<div id="linear-regression" class="section level4" number="1.7.1.1">
-<h4><span class="header-section-number">1.7.1.1</span> Linear
+<div id="linear-regression" class="section level4" number="1.8.1.1">
+<h4><span class="header-section-number">1.8.1.1</span> Linear
 regression</h4>
 <p>Purpose: Used to model the relationship between a continuous
 dependent variable and one or more independent variables. Assumptions:
@@ -3201,16 +3459,16 @@ Linearity, normality of residuals, homoscedasticity, independence.
 Example Application: Predicting the price of a house based on square
 footage, number of rooms, etc.</p>
 </div>
-<div id="logistic-regression" class="section level4" number="1.7.1.2">
-<h4><span class="header-section-number">1.7.1.2</span> Logistic
+<div id="logistic-regression" class="section level4" number="1.8.1.2">
+<h4><span class="header-section-number">1.8.1.2</span> Logistic
 regression</h4>
 <p>Purpose: Used when the dependent variable is binary (e.g., yes/no,
 success/failure). Assumptions: Linear relationship between the log-odds
 of the outcome and predictors. Example Application: Predicting the
 likelihood of a disease based on age, gender, and other factors.</p>
 </div>
-<div id="cox-proportional-hazards-regression" class="section level4" number="1.7.1.3">
-<h4><span class="header-section-number">1.7.1.3</span> Cox proportional
+<div id="cox-proportional-hazards-regression" class="section level4" number="1.8.1.3">
+<h4><span class="header-section-number">1.8.1.3</span> Cox proportional
 hazards regression</h4>
 <p>Purpose: Used for survival analysis, particularly when studying the
 time to an event (e.g., time to death, relapse). Assumptions:
@@ -3218,8 +3476,8 @@ Proportional hazards assumption, meaning the effect of the predictor on
 the hazard rate is constant over time. Example Application: Analyzing
 the impact of age, treatment type, and other covariates on patient
 survival times.</p>
-<div id="multivariable-regression" class="section level5" number="1.7.1.3.1">
-<h5><span class="header-section-number">1.7.1.3.1</span> Multivariable
+<div id="multivariable-regression" class="section level5" number="1.8.1.3.1">
+<h5><span class="header-section-number">1.8.1.3.1</span> Multivariable
 regression</h5>
 <p>Purpose: An extension of linear or logistic regression with more than
 one predictor variable. Assumptions: Similar to linear and logistic
@@ -3230,8 +3488,8 @@ genetics).</p>
 </div>
 </div>
 </div>
-<div id="mixed-effects-models" class="section level3" number="1.7.2">
-<h3><span class="header-section-number">1.7.2</span> Mixed Effects
+<div id="mixed-effects-models" class="section level3" number="1.8.2">
+<h3><span class="header-section-number">1.8.2</span> Mixed Effects
 Models</h3>
 <p>Purpose: Mixed effects models allow for the inclusion of both fixed
 and random effects, providing flexibility for hierarchical or grouped
@@ -3257,8 +3515,8 @@ same subjects over time (e.g., repeated measurements on patients).</li>
 students within schools, patients within hospitals).</li>
 </ul>
 </div>
-<div id="generalized-additive-models-gams" class="section level3" number="1.7.3">
-<h3><span class="header-section-number">1.7.3</span> Generalized
+<div id="generalized-additive-models-gams" class="section level3" number="1.8.3">
+<h3><span class="header-section-number">1.8.3</span> Generalized
 Additive Models (GAMs)</h3>
 <p>Purpose: GAMs extend GLMs by allowing for non-linear relationships
 between predictors and the outcome. This is useful when the relationship
@@ -3273,8 +3531,8 @@ depending on the distribution of the outcome variable.</p>
 <p>Common Applications: Modeling complex relationships in patient data
 where the effect of treatment or time may not be linear.</p>
 </div>
-<div id="generalized-additive-mixed-models-gamms" class="section level3" number="1.7.4">
-<h3><span class="header-section-number">1.7.4</span> Generalized
+<div id="generalized-additive-mixed-models-gamms" class="section level3" number="1.8.4">
+<h3><span class="header-section-number">1.8.4</span> Generalized
 Additive Mixed Models (GAMMs)</h3>
 <p>Purpose: GAMMs combine the flexibility of GAMs with random effects,
 useful for hierarchical or clustered data.</p>

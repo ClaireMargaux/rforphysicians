@@ -47,7 +47,7 @@ The base R plotting functions are effective and user-friendly, so we will begin 
 
 Next, we will take a look at the functions offered by `ggplot2`, a system for declarative graphics creation. You provide the data and specify how to map variables to aesthetics and which graphical primitives to use; ggplot2 then takes care of the details. Although it is slightly more technical than base R, it produces very aesthetically pleasing results.
 
-TTo explore R’s plotting capabilities, we’ll continue working with the NHANES datasets. Specifically, we’ll use the merged data frame that combines the `demo`, `bpx`, `bmx` and `smq` data sets. If you still have it loaded from Chapter 2, you can use it directly. Otherwise, you can download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
+To explore R’s plotting capabilities, we’ll continue working with the NHANES datasets. Specifically, we’ll use the merged data frame that combines the `demo`, `bpx`, `bmx` and `smq` data sets. If you still have it loaded from Chapter 2, you can use it directly. Otherwise, you can download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
 
 ```{r, echo=TRUE}
 # Load the merged_nhanes CSV file

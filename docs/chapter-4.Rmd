@@ -41,33 +41,184 @@ library(tidyverse)
 
 The reference material for this course, as well as some useful literature to deepen your knowledge of R, can be found at the bottom of the page.
 
-# Most commonly used statistical tests
+---
 
-| Section | Topic | Subtopics |
-|---------|-------|-----------|
-| **4.1 Tests for comparing two groups** | Tests comparing means or proportions between two groups | Student’s t-Test, Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test), Fisher’s Exact Test, McNemar Test |
-| **4.2 Tests for more than two groups** | Tests for comparing multiple groups | Kruskal-Wallis Test, Friedman Test, Pearson’s Chi-Square Test |
-| **4.3 Tests for distribution and normality** | Tests for distribution of data | Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test |
-| **4.4 Tests for survival analysis** | Tests for time-to-event data | Logrank/ Log-Rank Test |
-| **4.5 Correlation and association tests** | Tests for relationships between variables | Correlation test by Pearson, Correlation test by Spearman |
-| **4.6 Predictive modeling and regression** | Predictive models and regression techniques | Generalized Linear Models (GLMs) (Linear Regression - Logistic Regression - Cox Proportional Hazards Regression - Multivariable Regression) Mixed Effects Models, Generalized Additive Models (GAMs), Generalized Additive Mixed Models (GAMMs) |
+To explore R’s statistical tools, we’ll continue working with the NHANES datasets. Specifically, we’ll use the merged data frame that combines the `demo`, `bpx`, `bmx` and `smq` data sets. If you still have it loaded from Chapters 2 und 3, you can use it directly. Otherwise, you can download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
 
-## Overview
+```{r, echo=TRUE}
+# Load the merged_nhanes CSV file
+merged_nhanes <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
+```
 
-|               | 1 Sample                             | 2 Paired Samples                                             | 2 Unpaired Samples                           | >2 Paired Samples                            | >2 Unpaired Samples                         | Continuous Predictor               |
-|---------------|--------------------------------------|--------------------------------------------------------------|----------------------------------------------|----------------------------------------------|----------------------------------------------|------------------------------------|
-| **Binary**    | Binomial test                        | McNemar test                                                 | Chi-square test, Fisher's exact test         | Cochran's Q test                             | Chi-square test, extensions of Fisher's test | Logistic regression                |
-| **Nominal**   | Chi-square goodness of fit test      |                                                              | Chi-square test, extensions of Fisher's test |                                              | Chi-square test                              | Multinomial regression             |
-| **Ordinal**   | Wilcoxon signed-rank test, sign test | Sign test or Wilcoxon signed-rank test on differences        | Mann-Whitney U test (Wilcoxon rank-sum test) | Friedman test                                | Kruskal–Wallis test                          | Ordinal regression                 |
-| **Continuous**| One-sample t-test                    | Paired t-test or Wilcoxon signed-rank test on differences    | Two-sample t-test                            | Repeated measures ANOVA                      | ANOVA                                        | Linear regression                  |
-| **Time-to-event** | One-sample log-rank test             |                                                              | Log-rank test                                |                                              |                                             | Cox regression, Weibull regression |
+# Most commonly used statistical tests and models
+
+This chapter will follow the structure outlined below. We will learn how to perform a selection of statistical tests and models in R, categorising them by their objective (e.g. comparing two means or analysing survival).
+
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Section</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Topic</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Subtopics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.1 Tests for comparing two groups</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests comparing means or proportions between two groups</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Student’s t-test <br> • Wilcoxon-Mann-Whitney test (Mann-Whitney-U-test) <br> • Fisher’s exact test <br> • McNemar test</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.2 Tests for more than two groups</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for comparing multiple groups</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Kruskal-Wallis test <br> • Friedman test <br> • Pearson’s Chi-Square test</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.3 Tests for distribution and normality</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for distribution of data</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Lilliefors / Kolmogorov-Smirnov-Lilliefors test</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.4 Tests for survival analysis</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for time-to-event data</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Logrank test</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.5 Correlation and association tests</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for relationships between variables</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Correlation test by Pearson <br> • Correlation test by Spearman</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.6 Predictive modelling and regression</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Predictive models and regression techniques</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Generalized Linear Models (GLMs): Linear regression, logistic regression, ordinal regression, Cox (proportional hazards) regression - Multivariable Regression <br> • Mixed Effects Models <br> • Generalized Additive Models (GAMs) <br> • Generalized Additive Mixed Models (GAMMs)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Which test for which data?
+
+Before we begin, here is an overview of the type of data required by each test/model. More tests and models are presented than will be discussed in the course, but I have included them for the sake of completeness. If you feel lost on that topic at any point in the chapter, just scroll up again to have a look at this table.
+
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;"></th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">1 sample</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">2 paired samples</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">2 unpaired samples</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">&gt;2 paired samples</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">&gt;2 unpaired samples</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Continuous predictor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Binary</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Binomial test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• McNemar test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Fisher's exact test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cochran's Q test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Extensions of Fisher's test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Logistic regression</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Nominal</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square goodness of fit test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Extensions of Fisher's test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Multinomial regression</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Ordinal</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Wilcoxon signed-rank test<br>• Sign test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Sign test<br>• Wilcoxon signed-rank test on differences</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Mann-Whitney U test (Wilcoxon rank-sum test)</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Friedman test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Kruskal–Wallis test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Ordinal regression</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Continuous</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• One-sample t-test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Paired t-test<br>• Wilcoxon signed-rank test on differences</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Two-sample t-test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Repeated measures ANOVA</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• ANOVA</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Linear regression</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Time-to-event</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• One-sample log-rank test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Log-rank test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cox regression<br>• Weibull regression</td>
+    </tr>
+  </tbody>
+</table>
+
+## What is a statistical test?
+
+Before we start looking at many different statistical tests, let us recall the basic structure that they all share, by exploring more in-depth the Student's t-test for two, independent continuous samples.
+
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Generally</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Student's t-test for two, independent samples</th>
+      </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">A test always wants to test some quantity of the data it is used on</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Working on two patients cohorts, the smokers and the non-smokers, one could ask her-/himself if they share the same mean on a variable, e.g. the BMI</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The data itself is expected to fulfil some **assumptions**</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">As the BMI data is continuous, the cohorts are big (> 100 patients each, of sizes m and n) and assumed to be independent, and there is no reason to assume they'd have a different variance in the BMI, a Student's t-test appears to be the right choice</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The 'status quo'/no difference formulation of the quetion we're asking is called the **null hypothesis**</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The null hypothesis, in our example, is the hypothesis that our two cohorts (the smokers and the non-smokers) share the same mean BMI</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The hypothesis we are usually interested to prove, the one showing a difference between two quantities, is called the **alternative hypothesis**</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The alternative hypothesis, in our example, is the hypothesis that our two cohorts (the smokers and the non-smokers) do not share the same mean BMI</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Assuming the null hypothesis is true, a specific parameter, called the **statistic**, is expected to fall into a given **distribution**</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the null hypothesis is true, then the t statistic: [insert image here] follows a Student-t-distribution with n+m-2 degrees of freedom.</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">For any object of which the distribution is know, it is possible to compute its probability to fall within a certain range; for a given **alpha level** between 0 and 1, one can determine an interval in which the statistic has a probability of alpha to fall within</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Letting alpha be 0.05, as it is common in medicine, we can determine that our t statistic has a probability of 95% to be in a given interval (that can be computed exactly)</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the statistic, after being computed, falls in the confidence interval, then we cannot reject the null hypothesis, and have to look for further evidence to prove our claim</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the t statistic falls into the range we computed, then we cannot say that we saw a significant difference in the means</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the statistic, after being computed, does not fall in the confidence interval, then we can reject the null hypothesis, say that the claim we made on the data is right with a 1-alpha confidence</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the t statistic doesn't fall into the range we computed, then we can say that we saw a significant difference in the means, with a confidence of 95%</td>
+    </tr>    
+  </tbody>
+</table>
+
+A few important comments: 
+
+  + It is not possible to prove that the null hypothesis is true: it could always be that with a bigger effect size and/or a larger sample size, we could show statistically the difference we're trying to demonstrate. So when a test comes out 'negatively' (no statistical significance, p=>alpha), it doesn't mean our supposition is necessarly wrong.
+  + On the other hand, even a significant test (p<alpha) doesn't mean that we proved the absolute truth: in a theoretical world, where we could repeat our experiment 100 times in the same conditions, even if our theory is wrong, we would always find a 'positive' result in alpha% of the cases. That is why consensus, in science, always relies on repeated experiments that (for the vast majority of them*) draw the same conclusion.
+  + \* Why is that? Because again, even in a theoretical world, where we could repeat our experiment 100 times in the same conditions, even if our theory is right, we would always find a 'negative' result in alpha% of the cases. 
 
 ## Tests for comparing two groups
 
 ### Student's t-Test
 
-Basis for comparing means of two groups.
-Introduce first as it’s widely used and foundational.
+
 
 ### Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test)
 

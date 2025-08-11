@@ -1,8 +1,8 @@
-# 🩺 R for physicians
+# R for physicians
 
 Welcome to R for physicians, a gentle introduction to coding and data analysis in R designed specifically for healthcare professionals and researchers. This project contains interactive lecture notes and practical resources to help you get started with data in R — no prior coding experience required.
 
-## 📘 Contents
+## Contents
 
 The lecture is structured into diffents chapters and appendices:
 
@@ -27,7 +27,7 @@ The lecture is structured into diffents chapters and appendices:
     Appendix B – Reference Lists of Useful Functions
     A quick-access catalog of essential functions for data handling and plotting.
 
-## 🚀 Getting started
+## Getting started
 
 To begin, access the full lecture notes via the following link:
 
@@ -36,9 +36,10 @@ To begin, access the full lecture notes via the following link:
 
 No installation is required — just follow along in your browser.
 
-## 📁 Project structure
+## Project structure
 
 This repository is organized into folders and files that support the creation and sharing of lecture materials.
+
 📂 Folders
 
     archive/

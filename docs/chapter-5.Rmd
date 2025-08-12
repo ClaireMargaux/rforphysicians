@@ -42,9 +42,99 @@ The reference material for this course, as well as some useful literature to dee
 
 # Good practices
 
-## Primary vs Secondary outcomes
+**Always...**
+
++ ... specify the type of data that you used, their unit, if they are continuous, categorical, etc.
++ ... specify the test that has been used to compute a p-value, let it be in a text or in a table. No exception!
++ ... state what you have done with missing data (see more on that below), and if applicable report the proportion of missing data you have
++ ... precise the significance level ($\alpha$) that you have used for your tests/CI
++ ... publish your "negative" ($p>alpha$) results (as we have learnt in Chapter 4, by design, even a false claim might lead to a "positive" ($p\leq\alpha$) results, so if only those results get published, one might think, in the end, that a claim is true, even though only "extreme" results were published, which do not reflect the reality); I am fully aware this is not as *sexy* as a positive result, and that editors are not very fond of them, but this should not stop us from trying
+
+A few useful reminders:
+
++ A confidence interval (CI) and a statistical test use the same underlying methodology, meaning that if you renounce on a doing statistical inference on a given variable (because you want to save statistical power for other analyses), please do **not** give a CI, as it contains moreless the same information (the CI is even a bit more informative, since you can deduce if $p\leq\alpha$ or $p>\alpha$ from the CI).
+
+## Primary vs Secondary endpoints
+
+Keep your **statistical power** for your primary endpoint(s). For that, keep their number to a minimum (ideally only one primary endpoint), and try to remain as descriptive (i.e. not statistical testing) as possible regarding your secondary endpoints.
 
 ## How to deal with missing data
+
+Missing data is a very tense topic. In practice, they are almost unavoidable. 
+
+### Prevention
+
+A first good step regarding missing data is to act preventively: if you are planing a prospective data analysis, is to design your study in a way that reduces as much as possible their occurrence. A few tips there:
+
++ Think about the availability of the data you are asking for.
+  * If a variable is not Standard of Care (e.g. a specific score you want to be used for assessment that is not standard in your clinic) or if a variable cannot be looked up any more if forgotten (e.g. measurement of bicarbonate in blood that decays after an hour, or a score at a specific time point), please indicate that very clearly (bold, in red, size 30, be creative) on your CRF, to make sure this is done!
++ Design your CRF in a *smart* way: you want to collect as much data as necessary, but as few as possible!
+  * Make sure your primary and secondary endpoints are covered by the CRF, and do not ask for much more! A lot of data is not necessarily helpful, the only risk you are taking after a certain point is that a lot of information will go missing, as nobody wants to fill in a form that is too long or requires to much investment.
+  * Also, make your work for the upcoming analysis easier by asking for precise information:
+    * Precise the unit for quantitative variables.
+    * Already pre-define what you expect to be the most recurrent categories for categorical variables (and set the last category as 'Other' with an option to complement it with free text).
+
+But once the data collection is over or if you are working on retrospective data, the data which is missing is usually missing for good.
+
+### Action
+
+So, one thing you should always ask yourself, when encountering missing data is: <u>Is this data "missing /completely) at random"?</u> Meaning: are the missing data points absent by chance, or is there a more **systematic pattern** in their missingness? 
+
+<u>Types of missingness (with examples)</u>
+
+**Missing Completely At Random (MCAT):** Data is missing independently of any observed or unobserved values.
+
+You are missing replies to your QoL questionnaire at 6 months for a few patients. The data is missing because all those questionnaires should have been filled in during a specific week where the study nurse was on holiday (poor absence planning, but that is another topic). There is nothing specifically putting those few patients aside from the rest of the cohort: we call those cases MCAT.
+
+**Missing At Random (MAR):** Missingness depends on observed data but not the missing values themselves.
+
+You are collecting data on depression in a cohort composed of both men and women, and men filled in less surveys than women. After accounting for gender, the unbalanced completion of survey has nothing to do with the level of depression: we call those cases MAT.
+
+**Missing Not At Random (MNAR):** Missing values are related to the missing data itself, leading to potential bias.
+
+Now you are collecting questionnaires filled in at 12 months by patients that are suffering of brain cancer, among which the progress of the disease is very variable. At the end of the trial, some questionnaires are missing, and they all **systematically** belong to patients that were simply too ill/invalid to fill them in. If you just delete these cases for your analysis, you might introduce a **bias**, meaning that you have to think about an alternative way of dealing with this data than just dropping the missing rows.
+
+#### Ommission: Listwise deletion (= complete case deletion)
+
+If the data are missing MCAR (or MAR), then listwise deletion does not add any (strong) bias, but it does decrease the power of the analysis by decreasing the effective sample size. Another good option in that case is mean imputation, which is most effective when the data is MCAR, as it assumes that the missing values, on average, are similar to the observed ones.
+
+#### Imputation
+
+If you are dealing with data MNAR, then you have to find a smart way to impute ("deduce") by one way or another the value of the data which is missing. We call that **imputation**, and there are many approaches to do that, each of them having advantages and disadvantages. Choose the optimal one depending on your data, the analysis you aim for, and the proportion of missing data.
+
+  * <u>Mean/median imputation:</u> you replace the missing values with the mean or median of the observed values in that column.
+
+    **(+)** does not change the sample mean/median for that variable
+    
+    **(-)** attenuates any correlations involving the variable(s) that are imputed, can distort distributions and underestimate variance
+    
+  * <u>Regression imputation:</u> you use a regression model to predict the missing value based on other variables in the dataset.
+    
+    **(+)** the estimates fit perfectly along the regression line without any residual variance
+    
+    **(-)** opposite problem of mean imputation: the model predicts the most likely value of missing data but does not supply uncertainty about that value; by doing so, it may artificially strengthen relationships between variables
+    
+  * <u>Last Observation Carried Forward (LOCF) imputation:</u> an be used when the data are longitudinal (i.e. repeated measures have been taken per subject); the last observed non-missing value is used to fill in missing values at a later point in the study
+    
+    **(+)** easy to apply
+    
+    **(-)** can introduce bias if the last observed value is not representative of the participant’s state at the time of the missing data; underestimates variability (fails to account for natural fluctuations in the data)
+    
+  * <u>K-Nearest Neighbours (KNN) imputation:</u> you find the k-nearest neighbours to a data point with a missing value and using their values to impute the missing one. 
+    
+    **(+)** efficient for data sets with underlying patterns and relationships
+    
+    **(-)** is computationally expensive for large datasets
+    
+  * Etc.
+  
+### Last resort
+
+And if too many data points are missing for a variable, consider dropping the corresponding analysis completely.
+
+## Multiple testing
+
+
 
 \newpage
 

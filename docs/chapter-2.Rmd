@@ -547,8 +547,8 @@ You should specify the type of join you are looking for:
   + Right (outer) join: keep all rows from `bmx` and only matching rows from `demo`: `left_join_df <- merge(demo, bmx, by = "SEQN", all.y = TRUE)`
   + Full (outer) join: keep all rows from both `demo` and `bmx`, filling with NA where there are no matches: `full_join_df <- merge(demo, bmx, by = "SEQN", all = TRUE)`
 
-```{r, echo=FALSE, out.width = "50%"}
-knitr::include_graphics(path = "images/joins.png")
+```{r, echo=FALSE, out.width = "100%"}
+knitr::include_graphics(path = "images/types_of_joins.jpg")
 ```
 
 💡 `merge()` in base R is flexible but can be a bit verbose. For simpler syntax, you can also use the `dplyr` functions `left_join()`, `right_join()`, `inner_join()`, and `full_join()`.

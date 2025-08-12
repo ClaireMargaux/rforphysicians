@@ -11,7 +11,7 @@
 
 <meta name="author" content="Claire Descombes" />
 
-<meta name="date" content="2025-06-03" />
+<meta name="date" content="2025-08-12" />
 
 <title>Chapter 5</title>
 
@@ -2904,7 +2904,7 @@ border-radius: 0px;
 <h1 class="title toc-ignore">Chapter 5</h1>
 <h3 class="subtitle">R for physicians</h3>
 <h4 class="author">Claire Descombes</h4>
-<h4 class="date">2025-06-03</h4>
+<h4 class="date">2025-08-12</h4>
 
 </div>
 
@@ -2946,13 +2946,181 @@ literature to deepen your knowledge of R, can be found at the bottom of
 the page.</p>
 <div id="good-practices" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Good practices</h1>
-<div id="primary-vs-secondary-outcomes" class="section level2" number="1.1">
+<p><strong>Always…</strong></p>
+<ul>
+<li>… specify the type of data that you used, their unit, if they are
+continuous, categorical, etc.</li>
+<li>… specify the test that has been used to compute a p-value, let it
+be in a text or in a table. No exception!</li>
+<li>… state what you have done with missing data (see more on that
+below), and if applicable report the proportion of missing data you
+have</li>
+<li>… precise the significance level (<span class="math inline">\alpha</span>) that you have used for your
+tests/CI</li>
+<li>… publish your “negative” (<span class="math inline">p&gt;alpha</span>) results (as we have learnt in
+Chapter 4, by design, even a false claim might lead to a “positive”
+(<span class="math inline">p\leq\alpha</span>) results, so if only those
+results get published, one might think, in the end, that a claim is
+true, even though only “extreme” results were published, which do not
+reflect the reality); I am fully aware this is not as <em>sexy</em> as a
+positive result, and that editors are not very fond of them, but this
+should not stop us from trying</li>
+</ul>
+<p>A few useful reminders:</p>
+<ul>
+<li>A confidence interval (CI) and a statistical test use the same
+underlying methodology, meaning that if you renounce on a doing
+statistical inference on a given variable (because you want to save
+statistical power for other analyses), please do <strong>not</strong>
+give a CI, as it contains moreless the same information (the CI is even
+a bit more informative, since you can deduce if <span class="math inline">p\leq\alpha</span> or <span class="math inline">p&gt;\alpha</span> from the CI).</li>
+</ul>
+<div id="primary-vs-secondary-endpoints" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Primary vs Secondary
-outcomes</h2>
+endpoints</h2>
+<p>Keep your <strong>statistical power</strong> for your primary
+endpoint(s). For that, keep their number to a minimum (ideally only one
+primary endpoint), and try to remain as descriptive (i.e. not
+statistical testing) as possible regarding your secondary endpoints.</p>
 </div>
 <div id="how-to-deal-with-missing-data" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> How to deal with
 missing data</h2>
+<p>Missing data is a very tense topic. In practice, they are almost
+unavoidable.</p>
+<div id="prevention" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Prevention</h3>
+<p>A first good step regarding missing data is to act preventively: if
+you are planing a prospective data analysis, is to design your study in
+a way that reduces as much as possible their occurrence. A few tips
+there:</p>
+<ul>
+<li>Think about the availability of the data you are asking for.
+<ul>
+<li>If a variable is not Standard of Care (e.g. a specific score you
+want to be used for assessment that is not standard in your clinic) or
+if a variable cannot be looked up any more if forgotten
+(e.g. measurement of bicarbonate in blood that decays after an hour, or
+a score at a specific time point), please indicate that very clearly
+(bold, in red, size 30, be creative) on your CRF, to make sure this is
+done!</li>
+</ul></li>
+<li>Design your CRF in a <em>smart</em> way: you want to collect as much
+data as necessary, but as few as possible!
+<ul>
+<li>Make sure your primary and secondary endpoints are covered by the
+CRF, and do not ask for much more! A lot of data is not necessarily
+helpful, the only risk you are taking after a certain point is that a
+lot of information will go missing, as nobody wants to fill in a form
+that is too long or requires to much investment.</li>
+<li>Also, make your work for the upcoming analysis easier by asking for
+precise information:
+<ul>
+<li>Precise the unit for quantitative variables.</li>
+<li>Already pre-define what you expect to be the most recurrent
+categories for categorical variables (and set the last category as
+‘Other’ with an option to complement it with free text).</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>But once the data collection is over or if you are working on
+retrospective data, the data which is missing is usually missing for
+good.</p>
+</div>
+<div id="action" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Action</h3>
+<p>So, one thing you should always ask yourself, when encountering
+missing data is: <u>Is this data “missing /completely) at random”?</u>
+Meaning: are the missing data points absent by chance, or is there a
+more <strong>systematic pattern</strong> in their missingness?</p>
+<p><u>Types of missingness (with examples)</u></p>
+<p><strong>Missing Completely At Random (MCAT):</strong> Data is missing
+independently of any observed or unobserved values.</p>
+<p>You are missing replies to your QoL questionnaire at 6 months for a
+few patients. The data is missing because all those questionnaires
+should have been filled in during a specific week where the study nurse
+was on holiday (poor absence planning, but that is another topic). There
+is nothing specifically putting those few patients aside from the rest
+of the cohort: we call those cases MCAT.</p>
+<p><strong>Missing At Random (MAR):</strong> Missingness depends on
+observed data but not the missing values themselves.</p>
+<p>You are collecting data on depression in a cohort composed of both
+men and women, and men filled in less surveys than women. After
+accounting for gender, the unbalanced completion of survey has nothing
+to do with the level of depression: we call those cases MAT.</p>
+<p><strong>Missing Not At Random (MNAR):</strong> Missing values are
+related to the missing data itself, leading to potential bias.</p>
+<p>Now you are collecting questionnaires filled in at 12 months by
+patients that are suffering of brain cancer, among which the progress of
+the disease is very variable. At the end of the trial, some
+questionnaires are missing, and they all <strong>systematically</strong>
+belong to patients that were simply too ill/invalid to fill them in. If
+you just delete these cases for your analysis, you might introduce a
+<strong>bias</strong>, meaning that you have to think about an
+alternative way of dealing with this data than just dropping the missing
+rows.</p>
+<div id="ommission-listwise-deletion-complete-case-deletion" class="section level4" number="1.2.2.1">
+<h4><span class="header-section-number">1.2.2.1</span> Ommission:
+Listwise deletion (= complete case deletion)</h4>
+<p>If the data are missing MCAR (or MAR), then listwise deletion does
+not add any (strong) bias, but it does decrease the power of the
+analysis by decreasing the effective sample size. Another good option in
+that case is mean imputation, which is most effective when the data is
+MCAR, as it assumes that the missing values, on average, are similar to
+the observed ones.</p>
+</div>
+<div id="imputation" class="section level4" number="1.2.2.2">
+<h4><span class="header-section-number">1.2.2.2</span> Imputation</h4>
+<p>If you are dealing with data MNAR, then you have to find a smart way
+to impute (“deduce”) by one way or another the value of the data which
+is missing. We call that <strong>imputation</strong>, and there are many
+approaches to do that, each of them having advantages and disadvantages.
+Choose the optimal one depending on your data, the analysis you aim for,
+and the proportion of missing data.</p>
+<ul>
+<li><p><u>Mean/median imputation:</u> you replace the missing values
+with the mean or median of the observed values in that column.</p>
+<p><strong>(+)</strong> does not change the sample mean/median for that
+variable</p>
+<p><strong>(-)</strong> attenuates any correlations involving the
+variable(s) that are imputed, can distort distributions and
+underestimate variance</p></li>
+<li><p><u>Regression imputation:</u> you use a regression model to
+predict the missing value based on other variables in the dataset.</p>
+<p><strong>(+)</strong> the estimates fit perfectly along the regression
+line without any residual variance</p>
+<p><strong>(-)</strong> opposite problem of mean imputation: the model
+predicts the most likely value of missing data but does not supply
+uncertainty about that value; by doing so, it may artificially
+strengthen relationships between variables</p></li>
+<li><p><u>Last Observation Carried Forward (LOCF) imputation:</u> an be
+used when the data are longitudinal (i.e. repeated measures have been
+taken per subject); the last observed non-missing value is used to fill
+in missing values at a later point in the study</p>
+<p><strong>(+)</strong> easy to apply</p>
+<p><strong>(-)</strong> can introduce bias if the last observed value is
+not representative of the participant’s state at the time of the missing
+data; underestimates variability (fails to account for natural
+fluctuations in the data)</p></li>
+<li><p><u>K-Nearest Neighbours (KNN) imputation:</u> you find the
+k-nearest neighbours to a data point with a missing value and using
+their values to impute the missing one.</p>
+<p><strong>(+)</strong> efficient for data sets with underlying patterns
+and relationships</p>
+<p><strong>(-)</strong> is computationally expensive for large
+datasets</p></li>
+<li><p>Etc.</p></li>
+</ul>
+</div>
+</div>
+<div id="last-resort" class="section level3" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> Last resort</h3>
+<p>And if too many data points are missing for a variable, consider
+dropping the corresponding analysis completely.</p>
+</div>
+</div>
+<div id="multiple-testing" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Multiple testing</h2>
 <div style="page-break-after: always;"></div>
 </div>
 </div>

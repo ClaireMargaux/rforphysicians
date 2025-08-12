@@ -98,6 +98,10 @@ This chapter will follow the structure outlined below. We will learn how to perf
 
 ## Which test for which data?
 
+```{r, echo=FALSE, out.width = "100%"}
+knitr::include_graphics(path = "images/types_of_data.jpg")
+```
+
 Before we begin, here is an overview of the type of data required by each test/model. More tests and models are presented than will be discussed in the course, but I have included them for the sake of completeness. If you feel lost on that topic at any point in the chapter, just scroll up again to have a look at this table.
 
 <table style="width:100%; border-collapse: collapse; border: 1px solid black;">
@@ -163,7 +167,7 @@ Before we begin, here is an overview of the type of data required by each test/m
 
 ## What is a statistical test?
 
-Before we start looking at many different statistical tests, let us recall the basic structure that they all share, by exploring more in-depth the Student's t-test for two, independent continuous samples.
+Before we start looking at many different <u>statistical hypothesis tests</u>, let us recall the basic structure that they all share, by exploring more in-depth the Student's t-test for two, independent continuous samples.
 
 <table style="width:100%; border-collapse: collapse; border: 1px solid black;">
   <thead>
@@ -174,15 +178,15 @@ Before we start looking at many different statistical tests, let us recall the b
   </thead>
   <tbody>
     <tr>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">A test always wants to test some quantity of the data it is used on</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Working on two patients cohorts, the smokers and the non-smokers, one could ask her-/himself if they share the same mean on a variable, e.g. the BMI</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">A test always aims to put to test a claim we make about some parameter (a correlation, a difference in mean, etc.) in the distribution of the population of interest.</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Working on two patients cohorts, the smokers and the non-smokers, one could ask her-/himself if they share the same mean on a continuous variable, e.g. the BMI</td>
     </tr>
     <tr>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The data itself is expected to fulfil some **assumptions**</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">As the BMI data is continuous, the cohorts are big (> 100 patients each, of sizes m and n) and assumed to be independent, and there is no reason to assume they'd have a different variance in the BMI, a Student's t-test appears to be the right choice</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The data itself is expected to fulfil some **assumptions**.</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">As the BMI data is continuous, the cohorts are big (> 100 patients each, of sizes $n_1$ and $n_2$) and assumed to be independent, and there is no reason to assume they'd have a different variance in the BMI, an unpaired Student's t-test appears to be the right choice.</td>
     </tr>
     <tr>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The 'status quo'/no difference formulation of the quetion we're asking is called the **null hypothesis**</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The 'status quo'/no difference formulation of the question we're asking is called the **null hypothesis**.</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">The null hypothesis, in our example, is the hypothesis that our two cohorts (the smokers and the non-smokers) share the same mean BMI</td>
     </tr>
     <tr>
@@ -191,28 +195,84 @@ Before we start looking at many different statistical tests, let us recall the b
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Assuming the null hypothesis is true, a specific parameter, called the **statistic**, is expected to fall into a given **distribution**</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the null hypothesis is true, then the t statistic: [insert image here] follows a Student-t-distribution with n+m-2 degrees of freedom.</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the null hypothesis is true, then the t statistic: $t = \frac{\tilde{X}_1-\tilde{X}_2}{s_p \cdot \sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$ (where $s_p$ is the pooled standard deviation) follows a Student's t-distribution with $n_1+n_2-2$ degrees of freedom.</td>
     </tr>
     <tr>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">For any object of which the distribution is know, it is possible to compute its probability to fall within a certain range; for a given **alpha level** between 0 and 1, one can determine an interval in which the statistic has a probability of alpha to fall within</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Letting alpha be 0.05, as it is common in medicine, we can determine that our t statistic has a probability of 95% to be in a given interval (that can be computed exactly)</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">For any object of which the distribution is (assumed to be) known, it is possible to compute its probability to fall within a certain range; for a given **significance level** (denoted by $\alpha$) and between 0 and 1, one can determine an interval in which the statistic has a probability of $1-\alpha$ to fall within</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Letting $\alpha$ be 0.05, as it is common in medicine, we can determine that our t statistic has a probability of 95% to be in a given interval (that can be computed in R or using a table).</td>
     </tr>
     <tr>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the statistic, after being computed, falls in the confidence interval, then we cannot reject the null hypothesis, and have to look for further evidence to prove our claim</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the t statistic falls into the range we computed, then we cannot say that we saw a significant difference in the means</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the statistic, after being computed, falls in the $1-\alpha$ confidence interval ($p>\alpha$), then we **cannot reject the null hypothesis**, and have to look for further evidence to prove our claim.</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the t statistic falls into the range we computed, then we cannot say that we saw a significant difference in the means.</td>
     </tr>
     <tr>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the statistic, after being computed, does not fall in the confidence interval, then we can reject the null hypothesis, say that the claim we made on the data is right with a 1-alpha confidence</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the t statistic doesn't fall into the range we computed, then we can say that we saw a significant difference in the means, with a confidence of 95%</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the statistic, after being computed, does *not* fall in the $1-\alpha$ confidence interval ($p \leq \alpha$), then we can reject the null hypothesis, and say that the claim we made on the data is **statistically significant** with a $1-\alpha$ confidence.</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the t-statistic does not fall into the range we computed, then we can say that we observe a statistically significant difference in the means, with a confidence of 95%.</td>
     </tr>    
   </tbody>
 </table>
 
 A few important comments: 
 
-  + It is not possible to prove that the null hypothesis is true: it could always be that with a bigger effect size and/or a larger sample size, we could show statistically the difference we're trying to demonstrate. So when a test comes out 'negatively' (no statistical significance, p=>alpha), it doesn't mean our supposition is necessarly wrong.
-  + On the other hand, even a significant test (p<alpha) doesn't mean that we proved the absolute truth: in a theoretical world, where we could repeat our experiment 100 times in the same conditions, even if our theory is wrong, we would always find a 'positive' result in alpha% of the cases. That is why consensus, in science, always relies on repeated experiments that (for the vast majority of them*) draw the same conclusion.
-  + \* Why is that? Because again, even in a theoretical world, where we could repeat our experiment 100 times in the same conditions, even if our theory is right, we would always find a 'negative' result in alpha% of the cases. 
+  + The p-value is the **probability under the null hypothesis** of obtaining a (real-valued) test statistic **at least as extreme** as the one obtained.
+  + Loosely speaking, rejection of the null hypothesis implies that there is **sufficient evidence against it**. 
+  + It is not possible to prove that the null hypothesis is true: it could always be that with a bigger effect size and/or a larger sample size, we could statistically show the difference that we are trying to demonstrate. So, when a test comes out "negatively" (no statistical significance, $p>\alpha$), it does not mean that our claim is necessarly wrong.
+  + On the other hand, even a significant test ($p\leq\alpha$) does not mean that we *irrefutably proved* our claim: in a theoretical world, where we could repeat our experiment 100 times in the same conditions and on the same population, even if our theory is wrong, we would always find a "positive" result ($p\leq\alpha$) in $\alpha\%$ of the cases. That is why consensus, in science, always relies on repeated experiments that (for the vast majority of them*) draw the same conclusion.
+  + \* Why is that? Because again, even in a theoretical world, where we could repeat our experiment 100 times in the same conditions, even if our theory is right, we would always find a "negative" result in $\alpha\%$ of the cases. 
+
+```{r, echo=FALSE}
+# parameters
+mu <- 0
+sigma <- 1
+
+# significance: tails that are 2.5% each (two-tailed alpha = 0.05)
+alpha <- 0.05
+lower_cut <- qnorm(alpha/2, mean = mu, sd = sigma)
+upper_cut <- qnorm(1 - alpha/2, mean = mu, sd = sigma)
+
+# density data
+x <- seq(mu - 4*sigma, mu + 4*sigma, length.out = 1000)
+df <- data.frame(x = x, y = dnorm(x, mean = mu, sd = sigma))
+
+# split regions
+df_mid   <- df[df$x >  lower_cut & df$x <  upper_cut, ]
+df_left  <- df[df$x <= lower_cut, ]
+df_right <- df[df$x >= upper_cut, ]
+
+# plot: middle first, tails after (so they sit on top), line on top of everything
+ggplot(df, aes(x = x, y = y)) +
+  geom_area(data = df_mid,   fill = "skyblue", alpha = 0.6) +   # middle area
+  geom_area(data = df_left,  fill = "tomato",  alpha = 0.8) +   # left tail (on top)
+  geom_area(data = df_right, fill = "tomato",  alpha = 0.8) +   # right tail (on top)
+  geom_line(size = 1) +
+  geom_vline(xintercept = c(lower_cut, upper_cut), linetype = "dashed") +
+  annotate("text", x = lower_cut, y = max(df$y)*0.9, label = sprintf("%.3f", lower_cut), hjust = 1.1) +
+  annotate("text", x = upper_cut, y = max(df$y)*0.9, label = sprintf("%.3f", upper_cut), hjust = -0.1) +
+  annotate("text", 
+           x = (lower_cut + upper_cut)/2, 
+           y = max(df$y)*0.5, 
+           label = "95%", 
+           size = 6, 
+           fontface = "bold", 
+           color = "black") +
+  annotate("text", 
+           x = lower_cut-1, 
+           y = max(df$y)*0.5, 
+           label = "2.5%", 
+           size = 6, 
+           fontface = "bold", 
+           color = "black") +
+  annotate("text", 
+           x = upper_cut+1, 
+           y = max(df$y)*0.5, 
+           label = "2.5%", 
+           size = 6, 
+           fontface = "bold", 
+           color = "black") +
+  labs(title = "Standard normal density",
+       x = "x", y = "Density") +
+  theme_minimal(base_size = 14)
+```
 
 ## Tests for comparing two groups
 
@@ -224,7 +284,7 @@ A few important comments:
 
 <u>2. Type of data</u>
 
-* One or two vectors of continuous variables (e.g. blood pressure in mmHg in two groups)
+* One or two vectors of continuous variables (e.g. blood pressure in mmHg in two cohorts)
 
 <u>3. Requirements</u>
 
@@ -277,6 +337,62 @@ t.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', var.equal = TRUE, 
 ### Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test)
 
 Presented as the non-parametric alternative to the t-Test.
+
+<u>1. Null hypothesis</u>
+
+* Means of two populations are equal
+
+<u>2. Type of data</u>
+
+* One or two vectors of continuous variables (e.g. blood pressure in mmHg in two cohorts)
+
+<u>3. Requirements</u>
+
+* The *means* of the two populations being compared should follow normal distributions. Under weak assumptions, this follows in large samples from the central limit theorem, even when the distribution of observations in each group is non-normal.
+* If using Student's original definition of the t-test, the two populations being compared should have the *same variance* (assessable graphically using a Q–Q plot). If the sample sizes in the two groups being compared are equal, Student's original t-test is highly robust to the presence of unequal variances. *Welch's t-test* is insensitive to equality of the variances regardless of whether the sample sizes are similar.
+* The data used to carry out the test should either be *sampled independently* from the two populations being compared or be fully paired. This is in general not testable from the data, but if the data are known to be dependent (e.g. paired by test design), a dependent test has to be applied.
+
+<u>4. `R` function</u>
+
+`t.test(x, ...)`: Performs one and two sample t-tests on vectors of data.
+
+<u>5. Important arguments</u>
+
+t.test(x, y = NULL,
+       alternative = c("two.sided", "less", "greater"),
+       mu = 0, paired = FALSE, var.equal = FALSE,
+       conf.level = 0.95, ...)
+
+* `x, y`: the vector(s) that contain the data (only one vector in the case of a one-sample t-test, two vectors otherwise).
+* `alternative`: a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".
+* `var.equal`:a logical variable indicating whether to treat the two variances as being equal. If `TRUE` then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
+* `mu`: a number indicating the true value of the mean (or difference in means if you are performing a two sample test).
+* `paired`: a logical indicating whether you want a paired t-test. As a reminder, "paired" means there is an obvious and meaningful one-to-one correspondence between the data in the first set and the data in the second set, e.g. blood pressure in a set of patients before and after administering a medicine.
+* `conf.level`: confidence level of the interval (default: 5%).
+
+<u>6. Example</u>
+
+Let us test if the mean BMI (`BMXBMI`) is significantly different between men and women (` RIAGENDR`).
+
+```{r}
+# We create two vectors, with the BMIs of women and men
+bmi_women <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Female"]
+bmi_men <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Male"]
+
+# We can start looking at how many non NA entries we have and by computing the means
+sum(!is.na(bmi_women));sum(!is.na(bmi_men))
+mean(bmi_women, na.rm = TRUE);mean(bmi_men, na.rm = TRUE)
+qqplot(x = bmi_women, y = bmi_men)
+
+# We compare their means using a t-test
+t.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', var.equal = TRUE, paired = FALSE)
+```
+
+* The `t` value is the statistic of the t-test.
+* `df` are the degrees of freedom (a characteristics of the underlying distribution of the statistic), depends on the test used (one- or two-sample, paired or unpaired), in this case it is the sum of the two samples minus 2 (3239+3212-2=6449).
+* The `p-value` is the probability of getting such a `t` value under the null hypothesis. It is very small: 5.854e-09, so to an alpha-level of 0.05, we say that their is a statistically significant difference between the means of the two groups.
+* The 95% CI tells us where the difference in the means lies, to a confidence of 95%. In coherence with the very low p-value, this interval does not contain 0 (which would mean "no difference").
+* Finally, the means of both vectors are also computed.
 
 ### Fisher's Exact Test
 

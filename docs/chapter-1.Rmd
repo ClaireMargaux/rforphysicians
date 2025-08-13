@@ -1,6 +1,5 @@
 ---
 title: "Chapter 1"
-author: "Claire Descombes"
 date: "`r Sys.Date()`"
 contact: claire.descombes@insel.ch
 output:

@@ -1,6 +1,5 @@
 ---
 title: "Appendix A"
-author: "Claire Descombes"
 date: "`r Sys.Date()`"
 contact: claire.descombes@insel.ch
 output:
@@ -44,12 +43,13 @@ The reference material for this course, as well as some useful literature to dee
 
 The National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nchs/nhanes/)) Survey from 2011-2012 assessed overall health and nutrition of adults and children in the United States and was conducted by the National Center for Health Statistics (NCHS). The data sets can be found in the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets).
 
-| Dataset               | NHANES Code | Description                                           | CSV File     |
-| --------------------- | ----------- | ----------------------------------------------------- | ------------ |
-| Demographics          | DEMO\_G     | Age, sex, race/ethnicity, income, education           | `DEMO_G.csv` |
-| Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings | `BPX_G.csv`  |
-| Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference              | `BMX_G.csv`  |
-| Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke          | `SMQ_G.csv`  |
+| Dataset               | NHANES Code | Description                                                       | File                                    |
+| --------------------- | ----------- | ----------------------------------------------------------------- | --------------------------------------- |
+| Demographics          | DEMO\_G     | Age, sex, race/ethnicity, income, education                       | `DEMO_G.csv`                            |
+| Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings             | `BPX_G.csv`                             |
+| Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference                          | `BMX_G.csv`                             |
+| Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke                      | `SMQ_G.csv`                             |
+| Mortality Data        | NDI         | Mortality follow-up data (status, follow-up time, cause of death) | `NHANES_2011_2012_MORT.dat`            |
 
 💡 The codebook for each data set can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in `R` using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data).
 
@@ -109,6 +109,18 @@ Follows a list of some of the key variables from the NHANES data sets.
 | SMQ690        | Smoked pipes in the past 5 days             |
 | SMQ700        | Smoked chewing tobacco in the past 5 days   |
 | SMQ710        | Smoked snuff in the past 5 days             |
+
+## Mortality data set (NHANES_2011_2012_MORT_2019_PUBLIC)
+
+| Variable Name     | Description                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| MORTSTAT      | Mortality status at the end of follow-up (0 = assumed alive, 1 = assumed deceased)        |
+| PERMTH\_INT   | Person-months of follow-up from the NHANES interview date to date of death or censoring   |
+| PERMTH\_EXM   | Person-months of follow-up from the NHANES examination date to date of death or censoring |
+| UCOD\_LEADING | Underlying cause of death, grouped into leading cause categories (public-use)             |
+| DIABETES      | Indicator if diabetes was listed as a cause of death (public-use)                         |
+| HYPERTEN      | Indicator if hypertension was listed as a cause of death (public-use)                     |
+
 
 \newpage
 

@@ -1,6 +1,5 @@
 ---
 title: "Appendix B"
-author: "Claire Descombes"
 date: "`r Sys.Date()`"
 contact: claire.descombes@insel.ch
 output:

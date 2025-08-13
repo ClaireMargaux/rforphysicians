@@ -1,6 +1,5 @@
 ---
 title: "Chapter 3"
-author: "Claire Descombes"
 date: "`r Sys.Date()`"
 contact: claire.descombes@insel.ch
 output:
@@ -47,11 +46,16 @@ The base R plotting functions are effective and user-friendly, so we will begin 
 
 Next, we will take a look at the functions offered by `ggplot2`, a system for declarative graphics creation. You provide the data and specify how to map variables to aesthetics and which graphical primitives to use; ggplot2 then takes care of the details. Although it is slightly more technical than base R, it produces very aesthetically pleasing results.
 
-To explore R’s plotting capabilities, we’ll continue working with the NHANES datasets. Specifically, we’ll use the merged data frame that combines the `demo`, `bpx`, `bmx` and `smq` data sets. If you still have it loaded from Chapter 2, you can use it directly. Otherwise, you can download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
+To explore R’s plotting capabilities, we’ll continue working with the NHANES datasets. Specifically, we’ll use the merged data frame that combines the `demo`, `bpx`, `bmx` and `smq` data sets. If you still have it loaded from Chapter 2, you can use it directly. 
+
+To be able to plot survival curves, we will also need survival data for the NHANES data set. Those can be found publicly as well (for adults only), on the [National Death Index](https://www.cdc.gov/nchs/linked-data/mortality-files/?CDC_AAref_Val=https://www.cdc.gov/nchs/data-linkage/mortality-public.htm). I already merged this survival data with the NHANES data set, please download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
 
 ```{r, echo=TRUE}
 # Load the merged_nhanes CSV file
 merged_nhanes <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
+
+# Load the merged_nhanes_with_mort CSV file
+merged_nhanes_with_mort <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes_with_mort.csv")
 ```
 
 # Including plots using base R
@@ -66,7 +70,7 @@ plot(x = merged_nhanes$RIDAGEYR, y = merged_nhanes$BPXSY1,
      col = c("steelblue"))
 ```
 
-💡 The arguments `xlab` and `ylab` allow fyou to define a label for the x and y axes respectively. The argument `main` defines the main title of the plot.
+💡 The arguments `xlab` and `ylab` allow you to define a label for the x and y axes respectively. The argument `main` defines the main title of the plot.
 
 ## Box plots
 
@@ -202,6 +206,30 @@ forestplot(labeltext = c("Female","Male"),
            xlab = "Systolic BP (95% CI) [mmHg]",
            col = fpColors(box = "steelblue", line = "steelblue"),
            title = "Forest plot of systolic BP by gender")
+```
+
+## Kaplan-Meier curves
+
+Base R requires the `survival` package in order to draw Kaplan-Meier survival curves.
+
+```{r, out.width="75%"}
+library(survival)
+
+# Filter out data outside of window (> 24 months)
+merged_nhanes_no_outliers <- merged_nhanes_with_mort[merged_nhanes_with_mort$PERMTH_INT <= 24, ]
+
+# Fit Kaplan–Meier survival curves
+fit <- survfit(Surv(PERMTH_INT, MORTSTAT) ~ 1, 
+               data = merged_nhanes_no_outliers)
+
+# Plot in base R
+plot(fit,
+     col = "steelblue",
+     lwd = 2,
+     xlab = "Time (months)",
+     ylab = "Survival probability",
+       ylim = c(0.7,1),
+     main = "Kaplan–Meier survival curve")
 ```
 
 ## Exercises
@@ -411,6 +439,29 @@ ggplot(forest_df, aes(x = mean, y = Gender)) +
        x = "Systolic BP (95% CI) [mmHg]",
        y = "") +
   theme_minimal()
+```
+
+## Kaplan-Meier curves
+
+`ggplot2` does not include a built-in function for KM curves, but can be extended with the `survminer` package for that.
+
+```{r, out.width="75%"}
+library(survminer)
+
+# Fit Kaplan–Meier survival curves (already done)
+fit <- survfit(Surv(PERMTH_INT, MORTSTAT) ~ 1, 
+               data = merged_nhanes_no_outliers)
+
+# Plot with ggsurvplot
+ggsurvplot(fit,
+           data = merged_nhanes_no_outliers,
+           palette = "steelblue",
+           conf.int = TRUE,  
+           xlab = "Time (months)",
+           ylab = "Survival probability",
+           ylim = c(0.7, 1),
+           risk.table = TRUE,
+           title = "Kaplan–Meier survival curve")
 ```
 
 ## Exercises

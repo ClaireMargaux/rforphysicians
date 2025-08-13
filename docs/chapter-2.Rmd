@@ -1,6 +1,5 @@
 ---
 title: "Chapter 2"
-author: "Claire Descombes"
 date: "`r Sys.Date()`"
 contact: claire.descombes@insel.ch
 output:
@@ -46,7 +45,6 @@ The reference material for this course, as well as some useful literature to dee
 ## Working directory
 
 When you get a file from somewhere on your computer (e.g. a dataset), you can either 
-
 * have it in your **R working directory** (see below), in which case you don't need to specify the full path to the file when you import it, 
 * or you can get files in different folders, by always **specifying the full path**.
 

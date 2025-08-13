@@ -1,6 +1,5 @@
 ---
 title: "Chapter 4"
-author: "Claire Descombes"
 date: "`r Sys.Date()`"
 contact: claire.descombes@insel.ch
 output:
@@ -45,9 +44,14 @@ The reference material for this course, as well as some useful literature to dee
 
 To explore R’s statistical tools, we’ll continue working with the NHANES datasets. Specifically, we’ll use the merged data frame that combines the `demo`, `bpx`, `bmx` and `smq` data sets. If you still have it loaded from Chapters 2 und 3, you can use it directly. Otherwise, you can download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
 
+To be able to use survival data, we will also need the NHANES data set complemented with mortality data. If you still have it loaded from Chapters 3, you can use it directly. Otherwise, you can download it from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) and import it into R.
+
 ```{r, echo=TRUE}
 # Load the merged_nhanes CSV file
 merged_nhanes <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
+
+# Load the merged_nhanes_with_mort CSV file
+merged_nhanes_with_mort <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes_with_mort.csv")
 ```
 
 # Most commonly used statistical tests and models
@@ -241,9 +245,9 @@ df_right <- df[df$x >= upper_cut, ]
 
 # plot: middle first, tails after (so they sit on top), line on top of everything
 ggplot(df, aes(x = x, y = y)) +
-  geom_area(data = df_mid,   fill = "skyblue", alpha = 0.6) +   # middle area
-  geom_area(data = df_left,  fill = "tomato",  alpha = 0.8) +   # left tail (on top)
-  geom_area(data = df_right, fill = "tomato",  alpha = 0.8) +   # right tail (on top)
+  geom_area(data = df_mid,   fill = "lightgreen", alpha = 0.6) +   # middle area
+  geom_area(data = df_left,  fill = "coral",  alpha = 0.8) +   # left tail (on top)
+  geom_area(data = df_right, fill = "coral",  alpha = 0.8) +   # right tail (on top)
   geom_line(size = 1) +
   geom_vline(xintercept = c(lower_cut, upper_cut), linetype = "dashed") +
   annotate("text", x = lower_cut, y = max(df$y)*0.9, label = sprintf("%.3f", lower_cut), hjust = 1.1) +
@@ -274,9 +278,9 @@ ggplot(df, aes(x = x, y = y)) +
   theme_minimal(base_size = 14)
 ```
 
-## Tests for comparing two groups
+# Tests for comparing two groups
 
-### Student's t-Test
+## Student's t-Test
 
 <u>1. Null hypothesis</u>
 
@@ -288,33 +292,43 @@ ggplot(df, aes(x = x, y = y)) +
 
 <u>3. Requirements</u>
 
-* The *means* of the two populations being compared should follow normal distributions. Under weak assumptions, this follows in large samples from the central limit theorem, even when the distribution of observations in each group is non-normal.
+* Both samples are *approximately normally distributed*. Under weak assumptions, this follows in large samples from the central limit theorem, even when the distribution of observations in each group is non-normal.
 * If using Student's original definition of the t-test, the two populations being compared should have the *same variance* (assessable graphically using a Q–Q plot). If the sample sizes in the two groups being compared are equal, Student's original t-test is highly robust to the presence of unequal variances. *Welch's t-test* is insensitive to equality of the variances regardless of whether the sample sizes are similar.
-* The data used to carry out the test should either be *sampled independently* from the two populations being compared or be fully paired. This is in general not testable from the data, but if the data are known to be dependent (e.g. paired by test design), a dependent test has to be applied.
+* The data used to carry out the test should either be *sampled independently* from the two populations being compared or be fully paired. This is in general not testable from the data, but if the data are known to be dependent (e.g. paired by test design), a paired test has to be applied.
 
-<u>4. `R` function</u>
+💡 Independent samples are randomly selected so that their observations are not dependent on the values of other observations.
+
+<u>4. R function</u>
 
 `t.test(x, ...)`: Performs one and two sample t-tests on vectors of data.
 
 <u>5. Important arguments</u>
 
+```
 t.test(x, y = NULL,
        alternative = c("two.sided", "less", "greater"),
        mu = 0, paired = FALSE, var.equal = FALSE,
        conf.level = 0.95, ...)
+```
 
 * `x, y`: the vector(s) that contain the data (only one vector in the case of a one-sample t-test, two vectors otherwise).
 * `alternative`: a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".
-* `var.equal`:a logical variable indicating whether to treat the two variances as being equal. If `TRUE` then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
 * `mu`: a number indicating the true value of the mean (or difference in means if you are performing a two sample test).
-* `paired`: a logical indicating whether you want a paired t-test. As a reminder, "paired" means there is an obvious and meaningful one-to-one correspondence between the data in the first set and the data in the second set, e.g. blood pressure in a set of patients before and after administering a medicine.
-* `conf.level`: confidence level of the interval (default: 5%).
+* `paired`: a logical indicating whether you want a paired t-test. 
+* `var.equal`:a logical variable indicating whether to treat the two variances as being equal. If `TRUE` then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
+* `conf.level`: confidence level of the interval (default: 0.95).
+
+💡 "paired" means there is an obvious and meaningful one-to-one correspondence between the data in the first set and the data in the second set, e.g. blood pressure in a set of patients before and after administering a medicine.
 
 <u>6. Example</u>
 
 Let us test if the mean BMI (`BMXBMI`) is significantly different between men and women (` RIAGENDR`).
 
 ```{r}
+# We quickly check the distribution of the BMI using a Q-Q-plot (even though,
+# with such a large sample, this isn't required)
+qqnorm(y = merged_nhanes$BMXBMI)
+
 # We create two vectors, with the BMIs of women and men
 bmi_women <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Female"]
 bmi_men <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Male"]
@@ -330,117 +344,114 @@ t.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', var.equal = TRUE, 
 
 * The `t` value is the statistic of the t-test.
 * `df` are the degrees of freedom (a characteristics of the underlying distribution of the statistic), depends on the test used (one- or two-sample, paired or unpaired), in this case it is the sum of the two samples minus 2 (3239+3212-2=6449).
-* The `p-value` is the probability of getting such a `t` value under the null hypothesis. It is very small: 5.854e-09, so to an alpha-level of 0.05, we say that their is a statistically significant difference between the means of the two groups.
+* The `p-value` is the probability of getting such a `t` value under the null hypothesis. It is very small: 5.854e-09, so to an $\alpha$-level of 0.05, we say that their is a statistically significant difference between the means of the two groups.
 * The 95% CI tells us where the difference in the means lies, to a confidence of 95%. In coherence with the very low p-value, this interval does not contain 0 (which would mean "no difference").
 * Finally, the means of both vectors are also computed.
 
-### Wilcoxon-Mann-Whitney Test (Mann-Whitney-U-Test)
+💡 `qqnorm` is a function that produces a normal Q-Q-plot of the values in y. `qqplot` produces a Q-Q-plot of two datasets.
 
-Presented as the non-parametric alternative to the t-Test.
+## Wilcoxon rank-sum and signed-rank tests
+
+Non-parametric (= makes minimal assumptions about the underlying distribution of the data being studied) "alternative" to the t-test (we do not test exactly the same thing, the t-test compares means, the Wilcoxon test compares distributions).
+
+💡 If working on *paired data*, the test is called **Wilcoxon signed-rank test**, and on *unpaired data* it is called **Wilcoxon rank-sum test** (also called Mann–Whitney U test, Mann–Whitney–Wilcoxon test, or Wilcoxon–Mann–Whitney test).
 
 <u>1. Null hypothesis</u>
 
-* Means of two populations are equal
+* Distributions of both populations are identical
 
 <u>2. Type of data</u>
 
-* One or two vectors of continuous variables (e.g. blood pressure in mmHg in two cohorts)
+* One or two vectors of continuous or ordinal variables (e.g. pain levels in two cohorts)
 
 <u>3. Requirements</u>
 
-* The *means* of the two populations being compared should follow normal distributions. Under weak assumptions, this follows in large samples from the central limit theorem, even when the distribution of observations in each group is non-normal.
-* If using Student's original definition of the t-test, the two populations being compared should have the *same variance* (assessable graphically using a Q–Q plot). If the sample sizes in the two groups being compared are equal, Student's original t-test is highly robust to the presence of unequal variances. *Welch's t-test* is insensitive to equality of the variances regardless of whether the sample sizes are similar.
-* The data used to carry out the test should either be *sampled independently* from the two populations being compared or be fully paired. This is in general not testable from the data, but if the data are known to be dependent (e.g. paired by test design), a dependent test has to be applied.
+* The data used to carry out the test should either be *sampled independently* from the two populations being compared or be fully paired. This is in general not testable from the data, but if the data are known to be dependent (e.g. paired by test design), a paired test has to be applied.
+* The differences between paired observations should be *symmetrically distributed* around the median. Unlike the paired t-test, the Wilcoxon test does not require normality but works best when the distribution is roughly symmetric. 
 
-<u>4. `R` function</u>
+<u>4. R function</u>
 
-`t.test(x, ...)`: Performs one and two sample t-tests on vectors of data.
+`wilcox.test(x, ...)`: Performs one- and two-sample Wilcoxon tests on vectors of data; the latter is also known as ‘Mann-Whitney’ test.
 
 <u>5. Important arguments</u>
 
-t.test(x, y = NULL,
-       alternative = c("two.sided", "less", "greater"),
-       mu = 0, paired = FALSE, var.equal = FALSE,
-       conf.level = 0.95, ...)
+```
+wilcox.test(x, y = NULL,
+            alternative = c("two.sided", "less", "greater"),
+            mu = 0, paired = FALSE, exact = NULL, correct = TRUE,
+            conf.int = FALSE, conf.level = 0.95,
+            tol.root = 1e-4, digits.rank = Inf, ...)
+```
 
-* `x, y`: the vector(s) that contain the data (only one vector in the case of a one-sample t-test, two vectors otherwise).
+* `x, y`: the vector(s) that contain the data (only one vector in the case of a one-sample Wilcoxon test, two vectors otherwise).
 * `alternative`: a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".
-* `var.equal`:a logical variable indicating whether to treat the two variances as being equal. If `TRUE` then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
-* `mu`: a number indicating the true value of the mean (or difference in means if you are performing a two sample test).
-* `paired`: a logical indicating whether you want a paired t-test. As a reminder, "paired" means there is an obvious and meaningful one-to-one correspondence between the data in the first set and the data in the second set, e.g. blood pressure in a set of patients before and after administering a medicine.
-* `conf.level`: confidence level of the interval (default: 5%).
+* `mu`: a number specifying an optional parameter used to form the null hypothesis. Set `mu = 0` (default) to test if the samples have the same distribution.
+* `paired`: a logical indicating whether you want a paired test. If only x is given, or if both x and y are given and paired is TRUE, a **Wilcoxon signed rank test** of the null that the distribution of x (in the one sample case) or of x - y (in the paired two sample case) is symmetric about mu is performed. Otherwise, if both x and y are given and paired is FALSE, a **Wilcoxon rank sum test** (equivalent to the Mann-Whitney test: see the Note) is carried out. In this case, the null hypothesis is that the distributions of x and y differ by a location shift of mu and the alternative is that they differ by some other location shift.
+* `conf.level`: confidence level of the interval (default: 0.95).
 
 <u>6. Example</u>
 
-Let us test if the mean BMI (`BMXBMI`) is significantly different between men and women (` RIAGENDR`).
+Let us test if the distribution of the BMI (`BMXBMI`) is significantly different between men and women (` RIAGENDR`).
 
 ```{r}
 # We create two vectors, with the BMIs of women and men
 bmi_women <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Female"]
 bmi_men <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Male"]
 
-# We can start looking at how many non NA entries we have and by computing the means
-sum(!is.na(bmi_women));sum(!is.na(bmi_men))
-mean(bmi_women, na.rm = TRUE);mean(bmi_men, na.rm = TRUE)
-qqplot(x = bmi_women, y = bmi_men)
-
-# We compare their means using a t-test
-t.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', var.equal = TRUE, paired = FALSE)
+# We compare their distributions using a Wilcoxon test
+wilcox.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', mu = 0, paired = FALSE)
 ```
 
-* The `t` value is the statistic of the t-test.
-* `df` are the degrees of freedom (a characteristics of the underlying distribution of the statistic), depends on the test used (one- or two-sample, paired or unpaired), in this case it is the sum of the two samples minus 2 (3239+3212-2=6449).
-* The `p-value` is the probability of getting such a `t` value under the null hypothesis. It is very small: 5.854e-09, so to an alpha-level of 0.05, we say that their is a statistically significant difference between the means of the two groups.
-* The 95% CI tells us where the difference in the means lies, to a confidence of 95%. In coherence with the very low p-value, this interval does not contain 0 (which would mean "no difference").
-* Finally, the means of both vectors are also computed.
+* The `W` value is the statistic of the Wilcoxon test (also called `U` statistic).
+* The `p-value` is the probability of getting such a `W` value under the null hypothesis. It is very small: 0.0004466, so to an $\alpha$-level of 0.05, we say that their is a statistically significant difference between the distributions of the two groups.
 
-### Fisher's Exact Test
+## Fisher's Exact Test
 
 Focus on categorical variables and small sample sizes.
 
-### McNemar Test
+## McNemar Test
 
 Highlight its application for paired categorical data.
 
-## Tests for more than two groups
+# Tests for more than two groups
 
-### Kruskal-Wallis Test
+## Kruskal-Wallis Test
 
 Generalization of Wilcoxon-Mann-Whitney for more than two groups.
 
-### Friedman Test
+## Friedman Test
 
 Generalization of paired tests (e.g., Wilcoxon) for more than two related groups.
 
-### Pearson's Chi-Square Test
+## Pearson's Chi-Square Test
 
 Complement Fisher’s Exact Test, emphasizing it’s better suited for larger samples.
 
-## Tests for distribution and normality
+# Tests for distribution and normality
 
-### Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test:
+## Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test
 
 Test for deviations from normality, set the stage for determining when to use parametric vs. non-parametric tests.
 
-## Tests for survival analysis
+# Tests for survival analysis
 
-### Logrank/ Log-Rank Test:
+## Logrank/ Log-Rank Test
 
 For analyzing time-to-event data. Mention Kaplan-Meier curves for context.
 
 ## Correlation and association tests
 
-### Correlation test by Pearson
+## Correlation test by Pearson
 
 Basis for understanding relationships between two continuous, normally distributed variables.
 
-### Correlation test by spearman:
+## Correlation test by Spearman
 
 Non-parametric alternative for monotonic relationships.
 
-## Predictive modeling and regression
+# Predictive modeling and regression
 
-### Generalized Linear Models (GLMs)
+## Generalized Linear Models (GLMs)
 
 Purpose: GLMs are an extension of linear models that allow for non-normal distributions of the response variable (e.g., binary, count, or categorical outcomes). They offer more flexibility than traditional linear regression by using different link functions and error distributions.
 
@@ -471,31 +482,31 @@ Common Applications
 * Poisson regression: Modeling count data (e.g., number of events in a fixed time period).
 * Cox regression: A form of survival analysis used to model time-to-event data, often with censored observations. It is based on the proportional hazards assumption and estimates the effect of predictor variables on the hazard (event occurrence rate).
 
-#### Linear regression
+### Linear regression
 
 Purpose: Used to model the relationship between a continuous dependent variable and one or more independent variables.
 Assumptions: Linearity, normality of residuals, homoscedasticity, independence.
 Example Application: Predicting the price of a house based on square footage, number of rooms, etc.
 
-#### Logistic regression
+### Logistic regression
 
 Purpose: Used when the dependent variable is binary (e.g., yes/no, success/failure).
 Assumptions: Linear relationship between the log-odds of the outcome and predictors.
 Example Application: Predicting the likelihood of a disease based on age, gender, and other factors.
 
-#### Cox proportional hazards regression
+### Cox proportional hazards regression
 
 Purpose: Used for survival analysis, particularly when studying the time to an event (e.g., time to death, relapse).
 Assumptions: Proportional hazards assumption, meaning the effect of the predictor on the hazard rate is constant over time.
 Example Application: Analyzing the impact of age, treatment type, and other covariates on patient survival times.
 
-##### Multivariable regression
+### Multivariable regression
 
 Purpose: An extension of linear or logistic regression with more than one predictor variable.
 Assumptions: Similar to linear and logistic regression, but more complex due to multiple predictors.
 Example Application: Predicting a health outcome (e.g., cholesterol levels) based on multiple lifestyle factors (e.g., diet, exercise, genetics).
 
-### Mixed Effects Models
+## Mixed Effects Models
 
 Purpose: Mixed effects models allow for the inclusion of both fixed and random effects, providing flexibility for hierarchical or grouped data. They are especially useful when there is variation between groups or subjects.
 
@@ -514,7 +525,7 @@ Common Applications
 * Longitudinal data: When measurements are taken repeatedly on the same subjects over time (e.g., repeated measurements on patients).
 * Clustered data: When observations are grouped into clusters (e.g., students within schools, patients within hospitals).
 
-### Generalized Additive Models (GAMs)
+## Generalized Additive Models (GAMs)
 
 Purpose: GAMs extend GLMs by allowing for non-linear relationships between predictors and the outcome. This is useful when the relationship between the independent and dependent variables is not linear.
 
@@ -526,9 +537,9 @@ Additive structure: The model assumes that the total effect is an additive combi
 
 Link function: Like GLMs, GAMs can use different link functions depending on the distribution of the outcome variable.
 
-Common Applications: Modeling complex relationships in patient data where the effect of treatment or time may not be linear.
+Common Applications: Modelling complex relationships in patient data where the effect of treatment or time may not be linear.
 
-### Generalized Additive Mixed Models (GAMMs)
+## Generalized Additive Mixed Models (GAMMs)
 
 Purpose: GAMMs combine the flexibility of GAMs with random effects, useful for hierarchical or clustered data.
 
@@ -542,7 +553,7 @@ Assumptions
 * Normality or appropriate error distribution: Depending on the type of outcome (e.g., Poisson for count data, binomial for binary data).
 * Random effects: If included, random effects account for variations between groups or subjects.
 
-Example Application: Analyzing patient data where outcomes are influenced by both individual patient characteristics and random hospital-specific effects (e.g., variability between hospitals).
+Example Application: Analysing patient data where outcomes are influenced by both individual patient characteristics and random hospital-specific effects (e.g., variability between hospitals).
 
 \newpage
 

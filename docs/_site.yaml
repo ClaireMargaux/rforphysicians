@@ -15,6 +15,11 @@ navbar:
       href: chapter-4.html
     - text: "Chapter 5"
       href: chapter-5.html  
+    - text: "Appendix A"
+      href: chapter-6.html
+    - text: "Appendix B"
+      href: chapter-7.html  
+      
 output:
   html_document:
     theme: null

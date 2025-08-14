@@ -280,7 +280,7 @@ ggplot(df, aes(x = x, y = y)) +
 
 # Tests for comparing two groups
 
-## Student's t-Test
+## Student's t-test
 
 <u>1. Null hypothesis</u>
 
@@ -350,6 +350,14 @@ t.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', var.equal = TRUE, 
 
 💡 `qqnorm` is a function that produces a normal Q-Q-plot of the values in y. `qqplot` produces a Q-Q-plot of two datasets.
 
+### Z-test
+
+The z-test is similar to the t-test (continuous variable(s), independent and normally distributed), and its null hypothesis is also that the means of two populations are equal, but it requires to know the standard deviation of your population(s). 
+
+You should favour a z-test to a t-test if the **standard deviation** of the population is **known** and the sample size is greater than or equal to 30.
+
+There is no z-test function available in base R, but in packages like `BSDA` (`z.test(x, ...)`).
+
 ## Wilcoxon rank-sum and signed-rank tests
 
 Non-parametric (= makes minimal assumptions about the underlying distribution of the data being studied) "alternative" to the t-test (we do not test exactly the same thing, the t-test compares means, the Wilcoxon test compares distributions).
@@ -405,11 +413,63 @@ wilcox.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', mu = 0, paire
 * The `W` value is the statistic of the Wilcoxon test (also called `U` statistic).
 * The `p-value` is the probability of getting such a `W` value under the null hypothesis. It is very small: 0.0004466, so to an $\alpha$-level of 0.05, we say that their is a statistically significant difference between the distributions of the two groups.
 
-## Fisher's Exact Test
+## Fisher's exact test
 
 Focus on categorical variables and small sample sizes.
 
-## McNemar Test
+Non-parametric (= makes minimal assumptions about the underlying distribution of the data being studied) "alternative" to the t-test (we do not test exactly the same thing, the t-test compares means, the Wilcoxon test compares distributions).
+
+💡 If working on *paired data*, the test is called **Wilcoxon signed-rank test**, and on *unpaired data* it is called **Wilcoxon rank-sum test** (also called Mann–Whitney U test, Mann–Whitney–Wilcoxon test, or Wilcoxon–Mann–Whitney test).
+
+<u>1. Null hypothesis</u>
+
+* Distributions of both populations are identical
+
+<u>2. Type of data</u>
+
+* One or two vectors of continuous or ordinal variables (e.g. pain levels in two cohorts)
+
+<u>3. Requirements</u>
+
+* The data used to carry out the test should either be *sampled independently* from the two populations being compared or be fully paired. This is in general not testable from the data, but if the data are known to be dependent (e.g. paired by test design), a paired test has to be applied.
+* The differences between paired observations should be *symmetrically distributed* around the median. Unlike the paired t-test, the Wilcoxon test does not require normality but works best when the distribution is roughly symmetric. 
+
+<u>4. R function</u>
+
+`fisher.test(x, ...)`: tests the null hypothesis of independence of rows and columns in a contingency table with fixed marginals.
+
+<u>5. Important arguments</u>
+
+```
+fisher.test(x, y = NULL, workspace = 200000, hybrid = FALSE,
+            hybridPars = c(expect = 5, percent = 80, Emin = 1),
+            control = list(), or = 1, alternative = "two.sided",
+            conf.int = TRUE, conf.level = 0.95,
+            simulate.p.value = FALSE, B = 2000)
+```
+
+* `x`: either a two-dimensional contingency table in matrix form, or a factor object.
+* `y`: a factor object; ignored if x is a matrix.
+* `alternative`: a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less". Only used in the $2\times2$ case.
+* `conf.int`: logical indicating if a confidence interval for the odds ratio in a $2\times2$ table should be computed (and returned).
+* `conf.level`: confidence level for the returned confidence interval. Only used in the $2\times2$ case and if `conf.int = TRUE`.
+
+<u>6. Example</u>
+
+Let us test if the distribution of the BMI (`BMXBMI`) is significantly different between men and women (` RIAGENDR`).
+
+```{r}
+# We create two vectors, with the BMIs of women and men
+bmi_women <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Female"]
+bmi_men <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Male"]
+
+# We compare their distributions using a Wilcoxon test
+wilcox.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', mu = 0, paired = FALSE)
+```
+
+* ...
+
+## McNemar test
 
 Highlight its application for paired categorical data.
 

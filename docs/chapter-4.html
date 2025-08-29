@@ -3820,19 +3820,27 @@ fisher.test(tab)</code></pre>
 <li>As it was to be expected (the table of observed and expected
 frequencies were very similar), the Chi-Square test is non significant
 (<code>p-value</code> = 0.6669).</li>
-<li>The <code>estimate</code> given by Fisher’s exact test is an
-estimate of the odds ratio (only computed in the <span class="math inline">2\times2</span> case), with a corresponding
-<code>95% percent confidence interval</code>. The <span class="math inline">95\%</span> confidence interval contains 1 and the
-<code>p-value</code> is above 0.05, which is coherent.</li>
+<li>Same conclusion for Fisher’s exact test. The <code>estimate</code>
+given is an estimation of the odds ratio (only computed in the <span class="math inline">2\times2</span> case), with a corresponding
+<code>95% percent confidence interval</code>. Note that the <span class="math inline">95\%</span> confidence interval for the odds ratio
+contains 1 and that the <code>p-value</code> is above 0.05, which is
+coherent.</li>
 <li>The <code>X-squared</code> is the statistic of the Chi-Squared test
 (assumed to have a chi-squared distribution with <code>df</code> degrees
 of freedom).</li>
 <li>For Fisher’s exact test, the statistic is assumed to have a
 hypergeometric distribution.</li>
 </ul>
-<div id="mcnemar-test" class="section level4" number="2.2.1.1">
-<h4><span class="header-section-number">2.2.1.1</span> McNemar test</h4>
-<p>Highlight its application for paired categorical data.</p>
+<div id="mcnemars-test" class="section level4" number="2.2.1.1">
+<h4><span class="header-section-number">2.2.1.1</span> McNemar’s
+test</h4>
+<p>McNemar’s test is similar to the Chi-Squared test (<span class="math inline">2\times 2</span> contingency table), and its null
+hypothesis is also that the variables are independent, but it is used on
+<strong>paired</strong> categorical data. It is often used in practice
+to compare the sensitivities and specificities for the evaluation of two
+diagnostic tests on the same group of patients.</p>
+<p>The corresponding function in base R is called
+<code>mcnemar.test(x,...)</code>.</p>
 </div>
 </div>
 </div>

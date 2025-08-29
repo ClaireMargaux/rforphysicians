@@ -70,12 +70,12 @@ This chapter will follow the structure outlined below. We will learn how to perf
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.1 Tests for comparing two groups</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests comparing means or proportions between two groups</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Student’s t-test <br> • Wilcoxon-Mann-Whitney test (Mann-Whitney-U-test) <br> • Fisher’s exact test <br> • McNemar test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Student’s t-test <br> • Wilcoxon-Mann-Whitney test (Mann-Whitney-U-test) <br> • Chi-Squared test  <br> • Fisher’s exact test <br> • McNemar test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.2 Tests for more than two groups</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for comparing multiple groups</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Kruskal-Wallis test <br> • Friedman test <br> • Pearson’s Chi-Square test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Kruskal-Wallis test <br> • Friedman test <br> • Chi-Squared test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.3 Tests for distribution and normality</strong></td>

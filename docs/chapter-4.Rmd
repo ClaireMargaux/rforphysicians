@@ -280,7 +280,9 @@ ggplot(df, aes(x = x, y = y)) +
 
 # Tests for comparing two groups
 
-## Student's t-test
+## Continuous variables
+
+### Student's t-test
 
 <u>1. Null hypothesis</u>
 
@@ -350,7 +352,7 @@ t.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', var.equal = TRUE, 
 
 💡 `qqnorm` is a function that produces a normal Q-Q-plot of the values in y. `qqplot` produces a Q-Q-plot of two datasets.
 
-### Z-test
+#### Z-test
 
 The z-test is similar to the t-test (continuous variable(s), independent and normally distributed), and its null hypothesis is also that the means of two populations are equal, but it requires to know the standard deviation of your population(s). 
 
@@ -358,7 +360,7 @@ You should favour a z-test to a t-test if the **standard deviation** of the popu
 
 There is no z-test function available in base R, but in packages like `BSDA` (`z.test(x, ...)`).
 
-## Wilcoxon rank-sum and signed-rank tests
+### Wilcoxon rank-sum and signed-rank tests
 
 Non-parametric (= makes minimal assumptions about the underlying distribution of the data being studied) "alternative" to the t-test (we do not test exactly the same thing, the t-test compares means, the Wilcoxon test compares distributions).
 
@@ -413,32 +415,115 @@ wilcox.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', mu = 0, paire
 * The `W` value is the statistic of the Wilcoxon test (also called `U` statistic).
 * The `p-value` is the probability of getting such a `W` value under the null hypothesis. It is very small: 0.0004466, so to an $\alpha$-level of 0.05, we say that their is a statistically significant difference between the distributions of the two groups.
 
-## Fisher's exact test
+## Categorical variables
 
-Focus on categorical variables and small sample sizes.
+### Chi-Squared test and Fisher's exact test
 
-Non-parametric (= makes minimal assumptions about the underlying distribution of the data being studied) "alternative" to the t-test (we do not test exactly the same thing, the t-test compares means, the Wilcoxon test compares distributions).
-
-💡 If working on *paired data*, the test is called **Wilcoxon signed-rank test**, and on *unpaired data* it is called **Wilcoxon rank-sum test** (also called Mann–Whitney U test, Mann–Whitney–Wilcoxon test, or Wilcoxon–Mann–Whitney test).
+Both are statistical hypothesis tests used in the analysis of contingency tables. The Chi-Squared test can be used when the sample sizes are large, Fisher's exact test is valid for all sample sizes (even though in practice it is usually employed when sample sizes are small).
 
 <u>1. Null hypothesis</u>
 
-* Distributions of both populations are identical
+* There are no differences between the classes in the population (rows and columns are independent)
 
 <u>2. Type of data</u>
 
-* One or two vectors of continuous or ordinal variables (e.g. pain levels in two cohorts)
+* Two categorical variables (e.g. cohort/control and progression of tumour yes/no)
 
 <u>3. Requirements</u>
 
-* The data used to carry out the test should either be *sampled independently* from the two populations being compared or be fully paired. This is in general not testable from the data, but if the data are known to be dependent (e.g. paired by test design), a paired test has to be applied.
-* The differences between paired observations should be *symmetrically distributed* around the median. Unlike the paired t-test, the Wilcoxon test does not require normality but works best when the distribution is roughly symmetric. 
+* Use Fisher's exact test when the *expected count* in one or more of the cells in your contingency table is below 5.
+
+💡 The expected counts are what we expect the numbers in the table to look like if the categorical variables are independent. The excepted count in a cell is always given by the formula: $$\text{expected count} = \frac{\text{sum of row} \cdot \text{sum of column}}{\text{total of table}}$$
+
+Here an example:
+
+**Observed frequencies table**
+
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;"></th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Smoking</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Non-smoking</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px;">Female</td>
+      <td style="border: 1px solid black; padding: 8px;">406</td>
+      <td style="border: 1px solid black; padding: 8px;">473</td>
+      <td style="border: 1px solid black; padding: 8px;">879</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px;">Male</td>
+      <td style="border: 1px solid black; padding: 8px;">659</td>
+      <td style="border: 1px solid black; padding: 8px;">737</td>
+      <td style="border: 1px solid black; padding: 8px;">1396</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px;">Total</td>
+      <td style="border: 1px solid black; padding: 8px;">1065</td>
+      <td style="border: 1px solid black; padding: 8px;">1210</td>
+      <td style="border: 1px solid black; padding: 8px;">2275</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+**Expected frequencies table**
+
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;"></th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Smoking</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Non-smoking</th>
+      <th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px;">Female</td>
+      <td style="border: 1px solid black; padding: 8px;">411.49</td>
+      <td style="border: 1px solid black; padding: 8px;">467.51</td>
+      <td style="border: 1px solid black; padding: 8px;">879</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px;">Male</td>
+      <td style="border: 1px solid black; padding: 8px;">653.51</td>
+      <td style="border: 1px solid black; padding: 8px;">742.49</td>
+      <td style="border: 1px solid black; padding: 8px;">1396</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; padding: 8px;">Total</td>
+      <td style="border: 1px solid black; padding: 8px;">1065</td>
+      <td style="border: 1px solid black; padding: 8px;">1210</td>
+      <td style="border: 1px solid black; padding: 8px;">2275</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
 
 <u>4. R function</u>
 
-`fisher.test(x, ...)`: tests the null hypothesis of independence of rows and columns in a contingency table with fixed marginals.
+`chisq.test(x, ...)`: performs chi-squared contingency table tests and goodness-of-fit tests.
+
+`fisher.test(x, ...)`: performs Fisher's exact test for testing the null of independence of rows and columns in a contingency table with fixed marginals.
 
 <u>5. Important arguments</u>
+
+```
+chisq.test(x, y = NULL, correct = TRUE,
+           p = rep(1/length(x), length(x)), rescale.p = FALSE,
+           simulate.p.value = FALSE, B = 2000)
+```
+
+* `x`: a numeric vector or matrix. `x` and `y` can also both be factors.
+* `y`: a numeric vector; ignored if x is a matrix. If `x` is a factor, `y` should be a factor of the same length.
+
 
 ```
 fisher.test(x, y = NULL, workspace = 200000, hybrid = FALSE,
@@ -456,22 +541,42 @@ fisher.test(x, y = NULL, workspace = 200000, hybrid = FALSE,
 
 <u>6. Example</u>
 
-Let us test if the distribution of the BMI (`BMXBMI`) is significantly different between men and women (` RIAGENDR`).
+Let us test if the smoking status (`SMQ040`) is significantly different between men and women (` RIAGENDR`).
 
 ```{r}
-# We create two vectors, with the BMIs of women and men
-bmi_women <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Female"]
-bmi_men <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Male"]
+# First, let us categorize the participants in smoking and non smoking
+table(merged_nhanes$SMQ040)
+merged_nhanes$SMOKE <- case_when(
+  merged_nhanes$SMQ040 == "Not at all" ~ "No",
+  merged_nhanes$SMQ040 %in% c("Every day", "Some days") ~ "Yes",
+  merged_nhanes$SMQ040 == "Refused" ~ NA
+)
 
-# We compare their distributions using a Wilcoxon test
-wilcox.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', mu = 0, paired = FALSE)
+# Let us visualize the contingency table
+(tab <- table(merged_nhanes$SMOKE, merged_nhanes$RIAGENDR))
+
+# What are the expected cell counts in this case?
+chisq <- chisq.test(tab)
+round(chisq$expected,2)
+
+# Since all cells are >5, we can test the null hypothesis of independence using
+# a chi-squared test
+chisq.test(tab)
+
+# Let us also try to run a Fisher's exact test on the same table
+fisher.test(tab)
 ```
 
-* ...
+* As it was to be expected (the table of observed and expected frequencies were very similar), the Chi-Square test is non significant (`p-value` = 0.6669).
+* Same conclusion for Fisher's exact test. The `estimate` given is an estimation of the odds ratio (only computed in the $2\times2$ case), with a corresponding `95% percent confidence interval`. Note that the $95\%$ confidence interval for the odds ratio contains 1 and that the `p-value` is above 0.05, which is coherent.
+* The `X-squared` is the statistic of the Chi-Squared test (assumed to have a chi-squared distribution with `df` degrees of freedom). 
+* For Fisher's exact test, the statistic is assumed to have a hypergeometric distribution.
 
-## McNemar test
+#### McNemar's test
 
-Highlight its application for paired categorical data.
+McNemar's test is similar to the Chi-Squared test ($2\times 2$ contingency table), and its null hypothesis is also that the variables are independent, but it is used on **paired** categorical data. It is often used in practice to compare the sensitivities and specificities for the evaluation of two diagnostic tests on the same group of patients.
+
+The corresponding function in base R is called `mcnemar.test(x,...)`.
 
 # Tests for more than two groups
 

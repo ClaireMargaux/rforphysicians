@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2025-08-14" />
+<meta name="date" content="2025-08-29" />
 
 <title>Chapter 4</title>
 
@@ -2902,7 +2902,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Chapter 4</h1>
 <h3 class="subtitle">R for physicians</h3>
-<h4 class="date">2025-08-14</h4>
+<h4 class="date">2025-08-29</h4>
 
 </div>
 
@@ -3350,8 +3350,12 @@ our theory is right, we would always find a “negative” result in <span class
 <div id="tests-for-comparing-two-groups" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Tests for comparing two
 groups</h1>
-<div id="students-t-test" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Student’s t-test</h2>
+<div id="continuous-variables" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Continuous
+variables</h2>
+<div id="students-t-test" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Student’s
+t-test</h3>
 <p><u>1. Null hypothesis</u></p>
 <ul>
 <li>Means of two populations are equal</li>
@@ -3463,8 +3467,8 @@ does not contain 0 (which would mean “no difference”).</li>
 <p>💡 <code>qqnorm</code> is a function that produces a normal Q-Q-plot
 of the values in y. <code>qqplot</code> produces a Q-Q-plot of two
 datasets.</p>
-<div id="z-test" class="section level3" number="2.1.1">
-<h3><span class="header-section-number">2.1.1</span> Z-test</h3>
+<div id="z-test" class="section level4" number="2.1.1.1">
+<h4><span class="header-section-number">2.1.1.1</span> Z-test</h4>
 <p>The z-test is similar to the t-test (continuous variable(s),
 independent and normally distributed), and its null hypothesis is also
 that the means of two populations are equal, but it requires to know the
@@ -3476,9 +3480,9 @@ sample size is greater than or equal to 30.</p>
 <code>BSDA</code> (<code>z.test(x, ...)</code>).</p>
 </div>
 </div>
-<div id="wilcoxon-rank-sum-and-signed-rank-tests" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Wilcoxon rank-sum and
-signed-rank tests</h2>
+<div id="wilcoxon-rank-sum-and-signed-rank-tests" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Wilcoxon rank-sum
+and signed-rank tests</h3>
 <p>Non-parametric (= makes minimal assumptions about the underlying
 distribution of the data being studied) “alternative” to the t-test (we
 do not test exactly the same thing, the t-test compares means, the
@@ -3568,45 +3572,181 @@ called <code>U</code> statistic).</li>
 between the distributions of the two groups.</li>
 </ul>
 </div>
-<div id="fishers-exact-test" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Fisher’s exact
-test</h2>
-<p>Focus on categorical variables and small sample sizes.</p>
-<p>Non-parametric (= makes minimal assumptions about the underlying
-distribution of the data being studied) “alternative” to the t-test (we
-do not test exactly the same thing, the t-test compares means, the
-Wilcoxon test compares distributions).</p>
-<p>💡 If working on <em>paired data</em>, the test is called
-<strong>Wilcoxon signed-rank test</strong>, and on <em>unpaired
-data</em> it is called <strong>Wilcoxon rank-sum test</strong> (also
-called Mann–Whitney U test, Mann–Whitney–Wilcoxon test, or
-Wilcoxon–Mann–Whitney test).</p>
+</div>
+<div id="categorical-variables" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Categorical
+variables</h2>
+<div id="chi-squared-test-and-fishers-exact-test" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Chi-Squared test
+and Fisher’s exact test</h3>
+<p>Both are statistical hypothesis tests used in the analysis of
+contingency tables. The Chi-Squared test can be used when the sample
+sizes are large, Fisher’s exact test is valid for all sample sizes (even
+though in practice it is usually employed when sample sizes are
+small).</p>
 <p><u>1. Null hypothesis</u></p>
 <ul>
-<li>Distributions of both populations are identical</li>
+<li>There are no differences between the classes in the population (rows
+and columns are independent)</li>
 </ul>
 <p><u>2. Type of data</u></p>
 <ul>
-<li>One or two vectors of continuous or ordinal variables (e.g. pain
-levels in two cohorts)</li>
+<li>Two categorical variables (e.g. cohort/control and progression of
+tumour yes/no)</li>
 </ul>
 <p><u>3. Requirements</u></p>
 <ul>
-<li>The data used to carry out the test should either be <em>sampled
-independently</em> from the two populations being compared or be fully
-paired. This is in general not testable from the data, but if the data
-are known to be dependent (e.g. paired by test design), a paired test
-has to be applied.</li>
-<li>The differences between paired observations should be
-<em>symmetrically distributed</em> around the median. Unlike the paired
-t-test, the Wilcoxon test does not require normality but works best when
-the distribution is roughly symmetric.</li>
+<li>Use Fisher’s exact test when the <em>expected count</em> in one or
+more of the cells in your contingency table is below 5.</li>
 </ul>
+<p>💡 The expected counts are what we expect the numbers in the table to
+look like if the categorical variables are independent. The excepted
+count in a cell is always given by the formula: <span class="math display">\text{expected count} = \frac{\text{sum of row}
+\cdot \text{sum of column}}{\text{total of table}}</span></p>
+<p>Here an example:</p>
+<p><strong>Observed frequencies table</strong></p>
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+<thead>
+<tr>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Smoking
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Non-smoking
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Total
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid black; padding: 8px;">
+Female
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+406
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+473
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+879
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px;">
+Male
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+659
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+737
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+1396
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px;">
+Total
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+1065
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+1210
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+2275
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<p><strong>Expected frequencies table</strong></p>
+<table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+<thead>
+<tr>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Smoking
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Non-smoking
+</th>
+<th style="border: 1px solid black; padding: 8px; text-align: left; vertical-align: top;">
+Total
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid black; padding: 8px;">
+Female
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+411.49
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+467.51
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+879
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px;">
+Male
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+653.51
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+742.49
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+1396
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid black; padding: 8px;">
+Total
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+1065
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+1210
+</td>
+<td style="border: 1px solid black; padding: 8px;">
+2275
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
 <p><u>4. R function</u></p>
-<p><code>fisher.test(x, ...)</code>: tests the null hypothesis of
-independence of rows and columns in a contingency table with fixed
-marginals.</p>
+<p><code>chisq.test(x, ...)</code>: performs chi-squared contingency
+table tests and goodness-of-fit tests.</p>
+<p><code>fisher.test(x, ...)</code>: performs Fisher’s exact test for
+testing the null of independence of rows and columns in a contingency
+table with fixed marginals.</p>
 <p><u>5. Important arguments</u></p>
+<pre><code>chisq.test(x, y = NULL, correct = TRUE,
+           p = rep(1/length(x), length(x)), rescale.p = FALSE,
+           simulate.p.value = FALSE, B = 2000)</code></pre>
+<ul>
+<li><code>x</code>: a numeric vector or matrix. <code>x</code> and
+<code>y</code> can also both be factors.</li>
+<li><code>y</code>: a numeric vector; ignored if x is a matrix. If
+<code>x</code> is a factor, <code>y</code> should be a factor of the
+same length.</li>
+</ul>
 <pre><code>fisher.test(x, y = NULL, workspace = 200000, hybrid = FALSE,
             hybridPars = c(expect = 5, percent = 80, Emin = 1),
             control = list(), or = 1, alternative = &quot;two.sided&quot;,
@@ -3628,28 +3768,73 @@ confidence interval. Only used in the <span class="math inline">2\times2</span> 
 <code>conf.int = TRUE</code>.</li>
 </ul>
 <p><u>6. Example</u></p>
-<p>Let us test if the distribution of the BMI (<code>BMXBMI</code>) is
+<p>Let us test if the smoking status (<code>SMQ040</code>) is
 significantly different between men and women
 (<code>RIAGENDR</code>).</p>
-<pre class="r"><code># We create two vectors, with the BMIs of women and men
-bmi_women &lt;- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == &quot;Female&quot;]
-bmi_men &lt;- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == &quot;Male&quot;]
-
-# We compare their distributions using a Wilcoxon test
-wilcox.test(x = bmi_women, y = bmi_men, alternative = &#39;two.sided&#39;, mu = 0, paired = FALSE)</code></pre>
+<pre class="r"><code># First, let us categorize the participants in smoking and non smoking
+table(merged_nhanes$SMQ040)</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+##  Every day Not at all    Refused  Some days 
+##        878       1210          2        187</code></pre>
+<pre class="r"><code>merged_nhanes$SMOKE &lt;- case_when(
+  merged_nhanes$SMQ040 == &quot;Not at all&quot; ~ &quot;No&quot;,
+  merged_nhanes$SMQ040 %in% c(&quot;Every day&quot;, &quot;Some days&quot;) ~ &quot;Yes&quot;,
+  merged_nhanes$SMQ040 == &quot;Refused&quot; ~ NA
+)
+
+# Let us visualize the contingency table
+(tab &lt;- table(merged_nhanes$SMOKE, merged_nhanes$RIAGENDR))</code></pre>
+<pre><code>##      
+##       Female Male
+##   No     473  737
+##   Yes    406  659</code></pre>
+<pre class="r"><code># What are the expected cell counts in this case?
+chisq &lt;- chisq.test(tab)
+round(chisq$expected,2)</code></pre>
+<pre><code>##      
+##       Female   Male
+##   No  467.51 742.49
+##   Yes 411.49 653.51</code></pre>
+<pre class="r"><code># Since all cells are &gt;5, we can test the null hypothesis of independence using
+# a chi-squared test
+chisq.test(tab)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 ## 
-## data:  bmi_women and bmi_men
-## W = 5464414, p-value = 0.0004466
-## alternative hypothesis: true location shift is not equal to 0</code></pre>
+## data:  tab
+## X-squared = 0.18526, df = 1, p-value = 0.6669</code></pre>
+<pre class="r"><code># Let us also try to run a Fisher&#39;s exact test on the same table
+fisher.test(tab)</code></pre>
+<pre><code>## 
+##  Fisher&#39;s Exact Test for Count Data
+## 
+## data:  tab
+## p-value = 0.6661
+## alternative hypothesis: true odds ratio is not equal to 1
+## 95 percent confidence interval:
+##  0.8764221 1.2383671
+## sample estimates:
+## odds ratio 
+##   1.041726</code></pre>
 <ul>
-<li>…</li>
+<li>As it was to be expected (the table of observed and expected
+frequencies were very similar), the Chi-Square test is non significant
+(<code>p-value</code> = 0.6669).</li>
+<li>The <code>estimate</code> given by Fisher’s exact test is an
+estimate of the odds ratio (only computed in the <span class="math inline">2\times2</span> case), with a corresponding
+<code>95% percent confidence interval</code>. The <span class="math inline">95\%</span> confidence interval contains 1 and the
+<code>p-value</code> is above 0.05, which is coherent.</li>
+<li>The <code>X-squared</code> is the statistic of the Chi-Squared test
+(assumed to have a chi-squared distribution with <code>df</code> degrees
+of freedom).</li>
+<li>For Fisher’s exact test, the statistic is assumed to have a
+hypergeometric distribution.</li>
 </ul>
-</div>
-<div id="mcnemar-test" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> McNemar test</h2>
+<div id="mcnemar-test" class="section level4" number="2.2.1.1">
+<h4><span class="header-section-number">2.2.1.1</span> McNemar test</h4>
 <p>Highlight its application for paired categorical data.</p>
+</div>
+</div>
 </div>
 </div>
 <div id="tests-for-more-than-two-groups" class="section level1" number="3">

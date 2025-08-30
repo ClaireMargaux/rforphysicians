@@ -70,22 +70,22 @@ This chapter will follow the structure outlined below. We will learn how to perf
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.1 Tests for comparing two groups</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests comparing means or proportions between two groups</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Student’s t-test <br> • Wilcoxon-Mann-Whitney test (Mann-Whitney-U-test) <br> • Chi-Squared test  <br> • Fisher’s exact test <br> • McNemar test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Continuous variables: Student’s t-test, Z-test, Wilcoxon rank-sum and sigend-rank tests <br> • Categorical variables: Chi-square test, Fisher’s exact test, McNemar's test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.2 Tests for more than two groups</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for comparing multiple groups</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Kruskal-Wallis test <br> • Friedman test <br> • Chi-Squared test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Continuous variables: One-way ANOVA, Repeated-measures ANOVA, Kruskal-Wallis test, Friedman test <br> • Categorical variables: Chi-square test, Fisher's exact test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.3 Tests for distribution and normality</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for distribution of data</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Lilliefors / Kolmogorov-Smirnov-Lilliefors test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Shapiro-Wilk test, Lilliefors test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.4 Tests for survival analysis</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for time-to-event data</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Logrank test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Log-Rank test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.5 Correlation and association tests</strong></td>
@@ -93,9 +93,9 @@ This chapter will follow the structure outlined below. We will learn how to perf
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Correlation test by Pearson <br> • Correlation test by Spearman</td>
     </tr>
     <tr>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.6 Predictive modelling and regression</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.6 Regression</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Predictive models and regression techniques</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Generalized Linear Models (GLMs): Linear regression, logistic regression, ordinal regression, Cox (proportional hazards) regression - Multivariable Regression <br> • Mixed Effects Models <br> • Generalized Additive Models (GAMs) <br> • Generalized Additive Mixed Models (GAMMs)</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Generalized Linear Models (GLMs): Linear regression, logistic regression <br>• Cox (proportional hazards) regression</td>
     </tr>
   </tbody>
 </table>
@@ -133,17 +133,17 @@ Before we begin, here is an overview of the type of data required by each test/m
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Nominal</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square goodness of fit test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cochran's Q test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Extensions of Fisher's test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cochran's Q test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Extensions of Fisher's test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Multinomial regression</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Ordinal</strong></td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• One-sample Wilcoxon signed-rank test<br>• One-sample Sign test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Wilcoxon signed-rank test<br>• Sign test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Sign test<br>• Wilcoxon signed-rank test on differences</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Mann-Whitney U test (Wilcoxon rank-sum test)</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Wilcoxon rank-sum test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Friedman test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Kruskal–Wallis test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Ordinal regression</td>
@@ -151,17 +151,17 @@ Before we begin, here is an overview of the type of data required by each test/m
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Continuous</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• One-sample t-test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Paired t-test<br>• Wilcoxon signed-rank test on differences</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Paired t-test<br>• Wilcoxon signed-rank test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Two-sample t-test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Repeated measures ANOVA</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• ANOVA</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Repeated-measures ANOVA</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• One-way ANOVA</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Linear regression</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>Time-to-event</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• One-sample log-rank test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Log-rank test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Log-Rank test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cox regression<br>• Weibull regression</td>
@@ -199,7 +199,7 @@ Before we start looking at many different <u>statistical hypothesis tests</u>, l
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Assuming the null hypothesis is true, a specific parameter, called the **statistic**, is expected to fall into a given **distribution**</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the null hypothesis is true, then the t statistic: $t = \frac{\tilde{X}_1-\tilde{X}_2}{s_p \cdot \sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$ (where $s_p$ is the pooled standard deviation) follows a Student's t-distribution with $n_1+n_2-2$ degrees of freedom.</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">If the null hypothesis is true, then the t statistic: $$t = \frac{\tilde{X}_1-\tilde{X}_2}{s_p \cdot \sqrt{\frac{1}{n_1}+\frac{1}{n_2}}}$$ (where $s_p$ is the pooled standard deviation) follows a Student's t-distribution with $n_1+n_2-2$ degrees of freedom.</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">For any object of which the distribution is (assumed to be) known, it is possible to compute its probability to fall within a certain range; for a given **significance level** (denoted by $\alpha$) and between 0 and 1, one can determine an interval in which the statistic has a probability of $1-\alpha$ to fall within</td>
@@ -286,7 +286,7 @@ ggplot(df, aes(x = x, y = y)) +
 
 <u>1. Null hypothesis</u>
 
-* Means of two populations are equal
+* Means of two groups are equal
 
 <u>2. Type of data</u>
 
@@ -317,7 +317,7 @@ t.test(x, y = NULL,
 * `alternative`: a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".
 * `mu`: a number indicating the true value of the mean (or difference in means if you are performing a two sample test).
 * `paired`: a logical indicating whether you want a paired t-test. 
-* `var.equal`:a logical variable indicating whether to treat the two variances as being equal. If `TRUE` then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
+* `var.equal`: a logical variable indicating whether to treat the two variances as being equal. If `TRUE` then the pooled variance is used to estimate the variance otherwise the Welch (or Satterthwaite) approximation to the degrees of freedom is used.
 * `conf.level`: confidence level of the interval (default: 0.95).
 
 💡 "paired" means there is an obvious and meaningful one-to-one correspondence between the data in the first set and the data in the second set, e.g. blood pressure in a set of patients before and after administering a medicine.
@@ -354,9 +354,9 @@ t.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', var.equal = TRUE, 
 
 #### Z-test
 
-The z-test is similar to the t-test (continuous variable(s), independent and normally distributed), and its null hypothesis is also that the means of two populations are equal, but it requires to know the standard deviation of your population(s). 
+The z-test is similar to the t-test (continuous variable(s), independent and normally distributed), and its null hypothesis is also that the means of two groups are equal, but it requires to know the standard deviation of your group(s). 
 
-You should favour a z-test to a t-test if the **standard deviation** of the population is **known** and the sample size is greater than or equal to 30.
+You should favour a z-test to a t-test if the **standard deviation** of the group is **known** and the sample size is greater than or equal to 30.
 
 There is no z-test function available in base R, but in packages like `BSDA` (`z.test(x, ...)`).
 
@@ -368,7 +368,7 @@ Non-parametric (= makes minimal assumptions about the underlying distribution of
 
 <u>1. Null hypothesis</u>
 
-* Distributions of both populations are identical
+* Distributions of both groups are identical (there is not one sample that stochastically dominates the other sample)
 
 <u>2. Type of data</u>
 
@@ -417,9 +417,9 @@ wilcox.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', mu = 0, paire
 
 ## Categorical variables
 
-### Chi-Squared test and Fisher's exact test
+### Chi-square test and Fisher's exact test
 
-Both are statistical hypothesis tests used in the analysis of contingency tables. The Chi-Squared test can be used when the sample sizes are large, Fisher's exact test is valid for all sample sizes (even though in practice it is usually employed when sample sizes are small).
+Both are statistical hypothesis tests used in the analysis of contingency tables. The Chi-square test can be used when the sample sizes are large, Fisher's exact test is valid for all sample sizes (even though in practice it is usually employed when sample sizes are small).
 
 <u>1. Null hypothesis</u>
 
@@ -509,7 +509,7 @@ Here an example:
 
 <u>4. R function</u>
 
-`chisq.test(x, ...)`: performs chi-squared contingency table tests and goodness-of-fit tests.
+`chisq.test(x, ...)`: performs chi-square contingency table tests and goodness-of-fit tests.
 
 `fisher.test(x, ...)`: performs Fisher's exact test for testing the null of independence of rows and columns in a contingency table with fixed marginals.
 
@@ -560,7 +560,7 @@ chisq <- chisq.test(tab)
 round(chisq$expected,2)
 
 # Since all cells are >5, we can test the null hypothesis of independence using
-# a chi-squared test
+# a chi-square test
 chisq.test(tab)
 
 # Let us also try to run a Fisher's exact test on the same table
@@ -569,42 +569,173 @@ fisher.test(tab)
 
 * As it was to be expected (the table of observed and expected frequencies were very similar), the Chi-Square test is non significant (`p-value` = 0.6669).
 * Same conclusion for Fisher's exact test. The `estimate` given is an estimation of the odds ratio (only computed in the $2\times2$ case), with a corresponding `95% percent confidence interval`. Note that the $95\%$ confidence interval for the odds ratio contains 1 and that the `p-value` is above 0.05, which is coherent.
-* The `X-squared` is the statistic of the Chi-Squared test (assumed to have a chi-squared distribution with `df` degrees of freedom). 
+* The `X-squared` is the statistic of the Chi-square test (assumed to have a chi-square distribution with `df` degrees of freedom). 
 * For Fisher's exact test, the statistic is assumed to have a hypergeometric distribution.
 
 #### McNemar's test
 
-McNemar's test is similar to the Chi-Squared test ($2\times 2$ contingency table), and its null hypothesis is also that the variables are independent, but it is used on **paired** categorical data. It is often used in practice to compare the sensitivities and specificities for the evaluation of two diagnostic tests on the same group of patients.
+McNemar's test is similar to the Chi-square test ($2\times 2$ contingency table), and its null hypothesis is also that the variables are independent, but it is used on **paired** categorical data. It is often used in practice to compare the sensitivities and specificities for the evaluation of two diagnostic tests on the same group of patients.
 
 The corresponding function in base R is called `mcnemar.test(x,...)`.
 
 # Tests for more than two groups
 
-## Kruskal-Wallis Test
+## Continuous variables
 
-Generalization of Wilcoxon-Mann-Whitney for more than two groups.
+### One-way ANOVA (Analysis of Variance)
 
-## Friedman Test
+The one-way ANOVA is used as an extension to the t-test for differences among at least three groups. When there are only two means to compare, the t-test and the F-test (conducted by the one-way ANOVA) are equivalent.
 
-Generalization of paired tests (e.g., Wilcoxon) for more than two related groups.
+<u>1. Null hypothesis</u>
 
-## Pearson's Chi-Square Test
+* Means of different groups are equal
 
-Complement Fisher’s Exact Test, emphasizing it’s better suited for larger samples.
+<u>2. Type of data</u>
+
+* Vectors of continuous variables (e.g. blood pressure in mmHg in different cohorts)
+
+<u>3. Requirements</u>
+
+* The different samples are *approximately normally distributed*. Under weak assumptions, this follows in large samples from the central limit theorem, even when the distribution of observations in each group is non-normal.
+* The groups being compared should have the *same variance*. If this is not the case, an approximate method of Welch (1951) can be used, which generalizes the commonly known 2-sample Welch test to the case of arbitrarily many samples.
+* The data used to carry out the test should either be *sampled independently* from the populations being compared. ANOVA is not robust to violations to the assumption of independence. 
+
+<u>4. R function</u>
+
+`oneway.test(formula, data, ...)`: Test whether two or more samples from normal distributions have the same means.
+
+<u>5. Important arguments</u>
+
+```
+oneway.test(formula, data, subset, na.action, var.equal = FALSE)
+```
+
+* `formula`: a formula of the form `lhs ~ rhs` where `lhs` gives the sample values and `rhs` the corresponding groups.
+* `data`: an optional matrix or data frame containing the variables in the formula formula.
+* `na.action`: a function which indicates what should happen when the data contain NAs.
+* `var.equal`: a logical variable indicating whether to treat the variances in the samples as equal. If `TRUE`, then a simple F test for the equality of means in a one-way analysis of variance is performed. If `FALSE`, an approximate method of Welch (1951) is used, which generalizes the commonly known 2-sample Welch test to the case of arbitrarily many samples.
+
+<u>6. Example</u>
+
+Let us test if the mean blood pressure at first reading (`BPXSY1`) is significantly different between different age groups (` RIDAGEYR`).
+
+```{r}
+# We first define different age groups to compare them to each other
+merged_nhanes <- merged_nhanes %>%
+  mutate(AGE_GROUP = cut(RIDAGEYR, breaks = seq(10, 80, 10)))
+
+# Let us have a look at the mean BP values (1st reading) for those groups
+merged_nhanes %>%
+  group_by(AGE_GROUP) %>%
+  summarise(
+    n = n(),
+    mean_BPXSY1 = mean(BPXSY1, na.rm = TRUE)
+  )
+
+# Let us now test the means using a one-way ANOVA
+oneway.test(BPXSY1 ~ AGE_GROUP, data = merged_nhanes)
+```
+
+* The `F` value is the statistic of the F-test conducted by the one-way ANOVA. It is assumed to have an F distribution.
+* `num df` and `denom df` are the degrees of freedom (a characteristics of the underlying distribution of the statistic) for the numerator and the denominator composing the statistic (the F distribution has two different degrees of freedom). The degrees of freedom of the numerator	are the number of groups minus one, and the degrees of freedom of the denominator	are the total sample size minus the number of groups.
+* The `p-value` is the probability of getting such an `F` value under the null hypothesis. It is very small: 2.2e-16, so to an $\alpha$-level of 0.05, we say that their is a statistically significant difference between the means of the different groups.
+
+
+#### Repeated-measures ANOVA
+
+Repeated measures ANOVA is the equivalent of the one-way ANOVA, but for related, not independent groups, and is the extension of the paired t-test.
+
+It can be performed in R using the function `anova_test(data, formula, ...)`.
+
+
+### Kruskal-Wallis test
+
+Extension of the Wilcoxon rank-sum test for more than two groups.
+
+<u>1. Null hypothesis</u>
+
+* Distributions of the different groups are identical (there is not one sample that stochastically dominates one other sample)
+
+<u>2. Type of data</u>
+
+* Vectors of continuous or ordinal variables (e.g. pain levels in different cohorts)
+
+<u>3. Requirements</u>
+
+* The data used to carry out the test should be *sampled independently* from the populations being compared. If the data are known to be paired, a Friedman test has to be applied.
+* The observations in each group should follow *similar distributions*.
+
+<u>4. R function</u>
+
+`kruskal.test(formula, data, ...)`: Performs a Kruskal-Wallis rank sum test.
+
+<u>5. Important arguments</u>
+
+```
+kruskal.test(formula, data, subset, na.action, ...)
+```
+
+* `formula`: a formula of the form `response ~ group` where response gives the data values and group a vector or factor of the corresponding groups.
+* `data`: a matrix or data frame containing the variables in the formula formula.
+* `na.action`: a function which indicates what should happen when the data contain NAs.
+
+<u>6. Example</u>
+
+Let us test if the mean blood pressure at first reading (`BPXSY1`) is significantly different between different age groups (` RIDAGEYR`), just like we did with the one-way ANOVA.
+
+```{r}
+# We first define different age groups to compare them to each other
+merged_nhanes <- merged_nhanes %>%
+  mutate(AGE_GROUP = cut(RIDAGEYR, breaks = seq(10, 80, 10)))
+
+# Let us have a look at the distributions of the BP values (1st reading) for those groups
+ggplot(merged_nhanes, aes(x = AGE_GROUP, y = BPXSY1)) +
+  geom_boxplot(fill = "steelblue", alpha = 0.7) +
+  labs(
+    x = "Age group",
+    y = "Systolic BP in mmHg",
+    title = "Blood pressure (1st reading) by age group"
+  ) +
+  theme_minimal()
+
+# Let us now test the distributions using a Kruskal-Wallis test
+kruskal.test(BPXSY1 ~ AGE_GROUP, data = merged_nhanes)
+```
+
+* The `Kruskal-Wallis chi-squared` value is the statistic of the Kruskal-Wallis test (it is also called `H` statistic). In is assumed to follow a Chi-square distribution with $k-1$ (k beeing the number of groups) degrees of freedom (`df`).
+* The `p-value` is the probability of getting such a value under the null hypothesis. It is very small: 2.2e-16, so to an $\alpha$-level of 0.05, we say that their is a statistically significant difference between the distributions of the different groups.
+
+
+#### Friedman test
+
+Generalization of paired tests (e.g., Wilcoxon) for more than two related groups. It is the non-parametric equivalent of the repeated-measures ANOVA.
+
+It can be performed in R using the function `friedman.test(formula, data, ...)`.
+
+
+## Categorical variables
+
+### Chi-square test and Fisher's exact test
+
+
 
 # Tests for distribution and normality
 
-## Lilliefors/ Kolmogorov-Smirnov-Lilliefors Test
-
 Test for deviations from normality, set the stage for determining when to use parametric vs. non-parametric tests.
+
+## Shapiro-Wilk test
+
+## Lilliefors test
+
 
 # Tests for survival analysis
 
-## Logrank/ Log-Rank Test
+## Log-Rank test
 
-For analyzing time-to-event data. Mention Kaplan-Meier curves for context.
+For analysing time-to-event data. Mention Kaplan-Meier curves for context.
 
-## Correlation and association tests
+
+# Correlation and association tests
 
 ## Correlation test by Pearson
 
@@ -614,7 +745,7 @@ Basis for understanding relationships between two continuous, normally distribut
 
 Non-parametric alternative for monotonic relationships.
 
-# Predictive modeling and regression
+# Regression
 
 ## Generalized Linear Models (GLMs)
 
@@ -659,66 +790,12 @@ Purpose: Used when the dependent variable is binary (e.g., yes/no, success/failu
 Assumptions: Linear relationship between the log-odds of the outcome and predictors.
 Example Application: Predicting the likelihood of a disease based on age, gender, and other factors.
 
-### Cox proportional hazards regression
+## Cox (proportional hazards) regression
 
 Purpose: Used for survival analysis, particularly when studying the time to an event (e.g., time to death, relapse).
 Assumptions: Proportional hazards assumption, meaning the effect of the predictor on the hazard rate is constant over time.
 Example Application: Analyzing the impact of age, treatment type, and other covariates on patient survival times.
 
-### Multivariable regression
-
-Purpose: An extension of linear or logistic regression with more than one predictor variable.
-Assumptions: Similar to linear and logistic regression, but more complex due to multiple predictors.
-Example Application: Predicting a health outcome (e.g., cholesterol levels) based on multiple lifestyle factors (e.g., diet, exercise, genetics).
-
-## Mixed Effects Models
-
-Purpose: Mixed effects models allow for the inclusion of both fixed and random effects, providing flexibility for hierarchical or grouped data. They are especially useful when there is variation between groups or subjects.
-
-Key Features
-
-Fixed effects: These are the main predictors of interest (e.g., treatment, age, etc.), which are assumed to have the same effect across all groups.
-Random effects: These account for variability across groups or clusters (e.g., random intercepts for subjects or random slopes for measurements over time).
-
-Assumptions
-
-* Random effects are independent and identically distributed.
-* Fixed effects have a linear relationship with the response variable.
-
-Common Applications
-
-* Longitudinal data: When measurements are taken repeatedly on the same subjects over time (e.g., repeated measurements on patients).
-* Clustered data: When observations are grouped into clusters (e.g., students within schools, patients within hospitals).
-
-## Generalized Additive Models (GAMs)
-
-Purpose: GAMs extend GLMs by allowing for non-linear relationships between predictors and the outcome. This is useful when the relationship between the independent and dependent variables is not linear.
-
-Key Features
-
-Non-linear terms: Uses smooth functions (e.g., splines) for predictors, allowing for flexibility in modeling.
-
-Additive structure: The model assumes that the total effect is an additive combination of linear and smooth non-linear terms.
-
-Link function: Like GLMs, GAMs can use different link functions depending on the distribution of the outcome variable.
-
-Common Applications: Modelling complex relationships in patient data where the effect of treatment or time may not be linear.
-
-## Generalized Additive Mixed Models (GAMMs)
-
-Purpose: GAMMs combine the flexibility of GAMs with random effects, useful for hierarchical or clustered data.
-
-Key Features: Like GAMs, but with the inclusion of random effects to account for variability between groups.
-
-Applications: Ideal for longitudinal studies or hierarchical data where both non-linear relationships and random effects are present.
-
-Assumptions
-
-* Additivity: The total effect is a sum of the individual effects of predictors (this can be both linear and smooth).
-* Normality or appropriate error distribution: Depending on the type of outcome (e.g., Poisson for count data, binomial for binary data).
-* Random effects: If included, random effects account for variations between groups or subjects.
-
-Example Application: Analysing patient data where outcomes are influenced by both individual patient characteristics and random hospital-specific effects (e.g., variability between hospitals).
 
 \newpage
 

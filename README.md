@@ -6,7 +6,7 @@ Welcome to R for physicians, a gentle introduction to coding and data analysis i
 
 The lecture is structured into diffents chapters and appendices:
 
-    **Chapter 1:** Getting Started with R and RStudio
+    Chapter 1: Getting Started with R and RStudio
     Learn the basics of R syntax, RStudio, and how to produce clean, readable scripts.
 
     Chapter 2: Importing and handling data

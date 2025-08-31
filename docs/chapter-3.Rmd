@@ -167,12 +167,18 @@ Personally, I would recommend *avoiding* pie charts, as the human eye is not ver
 ## Mosaic plots
 
 ```{r, out.width="75%"}
-(smoking_gender_table <- table(merged_nhanes$RIAGENDR, merged_nhanes$SMQ020))
-mosaicplot(smoking_gender_table[,c("Yes","No")], # we select only the 'yes/no' answers
+# We first create a table of the data we want to plot in the mosaic plot
+(smoking_gender_table <- table(merged_nhanes$SMQ020, merged_nhanes$RIAGENDR))
+
+# We select only the "Yes" and "No" rows
+(smoke_table <- smoking_gender_table[c("Yes", "No") ,])
+
+# Mosaic plot
+mosaicplot(smoke_table,
            main = "Mosaic plot of smoking status by gender",
-           xlab = "Gender",
-           ylab = "Smoked at least 100 cigarettes?",
-           col = c("steelblue"))
+           xlab = "Smoked at least 100 cigarettes?",
+           ylab = "Gender",
+           col = c("skyblue", "salmon"))
 ```
 
 ## Forest plots
@@ -182,10 +188,10 @@ Base R does not include a built-in function for forest plots, but you can use a 
 ```{r, out.width="75%"}
 library(forestplot)
 
-# Calculate summary statistics by gender
+# We calculate summary statistics by gender
 summary_stats <- merged_nhanes %>%
-  filter(!is.na(BPXSY1)) %>%                      # Remove NAs for BPXSY1
-  group_by(RIAGENDR) %>%                          # Group by gender
+  filter(!is.na(BPXSY1)) %>% # We remove NAs for BPXSY1                      
+  group_by(RIAGENDR) %>%
   summarise(
     mean = mean(BPXSY1),
     sd = sd(BPXSY1),
@@ -204,9 +210,35 @@ forestplot(labeltext = c("Female","Male"),
            grid = TRUE,
            ci.vertices = TRUE,
            xlab = "Systolic BP (95% CI) [mmHg]",
-           col = fpColors(box = "steelblue", line = "steelblue"),
+           col = fpColors(box = "steelblue", 
+                          line = "steelblue"),
            title = "Forest plot of systolic BP by gender")
 ```
+
+## Heatmaps
+
+As a reminder: `RIDAGEYR` is the participant’s age (in years), `DMDHHSIZ` is the total number of people in the household, `BMXWT` is the weight (in kg), `BMXHT` is the standing height (in cm), and `BPXSY1` is the systolic blood pressure (first reading, in mmHg).
+
+```{r, out.width="75%"}
+# Let us draw a heat map of different variables for the first 20 participants in
+# the data set
+heatmap_data <- merged_nhanes %>%
+  slice(1:20) %>%
+  select(RIDAGEYR, DMDHHSIZ, BMXWT, BMXHT, BPXSY1)
+heatmap_data <- as.matrix(heatmap_data)
+
+# Create the heat map
+heatmap(x = heatmap_data, 
+        Colv = NA, Rowv = NA, 
+        scale = "column", # We standardize by column (by variable)
+        col = colorRampPalette(c("skyblue", "white", "salmon"))(100),
+        xlab="Variable", ylab="Participant", main="Heatmap",
+        cexRow=0.7, cexCol=0.7)
+```
+
+## Alluvial plots
+
+To draw alluvial plots, please see `ggplot2`, there is no possibility to draw such plots using base R.
 
 ## Kaplan-Meier curves
 
@@ -441,6 +473,85 @@ ggplot(forest_df, aes(x = mean, y = Gender)) +
   theme_minimal()
 ```
 
+## Heatmaps
+
+As a reminder: `RIDAGEYR` is the participant’s age (in years), `DMDHHSIZ` is the total number of people in the household, `BMXWT` is the weight (in kg), `BMXHT` is the standing height (in cm), and `BPXSY1` is the systolic blood pressure (first reading, in mmHg).
+
+```{r, out.width="75%"}
+# Let us draw a heat map of different variables for the first 20 participants in
+# the data set
+heatmap_data <- merged_nhanes %>%
+  slice(1:20) %>%
+  select(SEQN, RIDAGEYR, DMDHHSIZ, BMXWT, BMXHT, BPXSY1)
+
+# We reshape to long format and standardize
+heatmap_scaled <- heatmap_data %>%
+  mutate(across(-SEQN, scale)) %>%
+  pivot_longer(-SEQN, names_to = "Variable", values_to = "Value")
+
+# Create the heat map
+ggplot(heatmap_scaled, aes(x = Variable, y = factor(SEQN), fill = Value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "skyblue", mid = "white", high = "salmon") +
+  labs(x = "Variable", y = "Participant (SEQN)", fill = "Z-score",
+       title = "Heatmap") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 6))
+```
+
+💡 `pivot_longer(data, cols, ...)` "lengthens" data, increasing the number of rows and decreasing the number of columns. It’s especially useful for plotting functions like `geom_tile()` or `geom_flow()` that require data in a long format. Essentially, it takes the values from the specified columns (`cols`) and stacks them into a single column (`values_to`), with an additional column indicating the original column name (`names_to`).
+
+## Alluvial plots
+
+Alluvial plots require the use of the package `ggalluvial` in addition to `ggplot2`.
+
+```{r, out.width="75%"}
+library(ggalluvial)
+
+# We will draw an alluvial plot of the three systolic blood pressure readings of the first 50 participants with no NA values in the corresponding columns
+bp_data <- merged_nhanes %>%
+  filter(!is.na(BPXSY1),
+         !is.na(BPXSY2),
+         !is.na(BPXSY3)) %>%
+  slice(1:50) %>%
+  select(SEQN, BPXSY1, BPXSY2, BPXSY3)
+
+# We put the BP reading into three groups
+bp_data <- bp_data %>%
+  mutate(BPXSY1 = cut(BPXSY1, breaks = c(0, 120, 130, 200),
+                      labels = c("[0-120)", "[120-130)", "[130-200)"),
+                      right = FALSE)) %>%
+  mutate(BPXSY2 = cut(BPXSY2, breaks = c(0, 120, 130, 200),
+                      labels = c("[0-120)", "[120-130)", "[130-200)"),
+                      right = FALSE)) %>%
+  mutate(BPXSY3 = cut(BPXSY3, breaks = c(0, 120, 130, 200),
+                      labels = c("[0-120)", "[120-130)", "[130-200)"),
+                      right = FALSE))
+
+# We reshape to long format for ggalluvial
+bp_long <- bp_data %>%
+  pivot_longer(cols = starts_with("BPXSY"),
+               names_to = "Reading",
+               values_to = "Systolic_BP")
+
+# Alluvial plot
+ggplot(bp_long,
+       aes(x = Reading, 
+           stratum = Systolic_BP, 
+           alluvium = SEQN, 
+           fill = Systolic_BP, 
+           label = Systolic_BP)) +
+  geom_flow(stat = "alluvium", lode.guidance = "forward", alpha = 0.6, color = "white") +
+  geom_stratum(width = 0.5, color = "white") + 
+  geom_text(stat = "stratum", size = 3, color = "white") +
+  scale_fill_manual(values = c("skyblue", "steelblue", "salmon")) +
+  theme_minimal() +
+  labs(title = "Alluvial plot of systolic BP",
+       x = "Systolic blood pressure (1st-3rd readings)", 
+       y = "Participants",
+       fill = "Systolic BP")
+```
+
 ## Kaplan-Meier curves
 
 `ggplot2` does not include a built-in function for KM curves, but can be extended with the `survminer` package for that.
@@ -543,7 +654,7 @@ ggsave(filename = "boxplot_syst_bp_by_gender.png",
 
 ☑️ Exercise on plotting with base R n°1
 
-```{r}
+```{r, out.width="75%"}
 par(mfrow=c(1,3))
 boxplot(merged_nhanes$BPXSY1 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
@@ -576,19 +687,19 @@ par(mfrow=c(3,1))
 hist(merged_nhanes[merged_nhanes$SMQ040=="Not at all",]$BPXSY1,
      breaks = 20,
      freq = TRUE,
-     col = "darkgreen",
+     col = "skyblue",
      xlab = "Systolic blood pressure (1st reading) [mmHg]",
      main = "Histogram of systolic BP: not smoking")
 hist(merged_nhanes[merged_nhanes$SMQ040=="Some days",]$BPXSY1,
      breaks = 20,
      freq = TRUE,
-     col = "orange2",
+     col = "steelblue",
      xlab = "Systolic blood pressure (1st reading) [mmHg]",
      main = "Histogram of systolic BP: smoking every other day")
 hist(merged_nhanes[merged_nhanes$SMQ040=="Every day",]$BPXSY1,
      breaks = 20,
      freq = TRUE,
-     col = "coral3",
+     col = "salmon",
      xlab = "Systolic blood pressure (1st reading) [mmHg]",
      main = "Histogram of systolic BP: smoking every day")
 par(mfrow=c(1,1))
@@ -617,7 +728,7 @@ ggplot(med_bmi, aes(x = age_groups, y = BMXBMI)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-```{r}
+```{r, out.width="75%"}
 # We calculate the median BMI by age group and by gender
 (med_bmi <- aggregate(BMXBMI ~ age_groups + RIAGENDR, data = merged_nhanes, FUN = function(x) median(x, na.rm = TRUE)))
 med_bmi_fem <- med_bmi[med_bmi$RIAGENDR == "Female",]

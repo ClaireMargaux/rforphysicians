@@ -71,11 +71,17 @@ To tell R which folder you are working in (e.g., where your data is stored), you
   + Use `setwd("path/to/your/folder")` in your script.
   + Or, the most convenient for script-based work: go to *Session > Set Working Directory > To Source File Location* to automatically set the working directory to the location of your script.
 
-💡 Tip: To avoid file path errors and keep your project organized, it’s best to store your script and data files in the same folder — or at least place your data files in a subfolder like `data_sets` within your project directory. Then, set that folder as your working directory in R. This ensures that your code can reliably find and save your files.
+💡 Tip: To avoid file path errors and keep your project organized, it’s best to store your script and data files in the same folder, or at least place your data files in a subfolder like `data_sets` within your project directory. Then, set that folder as your working directory in R. This ensures that your code can reliably find and save your files.
 
 ```{r, eval=FALSE}
-getwd()                         # Displays the current working directory
-setwd("~/path/to/your/folder")  # Sets the working directory
+# Command to display the current working directory
+getwd()
+
+# Command to manually set your working directory
+setwd("~/path/to/your/folder")
+
+# Command to automatically set your working directory to the location of your R file
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
 ```
 
 ## Import CSV and xlsx data

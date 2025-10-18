@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2025-08-30" />
+<meta name="date" content="2025-10-18" />
 
 <title>Chapter 4</title>
 
@@ -2902,7 +2902,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Chapter 4</h1>
 <h3 class="subtitle">R for physicians</h3>
-<h4 class="date">2025-08-30</h4>
+<h4 class="date">2025-10-18</h4>
 
 </div>
 
@@ -3104,10 +3104,8 @@ Continuous predictor
 • Chi-square test<br>• Fisher’s exact test
 </td>
 <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
-• Cochran’s Q test
 </td>
 <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
-• Chi-square test<br>• Extensions of Fisher’s test
 </td>
 <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
 • Logistic regression
@@ -3127,10 +3125,8 @@ Continuous predictor
 • Chi-square test<br>• Extensions of Fisher’s test
 </td>
 <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
-• Cochran’s Q test
 </td>
 <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
-• Chi-square test<br>• Extensions of Fisher’s test
 </td>
 <td style="border: 1px solid black; padding: 8px; vertical-align: top;">
 • Multinomial regression
@@ -3358,6 +3354,10 @@ variables</h2>
 <div id="students-t-test" class="section level3" number="2.1.1">
 <h3><span class="header-section-number">2.1.1</span> Student’s
 t-test</h3>
+<p>Parametric test used to evaluate whether the mean of two continuous
+variables is statistically significant or not. It provides an exact test
+for the equality of the means of two i.i.d. normal populations with
+unknown, but equal, variances.</p>
 <p><u>1. Null hypothesis</u></p>
 <ul>
 <li>Means of two groups are equal</li>
@@ -3582,11 +3582,17 @@ variables</h2>
 <div id="chi-square-test-and-fishers-exact-test" class="section level3" number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> Chi-square test and
 Fisher’s exact test</h3>
-<p>Both are statistical hypothesis tests used in the analysis of
-contingency tables. The Chi-square test can be used when the sample
-sizes are large, Fisher’s exact test is valid for all sample sizes (even
-though in practice it is usually employed when sample sizes are
-small).</p>
+<p>Both are non-parametric tests used in the analysis of contingency
+tables. They evaluate the difference between observed categorical data
+and expected categorical data (assumed randomly distributed) to
+determine if there is a significant difference or relationship between
+variables.</p>
+<p>The Chi-square test can be used when the sample sizes are large,
+Fisher’s exact test is valid for all sample sizes (even though in
+practice it is usually employed when sample sizes are small).</p>
+<p>One can also test whether the observed proportions for a categorical
+variable differ from hypothesized proportions: this is called a
+Chi-square goodness of fit test.</p>
 <p><u>1. Null hypothesis</u></p>
 <ul>
 <li>There are no differences between the classes in the population (rows
@@ -3834,9 +3840,9 @@ of freedom).</li>
 <li>For Fisher’s exact test, the statistic is assumed to have a
 hypergeometric distribution.</li>
 </ul>
-<div id="mcnemars-test" class="section level4" number="2.2.1.1">
-<h4><span class="header-section-number">2.2.1.1</span> McNemar’s
-test</h4>
+<div id="mcnemars-test-cochrans-q-test" class="section level4" number="2.2.1.1">
+<h4><span class="header-section-number">2.2.1.1</span> McNemar’s test,
+Cochran’s Q test</h4>
 <p>McNemar’s test is similar to the Chi-square test (<span class="math inline">2\times 2</span> contingency table), and its null
 hypothesis is also that the variables are independent, but it is used on
 <strong>paired</strong> categorical data. It is often used in practice
@@ -3844,6 +3850,11 @@ to compare the sensitivities and specificities for the evaluation of two
 diagnostic tests on the same group of patients.</p>
 <p>The corresponding function in base R is called
 <code>mcnemar.test(x,...)</code>.</p>
+<p>The Cochran’s Q test is an extension of the McNemar’s test for more
+than two categories with paired responses (<span class="math inline">n\times 2</span> contingency table).</p>
+<p>There is no function for a Cochran’s Q test in base R, but some
+packages (<code>onewaytests</code>, <code>outliers</code>, etc.) can
+provide one.</p>
 </div>
 </div>
 </div>
@@ -4043,10 +4054,10 @@ repeated-measures ANOVA.</p>
 <div id="categorical-variables-1" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Categorical
 variables</h2>
-<div id="chi-square-test-and-fishers-exact-test-1" class="section level3" number="3.2.1">
-<h3><span class="header-section-number">3.2.1</span> Chi-square test and
-Fisher’s exact test</h3>
-</div>
+<p>There is no simple, direct statistical test to assess the
+independence of three or more categorical variables simultaneously. You
+can test pairwise independence between each pair of variables, but that
+doesn’t guarantee joint independence.</p>
 </div>
 </div>
 <div id="tests-for-distribution-and-normality" class="section level1" number="4">

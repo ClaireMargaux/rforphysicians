@@ -126,8 +126,8 @@ Before we begin, here is an overview of the type of data required by each test/m
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Binomial test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• McNemar test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Fisher's exact test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cochran's Q test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Extensions of Fisher's test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> </td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> </td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Logistic regression</td>
     </tr>
     <tr>
@@ -135,8 +135,8 @@ Before we begin, here is an overview of the type of data required by each test/m
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square goodness of fit test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cochran's Q test</td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Extensions of Fisher's test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Cochran's Q test</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Chi-square test<br>• Extensions of Fisher's test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> </td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> </td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">• Multinomial regression</td>
     </tr>
     <tr>
@@ -284,6 +284,8 @@ ggplot(df, aes(x = x, y = y)) +
 
 ### Student's t-test
 
+Parametric test used to evaluate whether the mean of two continuous variables is statistically significant or not. It provides an exact test for the equality of the means of two i.i.d. normal populations with unknown, but equal, variances.
+
 <u>1. Null hypothesis</u>
 
 * Means of two groups are equal
@@ -419,7 +421,11 @@ wilcox.test(x = bmi_women, y = bmi_men, alternative = 'two.sided', mu = 0, paire
 
 ### Chi-square test and Fisher's exact test
 
-Both are statistical hypothesis tests used in the analysis of contingency tables. The Chi-square test can be used when the sample sizes are large, Fisher's exact test is valid for all sample sizes (even though in practice it is usually employed when sample sizes are small).
+Both are non-parametric tests used in the analysis of contingency tables. They evaluate the difference between observed categorical data and expected categorical data (assumed randomly distributed) to determine if there is a significant difference or relationship between variables.
+
+The Chi-square test can be used when the sample sizes are large, Fisher's exact test is valid for all sample sizes (even though in practice it is usually employed when sample sizes are small).
+
+One can also test whether the observed proportions for a categorical variable differ from hypothesized proportions: this is called a Chi-square goodness of fit test.
 
 <u>1. Null hypothesis</u>
 
@@ -572,11 +578,15 @@ fisher.test(tab)
 * The `X-squared` is the statistic of the Chi-square test (assumed to have a chi-square distribution with `df` degrees of freedom). 
 * For Fisher's exact test, the statistic is assumed to have a hypergeometric distribution.
 
-#### McNemar's test
+#### McNemar's test, Cochran's Q test
 
 McNemar's test is similar to the Chi-square test ($2\times 2$ contingency table), and its null hypothesis is also that the variables are independent, but it is used on **paired** categorical data. It is often used in practice to compare the sensitivities and specificities for the evaluation of two diagnostic tests on the same group of patients.
 
 The corresponding function in base R is called `mcnemar.test(x,...)`.
+
+The Cochran's Q test is an extension of the McNemar's test for more than two categories with paired responses ($n\times 2$ contingency table).
+
+There is no function for a Cochran's Q test in base R, but some packages (`onewaytests`, `outliers`, etc.) can provide one.
 
 # Tests for more than two groups
 
@@ -712,11 +722,9 @@ Generalization of paired tests (e.g., Wilcoxon) for more than two related groups
 
 It can be performed in R using the function `friedman.test(formula, data, ...)`.
 
-
 ## Categorical variables
 
-### Chi-square test and Fisher's exact test
-
+There is no simple, direct statistical test to assess the independence of three or more categorical variables simultaneously. You can test pairwise independence between each pair of variables, but that doesn’t guarantee joint independence.
 
 
 # Tests for distribution and normality

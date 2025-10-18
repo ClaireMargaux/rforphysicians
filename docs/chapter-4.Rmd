@@ -70,17 +70,17 @@ This chapter will follow the structure outlined below. We will learn how to perf
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.1 Tests for comparing two groups</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests comparing means or proportions between two groups</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Continuous variables: Student’s t-test, Z-test, Wilcoxon rank-sum and sigend-rank tests <br> • Categorical variables: Chi-square test, Fisher’s exact test, McNemar's test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Continuous variables: Student’s t-test, Z-test, Wilcoxon rank-sum and signed-rank tests <br> • Categorical variables: Chi-square test, Fisher’s exact test, McNemar's test, Cochran's Q test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.2 Tests for more than two groups</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for comparing multiple groups</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Continuous variables: One-way ANOVA, Repeated-measures ANOVA, Kruskal-Wallis test, Friedman test <br> • Categorical variables: Chi-square test, Fisher's exact test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Continuous variables: One-way ANOVA, Repeated-measures ANOVA, Kruskal-Wallis test, Friedman test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.3 Tests for distribution and normality</strong></td>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;">Tests for distribution of data</td>
-      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Shapiro-Wilk test, Lilliefors test</td>
+      <td style="border: 1px solid black; padding: 8px; vertical-align: top;"> • Shapiro-Wilk test, Kolmogorov–Smirnov test, Lilliefors test</td>
     </tr>
     <tr>
       <td style="border: 1px solid black; padding: 8px; vertical-align: top;"><strong>4.4 Tests for survival analysis</strong></td>
@@ -332,6 +332,7 @@ Let us test if the mean BMI (`BMXBMI`) is significantly different between men an
 # We quickly check the distribution of the BMI using a Q-Q-plot (even though,
 # with such a large sample, this isn't required)
 qqnorm(y = merged_nhanes$BMXBMI)
+# We will learn more on Q-Q-plots under "Assessments of distribution and normality"
 
 # We create two vectors, with the BMIs of women and men
 bmi_women <- merged_nhanes$BMXBMI[merged_nhanes$RIAGENDR == "Female"]
@@ -727,13 +728,50 @@ It can be performed in R using the function `friedman.test(formula, data, ...)`.
 There is no simple, direct statistical test to assess the independence of three or more categorical variables simultaneously. You can test pairwise independence between each pair of variables, but that doesn’t guarantee joint independence.
 
 
-# Tests for distribution and normality
+# Assessments of distribution and normality
 
-Test for deviations from normality, set the stage for determining when to use parametric vs. non-parametric tests.
+Tests for deviations from normality, determining when to use parametric vs. non-parametric tests.
 
-## Shapiro-Wilk test
+But there is an important remark to make here: With large enough sample sizes ($> 30$ or $40$), the violation of the normality assumption should not cause major problems. This implies that we can use parametric procedures even when the data are not normally distributed. The central limit theorem tells us that in large samples, the sampling distribution ($\neq$ data distribution!) tends to be normal, regardless of the shape of the data; and means of random samples from any distribution will themselves have normal distribution.
 
-## Lilliefors test
+We can look for normality visually by using normal Q-Q-plots (Q-Q-plots comparing the data distribution to a normal distribution) or by significance tests (hypothesis tests comparing the sample distribution to a normal one). It is important to ascertain whether data show a **serious deviation** from normality.
+
+## Visual assessments
+
+Visual inspection of the distribution may be used for assessing normality, although this approach does not guarantee that the distribution is normal.
+
+Many methods can be used to assess normality visually:
+
+* frequency distribution plots: histograms and box plots
+* probability plots: P-P plots (probability-probability plots), Q-Q plots (quantile-quantile plots) 
+
+We already discussed histograms and box plots in Chapter 3, and those are not the most adequate tools to assess a given distribution.
+
+A P-P plot compares the empirical cumulative distribution function of a data set with a specified, theoretical cumulative distribution function (e.g. the CDF of the normal distribution). A Q-Q plot compares the quantiles of a data distribution with the quantiles of a standardized, theoretical distribution from a specified family of distributions (e.g. the normal distribution). 
+
+## Q-Q-plots
+
+This approach is not a statistical test, but a very valuable visualization tool to assess the normality of a data sample, and can already allow to judge if the data show a serious deviation from normality. 
+
+A Q–Q plot (quantile–quantile plot) is a probability plot, a graphical method for comparing two probability distributions by plotting their quantiles against each other. If the two distributions being compared are similar, the points in the Q–Q plot will approximately lie on the **identity line $y = x$**.
+
+Q–Q plots can be used to compare collections of data, or theoretical distributions (and in particular: the normal distribution). 
+
+
+```{r}
+# Let us have a look at the distribution of weight and height with a Q-Q-plot
+qqnorm(y = merged_nhanes$BMXWT)
+qqnorm(y = merged_nhanes$BMXHT)
+```
+
+
+## Normality tests
+
+### Shapiro-Wilk test
+
+### Kolmogorov–Smirnov test
+
+### Lilliefors test
 
 
 # Tests for survival analysis

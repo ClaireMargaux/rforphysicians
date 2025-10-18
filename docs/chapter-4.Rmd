@@ -940,10 +940,117 @@ shapiro.test(BMXHT_5000)
 
 # Tests for survival analysis
 
+Before we delve deeper into the log-rank test, let's briefly discuss censoring, which is a crucial topic in time-to-event analysis.
+
+### Time-to-event data, censoring
+
+Survival analysis involves measuring the elapsed amount of time that passes between some defined “start time” and some other defined “end point” for each observation (subject, individual, etc.) in the sample population. Quite often, there are observations in a survival analysis for which this elapsed amount of time is unknown. These observations are said to be censored, and the reasons this could occur are explained along with an example below to make it easier to understand.
+
+Consider a hypothetical clinical trial that is scheduled to last for 12 months, and that will include 6 patients. Each patient was followed until one of three things happened:
+
+1. The patient experienced the event of interest
+2. The patient dropped out of the study
+3. The study ended after 12 months, but the patient did not experience the event in that time
+
+The graph below shows a timeline for each of the 6 patients in the study, along with an indication of whether or not they died (event) or were censored.
+
+```{r, echo=FALSE, out.width = "100%"}
+knitr::include_graphics(path = "images/censoring.jpg")
+```
+
+Of this fictitious group of six patients, patients 1, 4 and 5 experienced the event during the study period. Patients 2 and 6 did not experience the event during the study period, but it is possible that they did so at a later date; however, this is not documented. Therefore, they are censored. Finally, patient 3 dropped out of the study, which is why he or she is also censored.
+
+The time-to-event dataset would look like this:
+
+```{r}
+(survival_data <- data.frame(
+  id = 1:6,
+  time = c(7, 7, 8, 3, 6, 6),
+  event = c(1, 1, 0, 1, 1, 0) # (1 = event, 0 = censored)
+))
+```
+
+```{r, out.width="75%"}
+library(survival) # for survfit
+library(survminer) # for ggsurvplot
+
+# Let us draw the KM curve and look at the number at risk.
+fit <- survfit(Surv(time, event) ~ 1, data = survival_data)
+ggsurvplot(fit,
+           data = survival_data,
+           palette = c("steelblue"),
+           conf.int = TRUE,  
+           xlab = "Time (months)",
+           ylab = "Survival probability",
+           risk.table = TRUE,
+           title = "Kaplan–Meier survival curve")
+```
+
+Censored patients are marked on the KM curves with small vertical ticks and do not affect the survival probability; only events do.
+
+The number at risk is shown for each month, from 3 months (when the first patient experienced an event) to 8 months (the longest observation period in the cohort). At each time point, the number at risk is the number of patients who have not yet experienced the event.
+
 ## Log-Rank test
 
-For analysing time-to-event data. Mention Kaplan-Meier curves for context.
+The log-rank test is a test for analysing time-to-event data. It compares the estimated hazard functions of two groups at each observed event time.
 
+💡 The hazard function $h(t)$, at time $t$, is the instantaneous risk of experiencing the event among those who are still at risk. It is sometimes referred to as the hazard rate. We will discuss the hazard function in more detail when we look at Cox regression.
+
+There are other ways to analyse time-to-event data (e.g. overall survival, recurrence-free survival, time to recurrence, etc.). Among the options, we have already mentioned are Kaplan-Meier curves (see Chapter 3), and we will look at Cox regression at the end of this chapter.
+
+<u>1. Null hypothesis</u>
+
+The null hypothesis is that the two groups have identical hazard functions.
+
+<u>2. Type of data</u>
+
+Time-to-event data for two groups, e.g. overall survival (OS) for "Treatment 1" and "Treatment 2".
+
+<u>3. Requirements</u>
+
+*  The event times of individuals in each group should be **independent** to each other. This assumption implies that the occurrence of an event (e.g., death or failure) for one individual should not influence the occurrence of an event for another individual.
+* **Censoring** should **not be related** to the event being studied or to the group assignment (censored and non-censored patients do not differ in terms of their actual event times). The log-rank test assumes that the probability of censoring should be the same for all individuals within each group. 
+* The hazard rates (the risk of an event occurring) for the compared groups should be consistent over time (we call that **proportional hazards** assumption). The ratio of the hazard rates should remain constant, indicating that the groups are not experiencing significantly different risks at different time points. 
+
+<u>4. R function</u>
+
+We need the package `survival` to perform a log-rank test.
+
+```
+survdiff(formula, data, subset, na.action, rho=0, timefix=TRUE)
+```
+
+<u>5. Important arguments</u>
+
+* `formula`: a formula expression as for other survival models, of the form `Surv(time, status) ~ predictors`. 
+* `data`: the data frame in which to interpret the variables occurring in the formula.
+* `subset`: expression indicating which subset of the rows of data should be used in the fit. 
+
+<u>6. Example</u>
+
+```{r, out.width="75%"}
+# We want to have a look at the survival of people depending on the variable
+# SMQ020 (smoked at least 100 cigarettes in life).
+# We keep only the responses 'yes' or 'no'.
+df <- merged_nhanes_with_mort[merged_nhanes_with_mort$SMQ020 %in% c("Yes", "No"), ]
+
+# We perform the log-rank test.
+survdiff(Surv(PERMTH_INT, MORTSTAT) ~ SMQ020, data = df)
+
+# Smoking has (unsurprisingly) an influence on death. To see in which direction
+# (let us assume that we don't know), since the log-rank test does not tell
+# us that, we draw the KM curve.
+fit <- survfit(Surv(PERMTH_INT, MORTSTAT) ~ SMQ020, data = df)
+ggsurvplot(fit,
+           data = df,
+           palette = c("steelblue", "salmon"),
+           conf.int = TRUE,  
+           xlab = "Time (months)",
+           ylab = "Survival probability",
+           ylim = c(0.7, 1),
+           risk.table = TRUE,
+           title = "Kaplan–Meier survival curve")
+```
 
 # Correlation and association tests
 
@@ -1004,7 +1111,11 @@ Example Application: Predicting the likelihood of a disease based on age, gender
 
 Purpose: Used for survival analysis, particularly when studying the time to an event (e.g., time to death, relapse).
 Assumptions: Proportional hazards assumption, meaning the effect of the predictor on the hazard rate is constant over time.
-Example Application: Analyzing the impact of age, treatment type, and other covariates on patient survival times.
+Example Application: Analysing the impact of age, treatment type, and other covariates on patient survival times.
+
+### Hazard function
+
+### Competing risks
 
 
 \newpage

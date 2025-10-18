@@ -133,7 +133,7 @@ And if too many data points are missing for a variable, consider dropping the co
 
 ## Multiple testing
 
-
+## Superiority / equality / non-inferiority
 
 \newpage
 

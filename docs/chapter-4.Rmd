@@ -12,7 +12,7 @@ output:
     code_folding: show
     math_method: katex
 subtitle: "R for physicians"
-bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+bibliography: C:/GitHub/rforphysicians/docs/Rforphysicians.bib
 link-citations: yes
 editor_options: 
   chunk_output_type: console
@@ -48,10 +48,10 @@ To be able to use survival data, we will also need the NHANES data set complemen
 
 ```{r, echo=TRUE}
 # Load the merged_nhanes CSV file
-merged_nhanes <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
+merged_nhanes <- read.csv("C:/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
 
 # Load the merged_nhanes_with_mort CSV file
-merged_nhanes_with_mort <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes_with_mort.csv")
+merged_nhanes_with_mort <- read.csv("C:/GitHub/rforphysicians/data_sets/merged_nhanes_with_mort.csv")
 ```
 
 # Most commonly used statistical tests and models
@@ -1061,6 +1061,8 @@ Basis for understanding relationships between two continuous, normally distribut
 ## Correlation test by Spearman
 
 Non-parametric alternative for monotonic relationships.
+
+The Spearman correlation between two variables is equal to the Pearson correlation between the rank values of those two variables; while Pearson's correlation assesses linear relationships, Spearman's correlation assesses monotonic relationships (whether linear or not).
 
 # Regression
 

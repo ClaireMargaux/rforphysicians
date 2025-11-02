@@ -814,9 +814,9 @@ qqnorm(y = merged_nhanes$BMXHT)
 
 # It would be equivalent to use the function qqplot and take a normally
 # distributed vector as comparison.
-x <- rnorm(10000)
-qqplot(x = x, y = merged_nhanes$BMXWT)
-qqplot(x = x, y = merged_nhanes$BMXHT)
+simulated_normal <- rnorm(10000)
+qqplot(x = simulated_normal, y = merged_nhanes$BMXWT)
+qqplot(x = simulated_normal, y = merged_nhanes$BMXHT)
 ```
 
 
@@ -1054,21 +1054,225 @@ ggsurvplot(fit,
 
 # Correlation and association tests
 
+Correlation coefficients are numerical measure of some type of **correlation**, meaning a statistical relationship (causal or not!) between two variables.
+
+The null hypothesis of "no correlation" as measured by a correlation coefficient can be tested with a statistical hypothesis test.
+
 ## Correlation test by Pearson
 
-Basis for understanding relationships between two continuous, normally distributed variables.
+The Pearson correlation coefficient $r$ is a correlation coefficient that measures **linear** correlation between two sets of data. It is the ratio between the covariance of two variables and the product of their standard deviations; thus, it is essentially a normalized measurement of the covariance, such that the result always has a value between $−1$ and $1$:
+
+* $-1$ indicates a perfectly negative linear correlation between two variables
+* $0$ indicates no linear correlation between two variables
+* $1$ indicates a perfectly positive linear correlation between two variables
+
+⚠️ A Pearson's correlation coefficient of $0$ does **not** mean that there is no correlation between the two variables! Only that if there is one, it is not linear. Similarly, a non-significant p-value in the Pearson's correlation test ($p >> 0$) does not prove independence, only that there is no linear association between the variables.
+
+💡 Covariance is a measure of the joint variability of two variables.
+
+<u>1. Null hypothesis</u>
+
+* The correlation coefficient $r$ is equal to $0$ (i.e. no linear correlation)
+
+<u>2. Type of data</u>
+
+* Two vectors of continuous variables (e.g. weight in [kg] and height in [m])
+
+<u>3. Requirements</u>
+
+* The Pearson's correlation *test* assumes that both variables are roughly *normally distributed*.
+* Values in both data vectors must be *paired*, meaning that each element in one vector corresponds to a specific element in the other.
+
+<u>4. R function</u>
+
+`cor.test(x, ...)`: Test for association between paired samples, using one of Pearson's, Kendall's  or Spearman's correlation coefficient.
+
+<u>5. Important arguments</u>
+
+```
+cor.test(x, y,
+         alternative = c("two.sided", "less", "greater"),
+         method = c("pearson", "kendall", "spearman"),
+         exact = NULL, conf.level = 0.95, continuity = FALSE, ...)
+```
+
+* `x, y`: numeric vectors of data values. `x` and `y` must have the same length.
+* `alternative`: indicates the alternative hypothesis and must be one of "two.sided", "greater" or "less". You can specify just the initial letter. "greater" corresponds to positive association, "less" to negative association.
+* `method`: a character string indicating which correlation coefficient is to be used for the test. One of "pearson", "kendall", or "spearman", can be abbreviated.
+
+<u>6. Example</u>
+
+Let us measure the Pearson's correlation of different pairs of variables:
+
+* `BMXWT`: Weight (kg)
+* `BMXHT`: Standing height (cm)
+* `BMXBMI`: Body Mass Index (kg/m²)
+* `BMXWAIST`: Waist circumference (cm)
+
+```{r, out.width="75%"}
+# We quickly check the distribution of weight, BMI, height and waist circumference using Q-Q-plots
+qqnorm(y = merged_nhanes$BMXWT)
+qqnorm(y = merged_nhanes$BMXHT)
+qqnorm(y = merged_nhanes$BMXBMI)
+qqnorm(y = merged_nhanes$BMXWAIST)
+
+# Let us compute the Pearson's correlation coefficient and test.
+# We also plot the each pair of variables in a scatter plot.
+cor.test(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXHT, method = c("pearson")) # weight and height circumference
+plot(merged_nhanes$BMXWT, merged_nhanes$BMXHT,
+     col = "steelblue",
+     xlab = "Weight (kg)",
+     ylab = "Height (cm)",
+     main = "Scatterplot of weight vs height")
+cor.test(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXWAIST, method = c("pearson")) # weight and waist circumference
+plot(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXWAIST,
+     col = "steelblue",
+     xlab = "Weight (kg)",
+     ylab = "Waist circumference (cm)",
+     main = "Scatterplot of weight vs waist circumference")
+cor.test(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXWAIST, method = c("pearson")) # height and waist circumference
+plot(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXWAIST,
+     col = "steelblue",
+     xlab = "Height (cm)",
+     ylab = "Waist circumference (cm)",
+     main = "Scatterplot of height vs waist circumference")
+cor.test(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXBMI, method = c("pearson")) # weight and BMI
+plot(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXBMI,
+     col = "steelblue",
+     xlab = "Weight (kg)",
+     ylab = "Body Mass Index (kg/m^2)",
+     main = "Scatterplot of weight vs BMI")
+cor.test(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXBMI, method = c("pearson")) # height and BMI
+plot(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXBMI,
+     col = "steelblue",
+     xlab = "Height (cm)",
+     ylab = "Body Mass Index (kg/m^2)",
+     main = "Scatterplot of height vs BMI")
+```
+
+* Weight and height ($r = 0.45$) show a moderate positive association, which makes sense, since taller individuals tend to weigh more.
+* Weight and waist circumference ($r = 0.90$) show a very strong positive correlation, as expected, since heavier participants generally have larger waist measurements.
+* Height and waist circumference ($r = 0.20$) only have a weak positive correlation: taller participants tend to have slightly larger waists, though the effect is small. Weight has much more effect on waist circumference.
+* Weight and BMI ($r = 0.90$): very strong correlation, just like we expect, as BMI is directly derived from weight.
+* Height and BMI ($r = 0.02, p = 0.09$): essentially no linear relationship, because BMI already accounts for height in its formula, which explains the near-zero correlation.
+
+Note that while height and waist circumference appear roughly normally distributed, weight and BMI are slightly right-skewed, which may slightly affect the strength of Pearson’s correlation but not the overall interpretation of direction or relative magnitude.
 
 ## Correlation test by Spearman
 
-Non-parametric alternative for monotonic relationships.
+The Spearman correlation coefficient $\rho$ between two variables is equal to the Pearson correlation coefficient $r$ between the **rank values** of those two variables; while Pearson's correlation assesses linear relationships, Spearman's correlation assesses **monotonic** (i.e. strictly increasing, but not necessarily linearly) relationships.
 
-The Spearman correlation between two variables is equal to the Pearson correlation between the rank values of those two variables; while Pearson's correlation assesses linear relationships, Spearman's correlation assesses monotonic relationships (whether linear or not).
+It also lies between $-1$ and $1$, and is interpreted similarly to the Pearson coefficient.
+
+As it is a nonparametric test, ordinal data is also permitted.
+
+💡 Ranking a vector of data means replacing its numerical or ordinal values by their rank, when the data are sorted. For example, the ranks of the numerical vector `c(3.4, 5.1, 2.6, 7.3)` are `c(2, 3, 1, 4)`. 
+
+<u>1. Null hypothesis</u>
+
+* The correlation coefficient $\rho$ is equal to $0$ (i.e. no monotonic correlation)
+
+<u>2. Type of data</u>
+
+* Two vectors of continuous or ordinal variables (e.g. weight in [kg] and height in [m])
+
+<u>3. Requirements</u>
+
+* Values in both data vectors must be *paired*, meaning that each element in one vector corresponds to a specific element in the other.
+
+<u>4. R function</u>
+
+`cor.test(x, ...)`: Test for association between paired samples, using one of Pearson's, Kendall's  or Spearman's correlation coefficient.
+
+<u>5. Important arguments</u>
+
+```
+cor.test(x, y,
+         alternative = c("two.sided", "less", "greater"),
+         method = c("pearson", "kendall", "spearman"),
+         exact = NULL, conf.level = 0.95, continuity = FALSE, ...)
+```
+
+* `x, y`: numeric vectors of data values. `x` and `y` must have the same length.
+* `alternative`: indicates the alternative hypothesis and must be one of "two.sided", "greater" or "less". You can specify just the initial letter. "greater" corresponds to positive association, "less" to negative association.
+* `method`: a character string indicating which correlation coefficient is to be used for the test. One of "pearson", "kendall", or "spearman", can be abbreviated.
+
+<u>6. Example</u>
+
+Let us measure the Spearman's correlation of different pairs of variables:
+
+* `BMXWT`: Weight (kg)
+* `BMXHT`: Standing height (cm)
+* `BMXBMI`: Body Mass Index (kg/m²)
+* `BMXWAIST`: Waist circumference (cm)
+
+```{r, out.width="75%"}
+# Let us compute the Spearman's correlation coefficient and test.
+# We also plot the each pair of variables in a scatter plot.
+cor.test(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXHT, method = c("spearman"), exact = FALSE) # weight and height circumference
+plot(merged_nhanes$BMXWT, merged_nhanes$BMXHT,
+     col = "steelblue",
+     xlab = "Weight (kg)",
+     ylab = "Height (cm)",
+     main = "Scatterplot of weight vs height")
+cor.test(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXWAIST, method = c("spearman"), exact = FALSE) # weight and waist circumference
+plot(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXWAIST,
+     col = "steelblue",
+     xlab = "Weight (kg)",
+     ylab = "Waist circumference (cm)",
+     main = "Scatterplot of weight vs waist circumference")
+cor.test(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXWAIST, method = c("spearman"), exact = FALSE) # height and waist circumference
+plot(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXWAIST,
+     col = "steelblue",
+     xlab = "Height (cm)",
+     ylab = "Waist circumference (cm)",
+     main = "Scatterplot of height vs waist circumference")
+cor.test(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXBMI, method = c("spearman"), exact = FALSE) # weight and BMI
+plot(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXBMI,
+     col = "steelblue",
+     xlab = "Weight (kg)",
+     ylab = "Body Mass Index (kg/m^2)",
+     main = "Scatterplot of weight vs BMI")
+cor.test(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXBMI, method = c("spearman"), exact = FALSE) # height and BMI
+plot(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXBMI,
+     col = "steelblue",
+     xlab = "Height (cm)",
+     ylab = "Body Mass Index (kg/m^2)",
+     main = "Scatterplot of height vs BMI")
+```
+
+* Weight and height ($\rho = 0.47$) have a slightly stronger correlation using Spearman's method than Pearson's ($r = 0.45$), suggesting a monotonic but not perfectly linear increase: heavier participants tend to be taller, though not in a strictly linear way.
+* Weight and waist circumference ($\rho = 0.89$) have a Spearman's coefficient nearly identical to Pearson's ($r = 0.90$), confirming a very strong monotonic and rather linear association.
+* Height and waist circumference ($\rho = 0.20$) have identical Spearman's and Pearson’s ($r = 0.20$) coefficients, suggesting a weak but positive and linear relationship.
+* Weight and BMI ($\rho = 0.88$): their Spearman's coefficient is almost the same as their Pearson's coefficient ($r = 0.90$), again reflecting the strong link between weight and BMI’s definition.
+* Height and BMI ($\rho = 0.04, p < 0.001$): although statistically significant due to large sample size, the correlation remains basically nonexistent. There is practically no monotonic association.
+
+The pattern of relationships is consistent between Pearson’s and Spearman’s coefficients. The slightly higher Spearman values (especially for weight vs. height) suggest some non-linearity or mild skewness in the data, which is consistent with the fact that weight and BMI are slightly right-skewed.
 
 # Regression
 
+You are probably already familiar with linear regression. However, linear regression can be viewed within a broader framework called Generalized Linear Models (GLMs). We will first lay the foundation for understanding GLMs before focusing on three regression methods that are widely used in medicine:
+
+* Linear regression: for continuous outcomes (e.g. total lung capacity in liters).
+* Logistic regression: for binary outcomes (e.g. presence or absence of a disease).
+
+After discussing GLMs, we will move on to another type of regression model designed to handle time-to-event (i.e. censored) data: the Cox regression model (e.g. overall survival).
+
+💡 In this lecture, we will refer to the variable that we aim to explain with our regression model as the **response variable** or **output variable**. The variables that we use to make this prediction will be called **input variables** or **explanatory variables**. Different fields (medicine, statistics, economics, etc.) may use other names for these variables, which we summarize in the list below.
+
+⚠️ I strongly advise *against* using the terms *dependent and independent* variables, because these terms can misleadingly imply that some variables are fully independent of others or suggest a causal relationship.
+
+| Field                       | Output Variable            | Input Variable                     |
+| --------------------------- | -------------------------- | ---------------------------------- |
+| Statistics / Data Science   | Response variable          | Predictor variable / Covariate     |
+| Medicine / Epidemiology     | Outcome                    | Risk factor / Exposure / Covariate |
+| Economics / Social Sciences | Dependent variable         | Independent variable / Regressor   |
+| Machine Learning            | Target                     | Feature / Input                    |
+| General / Other fields      | Output                     | Input / Explanatory                |
+
 ## Generalized Linear Models (GLMs)
 
-Purpose: GLMs are an extension of linear models that allow for non-normal distributions of the response variable (e.g., binary, count, or categorical outcomes). They offer more flexibility than traditional linear regression by using different link functions and error distributions.
+GLMs are an extension of linear models that allow for non-normal distributions of the response variable (e.g., binary, count, or categorical outcomes). They offer more flexibility than traditional linear regression by using different *link functions* and error distributions.
 
 Key Features: 
 
@@ -1118,6 +1322,53 @@ Example Application: Analysing the impact of age, treatment type, and other cova
 ### Hazard function
 
 ### Competing risks
+
+
+## Exercices
+
+Comparing two groups – t-test
+Compare the mean systolic blood pressure (BPXSY1) between males and females.
+
+Which test would you use if the data is roughly normal?
+
+How about if it is skewed?
+
+Comparing two groups – Wilcoxon test
+Compare waist circumference (BMXWAIST) between participants who smoke at least 100 cigarettes in life (SMQ020 == "Yes") and non-smokers.
+
+Comparing proportions – Chi-square test
+Test whether smoking status (SMQ020) differs by gender (RIAGENDR).
+
+Comparing proportions – Fisher’s exact test
+Test the association between cigar smoking (SMQ680) and pipe smoking (SMQ690).
+
+Comparing more than two groups – ANOVA
+Compare mean BMI (BMXBMI) across age groups (AGE_GROUP).
+
+Comparing more than two groups – Kruskal-Wallis test
+Compare waist circumference (BMXWAIST) across different smoking frequency categories (SMQ040).
+
+Test for normality
+Check if BMI (BMXBMI) is normally distributed using the Shapiro-Wilk test.
+
+Correlation test – Pearson
+Compute the Pearson correlation between weight (BMXWT) and BMI (BMXBMI).
+
+Correlation test – Spearman
+Compute the Spearman correlation between height (BMXHT) and waist circumference (BMXWAIST).
+
+Survival analysis – Kaplan–Meier
+Using the NHANES mortality data (MORTSTAT, PERMTH_INT), plot the Kaplan–Meier survival curve by gender.
+
+Optional: Perform a Log-Rank test to compare survival curves.
+
+Bonus – Linear regression
+Fit a linear regression model predicting systolic blood pressure (BPXSY1) using age (RIDAGEYR) and BMI (BMXBMI) as predictors.
+
+Interpret the coefficients.
+
+Bonus – Logistic regression
+Predict the probability of being a smoker (SMQ020 == "Yes") using age and BMI as predictors.
 
 
 \newpage

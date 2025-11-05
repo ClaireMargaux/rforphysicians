@@ -1251,7 +1251,7 @@ The pattern of relationships is consistent between Pearson’s and Spearman’s 
 
 # Regression
 
-You are probably already familiar with linear regression. However, linear regression can be viewed within a broader framework called Generalized Linear Models (GLMs). We will first lay the foundation for understanding GLMs before focusing on three regression methods that are widely used in medicine:
+You are probably already familiar with linear regression. However, linear regression can be viewed within a broader framework called Generalized Linear Models (GLMs). We will first lay the foundation for understanding GLMs before focusing on two GLMs that are widely used in medicine:
 
 * Linear regression: for continuous outcomes (e.g. total lung capacity in liters).
 * Logistic regression: for binary outcomes (e.g. presence or absence of a disease).
@@ -1272,46 +1272,92 @@ After discussing GLMs, we will move on to another type of regression model desig
 
 ## Generalized Linear Models (GLMs)
 
-GLMs are an extension of linear models that allow for non-normal distributions of the response variable (e.g., binary, count, or categorical outcomes). They offer more flexibility than traditional linear regression by using different *link functions* and error distributions.
+Generalized linear models (GLMs) are an extension of linear models that 
 
-Key Features: 
+1. allow for response variables with *arbitrary distributions* (rather than simply normal distributions)
+2. and an arbitrary function of the response variable (the *link function*) that varies linearly with the predictors (rather than the response itself being assumed to vary linearly). 
 
-Linear relationship: GLMs assume a linear relationship between the predictors and the transformed response variable.
+In short: They offer more flexibility than traditional linear regression.
 
-Link function: Links the linear predictor to the mean of the distribution. Common link functions:
+| Model type | Formula | Description |
+|-------------|----------|-------------|
+| **Linear Regression** | $y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \varepsilon_i, \ i = 1,...,n$ | Models a continuous outcome directly as a linear combination of predictors. Errors $\varepsilon_i$ are assumed normally distributed. |
+| **Generalized Linear Model (GLM)** | $g(\mathbb{E}[y_i]) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_p x_{ip}, \ i = 1,...,n$ | Models the *expected value* ($\mathbb{E}$) of the outcome via a *link function* $g(\cdot)$, each outcome $y_i$ is assumed to be generated from a particular distribution (e.g., normal, binomial, Poisson). |
 
-* Identity link for normal distribution (linear regression)
-* Logit link for binomial distribution (logistic regression)
-* Log link for Poisson distribution (Poisson regression)
+💡 Notes:
 
-Error distributions: GLMs can be applied with various error distributions:
+* $y_i$ is the response variable.
+* $x_{ij}$ are the explanatory (input) variables.
+* $g(\cdot)$ is the link function, e.g.
+  * Identity link → linear regression
+  * Logit link → logistic regression
+  * Log link → Poisson regression
+
+GLMs consist of three elements:
+
+1. Linear relationship: GLMs assume a linear relationship between the predictors and the transformed response variable.
+2. Link function $g(\cdot)$: Links the linear predictor to the mean of the distribution. Common link functions:
+
+* Identity link for normal distribution (linear regression): $g(p)=p$
+* Logit link for binomial distribution (logistic regression): $g(p)=\text{logit}(p)=\ln\left(\frac{p}{1-p}\right)$
+* Log link for Poisson distribution (Poisson regression): $g(p)=\text{log}(p)$
+
+3. Output distribution: GLMs can be applied with various distributions for modelling the output:
+
 * Normal for continuous data (linear regression)
 * Binomial for binary data (logistic regression)
-* Poisson for count data
+* Poisson for count data (Poisson regression)
 
-Assumptions
+<u>1. Null hypothesis</u>
 
-* Independence: Observations must be independent.
-* Distribution: The response variable follows an appropriate distribution (e.g., binomial for binary outcomes, Poisson for count data).
+Regression as a whole does not have a single null hypothesis, it is primarily a method for estimating coefficients that best fit the data.
+However, each coefficient in the model can be tested individually under the null hypothesis that it equals zero (i.e. that the corresponding explanatory variable has no effect on the response variable).
 
-Common Applications
+<u>2. Type of data</u>
 
-* Linear regression: Predicting a continuous outcome.
-* Logistic regression: Predicting binary outcomes (e.g., yes/no, success/failure).
-* Poisson regression: Modeling count data (e.g., number of events in a fixed time period).
-* Cox regression: A form of survival analysis used to model time-to-event data, often with censored observations. It is based on the proportional hazards assumption and estimates the effect of predictor variables on the hazard (event occurrence rate).
+The type of regression used within the GLM framework depends on the nature of the response variable:
+
+* Continuous → Linear regression (e.g. blood pressure, cholesterol level)
+* Binary → Logistic regression (e.g. smoker vs. non-smoker)
+* Count / Discrete → Poisson regression (e.g. number of hospital visits)
+
+<u>3. Requirements</u>
+
+* Observations must be *independent*.
+* The response variable follows an *appropriate distribution* (e.g., binomial for binary outcomes, Poisson for count data).
+
+⚠️ A possible point of confusion has to do with the distinction between **generalized linear models** (discussed here) and **general (multivariate) linear models** (which is simply a compact way of simultaneously writing several multiple linear regression models). 
 
 ### Linear regression
 
-Purpose: Used to model the relationship between a continuous dependent variable and one or more independent variables.
-Assumptions: Linearity, normality of residuals, homoscedasticity, independence.
-Example Application: Predicting the price of a house based on square footage, number of rooms, etc.
+From the perspective of generalized linear models, it is useful to suppose that the distribution function is the normal distribution with constant variance and the link function is the identity: under these assumptions, the least-squares estimator is obtained as the maximum-likelihood parameter estimate.
+
+<u>2. Type of data</u>
+
+Continuous response variable.
+
+<u>3. Requirements</u>
+
+* Linearity: the relationship between each predictor and outcome must be linear.
+* Normality of residuals: the residuals should follow a normal distribution.
+* Constant variance (a.k.a. homoscedasticity): the variance of the residuals does not depend on the values of the predictor variables.
+* Independence: the observations should be independent (not repeated measures).
+
+💡 Residuals are the difference between a real-world observation and a value predicted by a model.
+
 
 ### Logistic regression
 
-Purpose: Used when the dependent variable is binary (e.g., yes/no, success/failure).
-Assumptions: Linear relationship between the log-odds of the outcome and predictors.
-Example Application: Predicting the likelihood of a disease based on age, gender, and other factors.
+<u>2. Type of data</u>
+
+Binary response variable.
+
+<u>3. Requirements</u>
+
+* Linearity: the relationship between the log-odds of the outcome and each predictor must be linear.
+* Independence: the observations should be independent (not repeated measures).
+* XXX
+
 
 ## Cox (proportional hazards) regression
 

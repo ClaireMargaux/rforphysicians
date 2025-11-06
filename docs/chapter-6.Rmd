@@ -12,7 +12,7 @@ output:
     code_folding: show
     math_method: katex
 subtitle: "R for physicians"
-bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+bibliography: C:/GitHub/rforphysicians/docs/Rforphysicians.bib
 link-citations: yes
 editor_options: 
   chunk_output_type: console
@@ -102,13 +102,13 @@ Follows a list of some of the key variables from the NHANES data sets.
 | ------------- | ------------------------------------------- |
 | SMQ020        | Smoked at least 100 cigarettes in life      |
 | SMQ040        | Do you now smoke cigarettes?                |
-| SMQ050Q       | Average number of cigarettes smoked per day |
-| SMD030        | Age when first smoked cigarettes regularly  |
-| SMD070        | Age when last smoked cigarettes regularly   |
-| SMQ680        | Smoked cigars in the past 5 days            |
-| SMQ690        | Smoked pipes in the past 5 days             |
-| SMQ700        | Smoked chewing tobacco in the past 5 days   |
-| SMQ710        | Smoked snuff in the past 5 days             |
+| SMQ050Q       | How long since quit smoking cigarettes      |
+| SMD030        | Age started smoking cigarettes regularly    |
+| SMD055        | Age last smoked cigarettes regularly        |
+| SMD057        | # cigarettes smoked per day when quit       |
+| SMQ077        | How soon after waking do you smoke          |
+| SMD660        | Brands of cigarettes smoked in past month   |
+| SMQ670        | Tried to quit smoking                       |
 
 ## Mortality data set (NHANES_2011_2012_MORT_2019_PUBLIC)
 

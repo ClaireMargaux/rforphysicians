@@ -1251,6 +1251,13 @@ The pattern of relationships is consistent between Pearson’s and Spearman’s 
 
 # Regression
 
+Regression analysis is a statistical method for estimating the **relationship** between one or more explanatory variables and one or more response variables.
+
+Regression analysis can be used for conceptually distinct purposes:
+* to show association between explanatory and response variables,
+* to predict new values of the response variable,
+* or, and this has to be especially well justified, to infer causal relationships between explanatory and response variables.
+
 You are probably already familiar with linear regression. However, linear regression can be viewed within a broader framework called Generalized Linear Models (GLMs). We will first lay the foundation for understanding GLMs before focusing on two GLMs that are widely used in medicine:
 
 * Linear regression: for continuous outcomes (e.g. total lung capacity in liters).
@@ -1260,8 +1267,6 @@ After discussing GLMs, we will move on to another type of regression model desig
 
 💡 In this lecture, we will refer to the variable that we aim to explain with our regression model as the **response variable** or **output variable**. The variables that we use to make this prediction will be called **input variables** or **explanatory variables**. Different fields (medicine, statistics, economics, etc.) may use other names for these variables, which we summarize in the list below.
 
-⚠️ I strongly advise *against* using the terms *dependent and independent* variables, because these terms can misleadingly imply that some variables are fully independent of others or suggest a causal relationship.
-
 | Field                       | Output Variable            | Input Variable                     |
 | --------------------------- | -------------------------- | ---------------------------------- |
 | Statistics / Data Science   | Response variable          | Predictor variable / Covariate     |
@@ -1269,6 +1274,8 @@ After discussing GLMs, we will move on to another type of regression model desig
 | Economics / Social Sciences | Dependent variable         | Independent variable / Regressor   |
 | Machine Learning            | Target                     | Feature / Input                    |
 | General / Other fields      | Output                     | Input / Explanatory                |
+
+⚠️ I strongly advise *against* using the terms *dependent and independent* variables, because these terms can misleadingly imply that some variables are fully independent of others or suggest a causal relationship.
 
 ## Generalized Linear Models (GLMs)
 
@@ -1281,7 +1288,7 @@ In short: They offer more flexibility than traditional linear regression.
 
 | Model type | Formula | Description |
 |-------------|----------|-------------|
-| **Linear Regression** | $y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \varepsilon_i, \ i = 1,...,n$ | Models a continuous outcome directly as a linear combination of predictors. Errors $\varepsilon_i$ are assumed normally distributed. |
+| **Linear Regression** | $y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \varepsilon_i, \ i = 1,...,n$ | Models a continuous outcome directly as a linear combination of predictors. Errors $\varepsilon_i$ are assumed independent and normally distributed. |
 | **Generalized Linear Model (GLM)** | $g(\mathbb{E}[y_i]) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_p x_{ip}, \ i = 1,...,n$ | Models the *expected value* ($\mathbb{E}$) of the outcome via a *link function* $g(\cdot)$, each outcome $y_i$ is assumed to be generated from a particular distribution (e.g., normal, binomial, Poisson). |
 
 💡 Notes:
@@ -1346,6 +1353,8 @@ Continuous response variable.
 💡 Residuals are the difference between a real-world observation and a value predicted by a model.
 
 
+💡 R^2 ......
+
 ### Logistic regression
 
 <u>2. Type of data</u>
@@ -1370,52 +1379,143 @@ Example Application: Analysing the impact of age, treatment type, and other cova
 ### Competing risks
 
 
-## Exercices
+## Exercices & Solutions
 
-Comparing two groups – t-test
-Compare the mean systolic blood pressure (BPXSY1) between males and females.
+### Exercices
 
-Which test would you use if the data is roughly normal?
+✏️ Exercise on comparing means: Compare the systolic blood pressure (1st reading, in mmHg, `BPXSY1`) between males and females (`RIAGENDR`). To choose the right test, determine if the data is roughly normal or skewed.
 
-How about if it is skewed?
+✏️ Exercise on comparing means n°2: Compare the age of the household reference person (`DMDHRAGE`) between participants who smoke at least 100 cigarettes in life (`SMQ020 == "Yes"`) and non-smokers (`SMQ020 == "No"`). To choose the right test, determine if the data is roughly normal or skewed.
 
-Comparing two groups – Wilcoxon test
-Compare waist circumference (BMXWAIST) between participants who smoke at least 100 cigarettes in life (SMQ020 == "Yes") and non-smokers.
+✏️ Exercise on comparing proportions: Test whether smoking at least 100 cigarettes in life (`SMQ020 == "Yes"` and `SMQ020 == "No"`) differs by marital status of the household reference person (`DMDHRMAR == "Married"` vs every other marital status).
+ 
+✏️ Exercise on comparing proportions n°2: Test the association between cigar smoking (`SMQ680`) and pipe smoking (`SMQ690`).
 
-Comparing proportions – Chi-square test
-Test whether smoking status (SMQ020) differs by gender (RIAGENDR).
+✏️ Exercise on comparing more than two groups: Compare mean BMI (`BMXBMI`) across age groups.
 
-Comparing proportions – Fisher’s exact test
-Test the association between cigar smoking (SMQ680) and pipe smoking (SMQ690).
+💡 Hint: remember how we used the function `cut()` to create age groups in Chapter 3.
 
-Comparing more than two groups – ANOVA
-Compare mean BMI (BMXBMI) across age groups (AGE_GROUP).
+✏️ Exercise on comparing more than two groups: Compare waist circumference (`BMXWAIST`) across different smoking frequency categories (`SMQ040`).
 
-Comparing more than two groups – Kruskal-Wallis test
-Compare waist circumference (BMXWAIST) across different smoking frequency categories (SMQ040).
+✏️ Exercise on normality: Check visually if BMI (BMXBMI) is normally distributed.
 
-Test for normality
-Check if BMI (BMXBMI) is normally distributed using the Shapiro-Wilk test.
+✏️ Exercise on correlation: Compute the Pearson correlation between weight (BMXWT) and BMI (BMXBMI). Compute the Spearman correlation between height (BMXHT) and waist circumference (BMXWAIST).
 
-Correlation test – Pearson
-Compute the Pearson correlation between weight (BMXWT) and BMI (BMXBMI).
+✏️ Exercise on survival analysis: Using the NHANES mortality data (MORTSTAT, PERMTH_INT), plot the Kaplan–Meier survival curve by gender. Then perform a Log-Rank test to compare survival curves.
 
-Correlation test – Spearman
-Compute the Spearman correlation between height (BMXHT) and waist circumference (BMXWAIST).
+✏️ Exercise on linear regression: Fit a linear regression model predicting systolic blood pressure (BPXSY1) using age (RIDAGEYR) and BMI (BMXBMI) as predictors. Interpret the coefficients.
 
-Survival analysis – Kaplan–Meier
-Using the NHANES mortality data (MORTSTAT, PERMTH_INT), plot the Kaplan–Meier survival curve by gender.
+✏️ Exercise on logistic regression: Predict the probability of being a smoker (SMQ020 == "Yes") using age and BMI as predictors. Interpret the coefficients.
 
-Optional: Perform a Log-Rank test to compare survival curves.
+💡 Hints
 
-Bonus – Linear regression
-Fit a linear regression model predicting systolic blood pressure (BPXSY1) using age (RIDAGEYR) and BMI (BMXBMI) as predictors.
+### Solutions
 
-Interpret the coefficients.
+☑️ Exercise on comparing means
 
-Bonus – Logistic regression
-Predict the probability of being a smoker (SMQ020 == "Yes") using age and BMI as predictors.
+```{r, out.width="75%"}
+# Let us have a look at the systolic blood pressure in our data set
+hist(merged_nhanes$BPXSY1,
+     col = "steelblue",
+     xlab = "Stystolic blood pressure (1st reading) [mmHg]",
+     ylab = "Count",
+     main = "Histogram of systolic blood pressure")
+qqnorm(merged_nhanes$BPXSY1,
+     col = "steelblue",
+     xlab = "Normal quantiles",
+     ylab = "Stystolic blood pressure (1st reading) [mmHg]",
+     main = "Q-Q-plot of systolic blood pressure")
 
+# Since the distribution is only slightly right-skewed, and we have a lot of data, we run a t-test to compare both groups (males and females)
+females <- merged_nhanes[merged_nhanes$RIAGENDR == "Female",]$BPXSY1
+males <- merged_nhanes[merged_nhanes$RIAGENDR == "Male",]$BPXSY1
+t.test(x = females, y = males,
+       alternative = c("two.sided"))
+# The p-value is highly significant (p-value = 1.801e-15)
+
+# If the data had been to skewed, we could have used a Wilcoxon rank-sum test (also called Mann–Whitney U test)
+```
+
+☑️ Exercise on comparing means n°2
+
+```{r, out.width="75%"}
+# Let us have a look at the waist circumference in our data set
+hist(merged_nhanes$DMDHRAGE,
+     col = "coral",
+     xlab = "Count",
+     ylab = "Stystolic blood pressure (1st reading) [mmHg]",
+     main = "Histogram of systolic blood pressure")
+qqnorm(merged_nhanes$DMDHRAGE,
+     col = "coral",
+     xlab = "Normal quantiles",
+     ylab = "Stystolic blood pressure (1st reading) [mmHg]",
+     main = "Q-Q-plot of systolic blood pressure")
+
+# This time, the distribution is definitely non normal, so we run a Wilcoxon test to compare the smokers and non smokers
+smokers <- merged_nhanes[merged_nhanes$SMQ020 == "Yes",]$DMDHRAGE
+nonsmokers <- merged_nhanes[merged_nhanes$SMQ020 == "No",]$DMDHRAGE
+wilcox.test(x = smokers, y = nonsmokers,
+            alternative = c("two.sided"))
+# The p-value is highly significant (p-value = 4.888e-11)
+```
+
+☑️ Exercise on comparing proportions: Chi-square test
+
+```{r, out.width="75%"}
+# We are comparing proportions, so we need to determine if we have to use a Chi-square test or a Fisher's exact test
+
+# First, let us select the smokers and non-smokers (and get rid of the categories 'Don't know' and 'Refused') and put the non married people together in one group
+smoke <- merged_nhanes[merged_nhanes$SMQ020 %in% c("Yes", "No"),]
+smoke$DMDHRMAR <- ifelse(smoke$DMDHRMAR == "Married", "Married", "Not married")
+
+# Let us visualize the contingency table
+(tab <- table(smoke$SMQ020, smoke$DMDHRMAR))
+
+# What are the expected cell counts in this case?
+chisq <- chisq.test(tab)
+round(chisq$expected,2)
+
+# Since the expected counts are way above 5, we use a chi-square test to compare the proportions
+chisq.test(tab)
+# The p-value is highly significant (p-value = 2.115e-05)
+```
+
+☑️ Exercise on comparing proportions n°2: Fisher’s exact test
+
+(`SMQ680`) and pipe smoking (`SMQ690`).
+
+```{r, out.width="75%"}
+# We are again comparing proportions, so we need to determine if we have to use a Chi-square test or a Fisher's exact test
+
+# First, let us select the pipe and cigar smokers
+smoke <- merged_nhanes[merged_nhanes$SMQ020 %in% c("Yes", "No"),]
+smoke$DMDHRMAR <- ifelse(smoke$DMDHRMAR == "Married", "Married", "Not married")
+
+# Let us visualize the contingency table
+(tab <- table(smoke$SMQ020, smoke$DMDHRMAR))
+
+# What are the expected cell counts in this case?
+chisq <- chisq.test(tab)
+round(chisq$expected,2)
+
+# Since the expected counts are way above 5, we use a chi-square test to compare the proportions
+chisq.test(tab)
+# The p-value is highly significant (p-value = 2.115e-05)
+```
+
+☑️ Exercise on comparing more than two groups – ANOVA
+
+☑️ Exercise on comparing more than two groups – Kruskal-Wallis test
+
+☑️ Exercise on normality: qqplot
+
+☑️ Exercise on correlation: pearson and spearman
+
+☑️ Exercise on survival analysis: km + log rank
+
+☑️ Exercise on linear regression:
+
+☑️ Exercise on logistic regression:
 
 \newpage
 

@@ -1383,35 +1383,35 @@ Example Application: Analysing the impact of age, treatment type, and other cova
 
 ### Exercices
 
-✏️ Exercise on comparing means: Compare the systolic blood pressure (1st reading, in mmHg, `BPXSY1`) between males and females (`RIAGENDR`). To choose the right test, determine if the data is roughly normal or skewed.
+✏️ N°1 Exercise on comparing means: Compare the systolic blood pressure (1st reading, in mmHg, `BPXSY1`) between males and females (`RIAGENDR`). To choose the right test, determine if the data is roughly normal or skewed.
 
-✏️ Exercise on comparing means n°2: Compare the age of the household reference person (`DMDHRAGE`) between participants who smoke at least 100 cigarettes in life (`SMQ020 == "Yes"`) and non-smokers (`SMQ020 == "No"`). To choose the right test, determine if the data is roughly normal or skewed.
+✏️ N°2 Exercise on comparing means: Compare the age of the household reference person (`DMDHRAGE`) between participants who smoke at least 100 cigarettes in life (`SMQ020 == "Yes"`) and non-smokers (`SMQ020 == "No"`). To choose the right test, determine if the data is roughly normal or skewed.
 
-✏️ Exercise on comparing proportions: Test whether smoking at least 100 cigarettes in life (`SMQ020 == "Yes"` and `SMQ020 == "No"`) differs by marital status of the household reference person (`DMDHRMAR == "Married"` vs every other marital status).
+✏️ N°3 Exercise on comparing proportions: Test whether smoking at least 100 cigarettes in life (`SMQ020 == "Yes"` and `SMQ020 == "No"`) differs by marital status of the household reference person (`DMDHRMAR == "Married"` vs every other marital status).
  
-✏️ Exercise on comparing proportions n°2: Test the association between cigar smoking (`SMQ680`) and pipe smoking (`SMQ690`).
+✏️ N°4 Exercise on comparing proportions: Test the association between cigar smoking (`SMQ680`) and pipe smoking (`SMQ690`).
 
-✏️ Exercise on comparing more than two groups: Compare mean BMI (`BMXBMI`) across age groups.
+✏️ N°5 Exercise on comparing more than two groups: Compare mean BMI (`BMXBMI`) across age groups.
 
 💡 Hint: remember how we used the function `cut()` to create age groups in Chapter 3.
 
-✏️ Exercise on comparing more than two groups: Compare waist circumference (`BMXWAIST`) across different smoking frequency categories (`SMQ040`).
+✏️ N°6 Exercise on comparing more than two groups: Compare waist circumference (`BMXWAIST`) across different smoking frequency categories (`SMQ040`).
 
-✏️ Exercise on normality: Check visually if BMI (BMXBMI) is normally distributed.
+✏️ N°7 Exercise on normality: Check visually if BMI (`BMXBMI`) is normally distributed.
 
-✏️ Exercise on correlation: Compute the Pearson correlation between weight (BMXWT) and BMI (BMXBMI). Compute the Spearman correlation between height (BMXHT) and waist circumference (BMXWAIST).
+✏️ N°8 Exercise on correlation: Compute the Pearson correlation between weight (`BMXWT`) and BMI (`BMXBMI`). Compute the Spearman correlation between height (`BMXHT`) and waist circumference (`BMXWAIST`).
 
-✏️ Exercise on survival analysis: Using the NHANES mortality data (MORTSTAT, PERMTH_INT), plot the Kaplan–Meier survival curve by gender. Then perform a Log-Rank test to compare survival curves.
+✏️ N°9 Exercise on survival analysis: Using the NHANES mortality data (MORTSTAT, PERMTH_INT), plot the Kaplan–Meier survival curve by gender. Then perform a Log-Rank test to compare survival curves.
 
-✏️ Exercise on linear regression: Fit a linear regression model predicting systolic blood pressure (BPXSY1) using age (RIDAGEYR) and BMI (BMXBMI) as predictors. Interpret the coefficients.
+✏️ N°10 Exercise on linear regression: Fit a linear regression model predicting systolic blood pressure (`BPXSY1`) using age (`RIDAGEYR`) and BMI (`BMXBMI`) as predictors. Interpret the coefficients.
 
-✏️ Exercise on logistic regression: Predict the probability of being a smoker (SMQ020 == "Yes") using age and BMI as predictors. Interpret the coefficients.
+✏️ N°11 Exercise on logistic regression: Predict the probability of being a smoker (`SMQ020 == "Yes"`) using age and BMI as predictors. Interpret the coefficients.
 
 💡 Hints
 
 ### Solutions
 
-☑️ Exercise on comparing means
+☑️ N°1 Exercise on comparing means
 
 ```{r, out.width="75%"}
 # Let us have a look at the systolic blood pressure in our data set
@@ -1436,7 +1436,7 @@ t.test(x = females, y = males,
 # If the data had been to skewed, we could have used a Wilcoxon rank-sum test (also called Mann–Whitney U test)
 ```
 
-☑️ Exercise on comparing means n°2
+☑️ N°2 Exercise on comparing means
 
 ```{r, out.width="75%"}
 # Let us have a look at the waist circumference in our data set
@@ -1459,7 +1459,7 @@ wilcox.test(x = smokers, y = nonsmokers,
 # The p-value is highly significant (p-value = 4.888e-11)
 ```
 
-☑️ Exercise on comparing proportions: Chi-square test
+☑️ N°3 Exercise on comparing proportions
 
 ```{r, out.width="75%"}
 # We are comparing proportions, so we need to determine if we have to use a Chi-square test or a Fisher's exact test
@@ -1480,9 +1480,7 @@ chisq.test(tab)
 # The p-value is highly significant (p-value = 2.115e-05)
 ```
 
-☑️ Exercise on comparing proportions n°2: Fisher’s exact test
-
-(`SMQ680`) and pipe smoking (`SMQ690`).
+☑️ N°4 Exercise on comparing proportions
 
 ```{r, out.width="75%"}
 # We are again comparing proportions, so we need to determine if we have to use a Chi-square test or a Fisher's exact test
@@ -1503,19 +1501,38 @@ chisq.test(tab)
 # The p-value is highly significant (p-value = 2.115e-05)
 ```
 
-☑️ Exercise on comparing more than two groups – ANOVA
+☑️ N°5 Exercise on comparing more than two groups
 
-☑️ Exercise on comparing more than two groups – Kruskal-Wallis test
+```{r}
+# We define the age groups 
+merged_nhanes <- merged_nhanes %>%
+  mutate(AGE_GROUP = cut(RIDAGEYR, breaks = seq(10, 80, 10)))
+head(merged_nhanes$AGE_GROUP)
 
-☑️ Exercise on normality: qqplot
+# Let us have a look at the mean BMI for those groups
+merged_nhanes %>%
+  group_by(AGE_GROUP) %>%
+  summarise(
+    n = n(),
+    mean_BMXBMI = mean(BMXBMI, na.rm = TRUE)
+  )
 
-☑️ Exercise on correlation: pearson and spearman
+# Let us now test the means using a one-way ANOVA
+oneway.test(BMXBMI ~ AGE_GROUP, data = merged_nhanes)
+# The p-value is highly significant (p-value < 2.2e-16)
+```
 
-☑️ Exercise on survival analysis: km + log rank
+☑️ N°6 Exercise on comparing more than two groups – Kruskal-Wallis test
 
-☑️ Exercise on linear regression:
+☑️ N°7 Exercise on normality: qqplot
 
-☑️ Exercise on logistic regression:
+☑️ N°8 Exercise on correlation: pearson and spearman
+
+☑️ N°9 Exercise on survival analysis: km + log rank
+
+☑️ N°10 Exercise on linear regression:
+
+☑️ N°11 Exercise on logistic regression:
 
 \newpage
 

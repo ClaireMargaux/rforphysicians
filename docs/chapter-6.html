@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2025-11-06" />
+<meta name="date" content="2025-11-18" />
 
 <title>Appendix A</title>
 
@@ -2902,7 +2902,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Appendix A</h1>
 <h3 class="subtitle">R for physicians</h3>
-<h4 class="date">2025-11-06</h4>
+<h4 class="date">2025-11-18</h4>
 
 </div>
 
@@ -2986,7 +2986,7 @@ folder</a>.</p>
 <tr class="even">
 <td>Smoking Questionnaire</td>
 <td>SMQ_G</td>
-<td>Smoking habits, exposure to secondhand smoke</td>
+<td>Smoking habits</td>
 <td><code>SMQ_G.csv</code></td>
 </tr>
 <tr class="odd">
@@ -3002,6 +3002,31 @@ death)</td>
 or directly in <code>R</code> using the function
 <code>nhanesCodebook(nh_table, colname)</code> from the package
 <code>nhanesA</code> (which I used to download the data).</p>
+<pre class="r"><code>library(nhanesA)
+
+# An example here
+nhanesCodebook(&#39;SMQ_G&#39;, &#39;SMQ020&#39;)</code></pre>
+<pre><code>## $`Variable Name:`
+## [1] &quot;SMQ020&quot;
+## 
+## $`SAS Label:`
+## [1] &quot;Smoked at least 100 cigarettes in life&quot;
+## 
+## $`English Text:`
+## [1] &quot;These next questions are about cigarette smoking and other tobacco use. {Have you/Has SP} smoked at least 100 cigarettes in {your/his/her} entire life?&quot;
+## 
+## $`Target:`
+## [1] &quot;Both males and females 20 YEARS -\r 150 YEARS&quot;
+## 
+## $SMQ020
+## # A tibble: 5 × 5
+##   `Code or Value` `Value Description` Count Cumulative `Skip to Item`
+##   &lt;chr&gt;           &lt;chr&gt;               &lt;int&gt;      &lt;int&gt; &lt;chr&gt;         
+## 1 1               Yes                  2369       2369 &quot;&quot;            
+## 2 2               No                   3184       5553 &quot;SMAQUEX2&quot;    
+## 3 7               Refused                 2       5555 &quot;SMAQUEX2&quot;    
+## 4 9               Don&#39;t know              4       5559 &quot;SMAQUEX2&quot;    
+## 5 .               Missing              1231       6790 &quot;&quot;</code></pre>
 <p>Follows a list of some of the key variables from the NHANES data
 sets.</p>
 <div id="demographics-demo_g" class="section level2" number="1.1">
@@ -3021,15 +3046,47 @@ sets.</p>
 <tbody>
 <tr class="odd">
 <td>RIDAGEYR</td>
-<td>Participant’s age in years</td>
+<td>Participant’s age in years at screening</td>
 </tr>
 <tr class="even">
 <td>RIAGENDR</td>
 <td>Participant’s gender</td>
 </tr>
 <tr class="odd">
+<td>RIDRETH1</td>
+<td>Race/Hispanic origin</td>
+</tr>
+<tr class="even">
+<td>DMDBORN4</td>
+<td>Country of birth</td>
+</tr>
+<tr class="odd">
+<td>DMDCITZN</td>
+<td>Citizenship status</td>
+</tr>
+<tr class="even">
+<td>DMDMARTL</td>
+<td>Marital status</td>
+</tr>
+<tr class="odd">
+<td>RIDEXPRG</td>
+<td>Pregnancy status at exam</td>
+</tr>
+<tr class="even">
+<td>INDHHIN2</td>
+<td>Annual household income</td>
+</tr>
+<tr class="odd">
+<td>INDFMIN2</td>
+<td>Annual family income</td>
+</tr>
+<tr class="even">
 <td>DMDHHSIZ</td>
 <td>Total number of people in the household</td>
+</tr>
+<tr class="odd">
+<td>DMDFMSIZ</td>
+<td>Total number of people in the family</td>
 </tr>
 <tr class="even">
 <td>DMDHHSZA</td>
@@ -3048,8 +3105,12 @@ sets.</p>
 <td>Gender of the household reference person</td>
 </tr>
 <tr class="even">
+<td>DMDHREDU</td>
+<td>Education level of the household reference person</td>
+</tr>
+<tr class="odd">
 <td>AIALANGA</td>
-<td>Language of the interview</td>
+<td>Language of the ACASI interview</td>
 </tr>
 </tbody>
 </table>
@@ -3090,20 +3151,40 @@ sets.</p>
 <td>Diastolic blood pressure (third reading) in mm Hg</td>
 </tr>
 <tr class="odd">
-<td>BPXPULS</td>
-<td>Pulse rate (beats per minute)</td>
-</tr>
-<tr class="even">
 <td>BPXPLS</td>
 <td>60-second pulse (30-second pulse multiplied by 2)</td>
 </tr>
+<tr class="even">
+<td>BPXPULS</td>
+<td>Pulse regular or irregular?</td>
+</tr>
 <tr class="odd">
-<td>BPXPTY</td>
-<td>Pulse type (e.g., regular or irregular)</td>
+<td>BPAARM</td>
+<td>Arm selected</td>
 </tr>
 <tr class="even">
-<td>BPXML1</td>
-<td>Maximum inflation level (mm Hg)</td>
+<td>BPQ150C</td>
+<td>Had coffee in the past 30 minutes?</td>
+</tr>
+<tr class="odd">
+<td>BPQ150A</td>
+<td>Had food in the past 30 minutes?</td>
+</tr>
+<tr class="even">
+<td>BPQ150B</td>
+<td>Had alcohol in the past 30 minutes?</td>
+</tr>
+<tr class="odd">
+<td>BPQ150C</td>
+<td>Had coffee in the past 30 minutes?</td>
+</tr>
+<tr class="even">
+<td>BPQ150D</td>
+<td>Had cigarettes in the past 30 minutes?</td>
+</tr>
+<tr class="odd">
+<td>BPXCHR</td>
+<td>60 sec HR (30 sec HR * 2)</td>
 </tr>
 </tbody>
 </table>
@@ -3136,18 +3217,14 @@ sets.</p>
 <td>Waist circumference (cm)</td>
 </tr>
 <tr class="odd">
-<td>BMXHIP</td>
-<td>Hip circumference (cm)</td>
-</tr>
-<tr class="even">
 <td>BMXARML</td>
 <td>Upper arm length (cm)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>BMXARMC</td>
 <td>Upper arm circumference (cm)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>BMXLEG</td>
 <td>Upper leg length (cm)</td>
 </tr>
@@ -3170,36 +3247,48 @@ sets.</p>
 <td>Smoked at least 100 cigarettes in life</td>
 </tr>
 <tr class="even">
-<td>SMQ040</td>
-<td>Do you now smoke cigarettes?</td>
-</tr>
-<tr class="odd">
-<td>SMQ050Q</td>
-<td>How long since quit smoking cigarettes</td>
-</tr>
-<tr class="even">
 <td>SMD030</td>
 <td>Age started smoking cigarettes regularly</td>
 </tr>
 <tr class="odd">
+<td>SMQ040</td>
+<td>Do you now smoke cigarettes?</td>
+</tr>
+<tr class="even">
+<td>SMQ050Q</td>
+<td>How long since quit smoking cigarettes</td>
+</tr>
+<tr class="odd">
+<td>SMQ050U</td>
+<td>Unit of measure (day/week/month/year)</td>
+</tr>
+<tr class="even">
 <td>SMD055</td>
 <td>Age last smoked cigarettes regularly</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>SMD057</td>
 <td># cigarettes smoked per day when quit</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>SMQ077</td>
 <td>How soon after waking do you smoke</td>
 </tr>
+<tr class="odd">
+<td>SMD641</td>
+<td># days smoked cigs during past 30 days</td>
+</tr>
 <tr class="even">
-<td>SMD660</td>
-<td>Brands of cigarettes smoked in past month</td>
+<td>SMD100BR</td>
+<td>Cigarette Brand/sub-brand</td>
 </tr>
 <tr class="odd">
 <td>SMQ670</td>
 <td>Tried to quit smoking</td>
+</tr>
+<tr class="even">
+<td>SMQ621</td>
+<td>Cigarettes smoked in entire life</td>
 </tr>
 </tbody>
 </table>

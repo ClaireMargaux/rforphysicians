@@ -48,10 +48,17 @@ The National Health and Nutrition Examination ([`NHANES`](https://www.cdc.gov/nc
 | Demographics          | DEMO\_G     | Age, sex, race/ethnicity, income, education                       | `DEMO_G.csv`                            |
 | Blood Pressure        | BPX\_G      | Systolic/diastolic blood pressure, number of readings             | `BPX_G.csv`                             |
 | Body Measures         | BMX\_G      | Height, weight, BMI, waist circumference                          | `BMX_G.csv`                             |
-| Smoking Questionnaire | SMQ\_G      | Smoking habits, exposure to secondhand smoke                      | `SMQ_G.csv`                             |
+| Smoking Questionnaire | SMQ\_G      | Smoking habits                                                    | `SMQ_G.csv`                             |
 | Mortality Data        | NDI         | Mortality follow-up data (status, follow-up time, cause of death) | `NHANES_2011_2012_MORT.dat`            |
 
 💡 The codebook for each data set can be accessed either on the [`NCHS website`](https://wwwn.cdc.gov/nchs/nhanes/continuousnhanes/default.aspx?BeginYear=2011) or directly in `R` using the function `nhanesCodebook(nh_table, colname)` from the package `nhanesA` (which I used to download the data).
+
+```{r}
+library(nhanesA)
+
+# An example here
+nhanesCodebook('SMQ_G', 'SMQ020')
+```
 
 Follows a list of some of the key variables from the NHANES data sets.
 
@@ -59,14 +66,23 @@ Follows a list of some of the key variables from the NHANES data sets.
 
 | Variable Name | Description                                           |
 | ------------- | ----------------------------------------------------- |
-| RIDAGEYR      | Participant's age in years                            |
+| RIDAGEYR      | Participant's age in years at screening               |
 | RIAGENDR      | Participant's gender                                  |
+| RIDRETH1      | Race/Hispanic origin                                  |
+| DMDBORN4      | Country of birth                                      |
+| DMDCITZN      | Citizenship status                                    |
+| DMDMARTL      | Marital status                                        |
+| RIDEXPRG      | Pregnancy status at exam                              |
+| INDHHIN2      | Annual household income                               |
+| INDFMIN2      | Annual family income                                  |
 | DMDHHSIZ      | Total number of people in the household               |
+| DMDFMSIZ      | Total number of people in the family                  |
 | DMDHHSZA      | Number of children aged 5 or younger in the household |
 | DMDHRAGE      | Age of the household reference person                 |
 | DMDHRMAR      | Marital status of the household reference person      |
 | DMDHRGND      | Gender of the household reference person              |
-| AIALANGA      | Language of the interview                             |
+| DMDHREDU      | Education level of the household reference person     |
+| AIALANGA      | Language of the ACASI interview                       |
 
 ## Blood Pressure (BPX_G)
 
@@ -78,10 +94,15 @@ Follows a list of some of the key variables from the NHANES data sets.
 | BPXDI1        | Diastolic blood pressure (first reading) in mm Hg  |
 | BPXDI2        | Diastolic blood pressure (second reading) in mm Hg |
 | BPXDI3        | Diastolic blood pressure (third reading) in mm Hg  |
-| BPXPULS       | Pulse rate (beats per minute)                      |
 | BPXPLS        | 60-second pulse (30-second pulse multiplied by 2)  |
-| BPXPTY        | Pulse type (e.g., regular or irregular)            |
-| BPXML1        | Maximum inflation level (mm Hg)                    |
+| BPXPULS       | Pulse regular or irregular?                        |
+| BPAARM        | Arm selected                                       |
+| BPQ150C       | Had coffee in the past 30 minutes?                 |
+| BPQ150A       | Had food in the past 30 minutes?                   |
+| BPQ150B       | Had alcohol in the past 30 minutes?                |
+| BPQ150C       | Had coffee in the past 30 minutes?                 |
+| BPQ150D       | Had cigarettes in the past 30 minutes?             |
+| BPXCHR        | 60 sec HR (30 sec HR * 2)                          |
 
 ## Body Measures (BMX_G)
 
@@ -91,7 +112,6 @@ Follows a list of some of the key variables from the NHANES data sets.
 | BMXHT         | Standing height (cm)         |
 | BMXBMI        | Body Mass Index (kg/m²)      |
 | BMXWAIST      | Waist circumference (cm)     |
-| BMXHIP        | Hip circumference (cm)       |
 | BMXARML       | Upper arm length (cm)        |
 | BMXARMC       | Upper arm circumference (cm) |
 | BMXLEG        | Upper leg length (cm)        |
@@ -101,14 +121,17 @@ Follows a list of some of the key variables from the NHANES data sets.
 | Variable Name | Description                                 |
 | ------------- | ------------------------------------------- |
 | SMQ020        | Smoked at least 100 cigarettes in life      |
+| SMD030        | Age started smoking cigarettes regularly    |
 | SMQ040        | Do you now smoke cigarettes?                |
 | SMQ050Q       | How long since quit smoking cigarettes      |
-| SMD030        | Age started smoking cigarettes regularly    |
+| SMQ050U       | Unit of measure (day/week/month/year)       |
 | SMD055        | Age last smoked cigarettes regularly        |
 | SMD057        | # cigarettes smoked per day when quit       |
 | SMQ077        | How soon after waking do you smoke          |
-| SMD660        | Brands of cigarettes smoked in past month   |
+| SMD641        | # days smoked cigs during past 30 days      |
+| SMD100BR      | Cigarette Brand/sub-brand                   |
 | SMQ670        | Tried to quit smoking                       |
+| SMQ621        | Cigarettes smoked in entire life            |
 
 ## Mortality data set (NHANES_2011_2012_MORT_2019_PUBLIC)
 

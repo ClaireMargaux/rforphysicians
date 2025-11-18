@@ -1379,9 +1379,9 @@ Example Application: Analysing the impact of age, treatment type, and other cova
 ### Competing risks
 
 
-## Exercices & Solutions
+# Exercices & Solutions
 
-### Exercices
+## Exercices
 
 ✏️ N°1 Exercise on comparing means: Compare the systolic blood pressure (1st reading, in mmHg, `BPXSY1`) between males and females (`RIAGENDR`). To choose the right test, determine if the data is roughly normal or skewed.
 
@@ -1409,7 +1409,7 @@ Example Application: Analysing the impact of age, treatment type, and other cova
 
 💡 Hints
 
-### Solutions
+## Solutions
 
 ☑️ N°1 Exercise on comparing means
 

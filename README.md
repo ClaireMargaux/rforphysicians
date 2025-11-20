@@ -4,11 +4,11 @@ Welcome to R for physicians, a gentle introduction to coding and data analysis i
 
 ## Program
 
-Course 1: 
+*Course 1*
 
-* 14:30 - 15:40: Chapter 1
-* 15:40 - 15:55: 15 minutes break
-* 15:55 - 17:00: Chapter 2 (start)
+* 14h30 - 15h40: Chapter 1
+* 15h40 - 15h55: 15 minutes break
+* 15h55 - 17h00: Chapter 2 (start)
 
 ## Contents
 

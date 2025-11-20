@@ -2,6 +2,14 @@
 
 Welcome to R for physicians, a gentle introduction to coding and data analysis in R designed specifically for healthcare professionals and researchers. This project contains interactive lecture notes and practical resources to help you get started with data in R. No prior coding experience is required.
 
+## Program
+
+Course 1: 
+
+* 14:30 - 15:40: Chapter 1
+* 15:40 - 15:55: 15 minutes break
+* 15:55 - 17:00: Chapter 2 (start)
+
 ## Contents
 
 The lecture is structured into diffents chapters and appendices:

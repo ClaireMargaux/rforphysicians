@@ -12,7 +12,7 @@ output:
     code_folding: show
     math_method: katex
 subtitle: "R for physicians"
-bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+bibliography: C:/GitHub/rforphysicians/docs/Rforphysicians.bib
 link-citations: yes
 editor_options: 
   chunk_output_type: console
@@ -132,15 +132,17 @@ Let us now look at real data frames to learn how to call or modify their element
 
 ```{r, echo=FALSE}
 # Load the necessary CSV files into data frames
-demo <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/DEMO_G.csv") # Demographics (cycle G = 2011–2012)
-bpx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BPX_G.csv") # Blood pressure
-bmx  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/BMX_G.csv") # Body measures
-smq  <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/SMQ_G.csv") # Smoking questionnaire
+demo <- read.csv("C:/GitHub/rforphysicians/data_sets/DEMO_G.csv") # Demographics (cycle G = 2011–2012)
+bpx  <- read.csv("C:/GitHub/rforphysicians/data_sets/BPX_G.csv") # Blood pressure
+bmx  <- read.csv("C:/GitHub/rforphysicians/data_sets/BMX_G.csv") # Body measures
+smq  <- read.csv("C:/GitHub/rforphysicians/data_sets/SMQ_G.csv") # Smoking questionnaire
 ```
 
 ## Exercises
 
-✏️ Exercise on the `NHANES` data sets n°1: import the `demo`, `bpx`, `bmx` and `smq` data sets from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) into R.
+### Exercise 1
+
+✏️ Exercise 1: import the `demo`, `bpx`, `bmx` and `smq` data sets from the [`data_sets` folder](https://github.com/ClaireMargaux/rforphysicians/tree/main/data_sets) into R.
 
 # Handling data
 
@@ -486,9 +488,13 @@ demo_no_na <- demo %>%
 
 ## Exercises
 
-✏️ Exercise on the `NHANES` data sets n°2: inspect the structure of the `demo` data set, look at different entries, get familiar with those commands.
+### Exercise 2
 
-✏️ Exercise on the `NHANES` data sets n°3: generate a new data frame selecting only the female patients that are above 18 years old and that took the interview in Spanish.
+✏️ Exercise 2: inspect the structure of the `demo` data set, look at different entries, get familiar with those commands.
+
+### Exercise 3
+
+✏️ Exercise 3: generate a new data frame selecting only the female patients that are above 18 years old and that took the interview in Spanish.
 
 # Combining data
 
@@ -577,7 +583,9 @@ full_join_df <- demo %>%
 
 ## Exercises
 
-✏️ Exercise on the `NHANES` data sets n°4: merge the 4 data sets `demo`, `bpx`, `bmx` and `smq` into a single data set `merged_nhanes` by performing an inner join on the `SEQN` ID and using the `dplyr` package.
+### Exercise 4
+
+✏️ Exercise 4: merge the 4 data sets `demo`, `bpx`, `bmx` and `smq` into a single data set `merged_nhanes` by performing an inner join on the `SEQN` ID and using the `dplyr` package.
 
 # Saving data
 
@@ -625,18 +633,22 @@ load(file.path(directory, "merged_demo_bpx_bmx.RData"))
 
 ## Exercises
 
-✏️ Exercise on the `NHANES` data sets n°5: Save the data frame resulting from Exercise n°4 in your working directory in both .csv and .rds formats.
+### Exercise 5
+
+✏️ Exercise 5: Save the data frame resulting from Exercise 4 in your working directory in both .csv and .rds formats.
 
 # Solutions to the exercises
 
 Please not that those are only examples, there are always many ways to solve the same task!
 
-☑️ Exercise on the `NHANES` data sets n°1: 
+## Exercise 1
+
+☑️ Exercise 1: 
 
 ```{r, echo=FALSE}
 # Load the necessary CSV files into data frames
 
-directory <- "/home/claire/Documents/GitHub/rforphysicians/data_sets/" # Use your own working directory here
+directory <- "C:/GitHub/rforphysicians/data_sets/" # Use your own working directory here
 
 demo <- read.csv(paste0(directory,"DEMO_G.csv")) # Demographics (cycle G = 2011–2012)
 bpx  <- read.csv(paste0(directory,"BPX_G.csv")) # Blood pressure
@@ -644,7 +656,9 @@ bmx  <- read.csv(paste0(directory,"BMX_G.csv")) # Body measures
 smq  <- read.csv(paste0(directory,"SMQ_G.csv")) # Smoking questionnaire
 ```
 
-☑️ Exercise on the `NHANES` data sets n°2: Did you manage to select a specific column you were interested in? Were you able to check how many men and women are included in the data set? Here are a few examples of operations you can use to explore the data set.
+## Exercise 2
+
+☑️ Exercise 2: Did you manage to select a specific column you were interested in? Were you able to check how many men and women are included in the data set? Here are a few examples of operations you can use to explore the data set.
 
 ```{r}
 # View the first few rows of the dataset
@@ -669,7 +683,9 @@ colSums(is.na(demo))
 mean(demo$RIDAGEYR, na.rm = TRUE)
 ```
 
-☑️ Exercise on the `NHANES` data sets n°3:
+## Exercise 3
+
+☑️ Exercise 3:
 
 ```{r}
 # Filter the dataset to include only female patients that are above 18 years old and that took the interview in Spanish.
@@ -682,7 +698,9 @@ demo_filtered[, ind]
 
 💡 Note: When filtering on a variable that contains missing values (e.g., `AIALANGA`), you must explicitly exclude NAs using `!is.na(...)`. This is because comparisons like demo$AIALANGA == "Spanish" return NA for missing values, not FALSE, so those rows aren't properly excluded from the subset.
 
-☑️ Exercise on the `NHANES` data sets n°4:
+## Exercise 4
+
+☑️ Exercise 4:
 
 ```{r, eval=FALSE}
 # If necessary, install the dplyr package
@@ -698,7 +716,9 @@ data_list <- list(demo, bpx, bmx, smq)
 merged_nhanes <- Reduce(function(x, y) inner_join(x, y, by = "SEQN"), data_list)
 ```
 
-☑️ Exercise on the `NHANES` data sets n°5:
+## Exercise 5
+
+☑️ Exercise 5:
 
 ```{r, eval=FALSE}
 # Save the merged dataset in your working directory

@@ -12,7 +12,7 @@ output:
     code_folding: show
     math_method: katex
 subtitle: "R for physicians"
-bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+bibliography: C:/GitHub/rforphysicians/docs/Rforphysicians.bib
 link-citations: yes
 editor_options: 
   chunk_output_type: console

@@ -12,7 +12,7 @@ output:
     code_folding: show
     math_method: katex
 subtitle: "R for physicians"
-bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+bibliography: C:/GitHub/rforphysicians/docs/Rforphysicians.bib
 link-citations: yes
 editor_options: 
   chunk_output_type: console
@@ -101,23 +101,23 @@ The reference material for this course, as well as some useful literature to dee
 | Function          | Package  | Description                                    |
 |-------------------|----------|------------------------------------------------|
 | `plot()`          | base R   | General-purpose plotting (scatter, lines, etc.)|
-| `boxplot()`       | base R   | Box plots by groups                             |
+| `boxplot()`       | base R   | Box plots by groups                            |
 | `pie()`           | base R   | Pie charts from frequency tables               |
-| `barplot()`       | base R   | Bar plots for summary statistics                |
+| `barplot()`       | base R   | Bar plots for summary statistics               |
 | `mosaicplot()`    | base R   | Mosaic plot for contingency tables             |
-| `hist()`          | base R   | Histogram of numeric data                       |
-| `forestplot()`    | forestplot | Forest plot with advanced features            |
-| `ggplot()`        | ggplot2  | Initialize a ggplot object                      |
+| `hist()`          | base R   | Histogram of numeric data                      |
+| `forestplot()`    | forestplot | Forest plot with advanced features           |
+| `ggplot()`        | ggplot2  | Initialize a ggplot object                     |
 | `aes()`           | ggplot2  | Define aesthetics mappings (x, y, color, fill) |
-| `geom_point()`    | ggplot2  | Scatter plot layer                              |
-| `geom_line()`     | ggplot2  | Line plot layer                                 |
-| `geom_histogram()`| ggplot2  | Histogram layer                                 |
+| `geom_point()`    | ggplot2  | Scatter plot layer                             |
+| `geom_line()`     | ggplot2  | Line plot layer                                |
+| `geom_histogram()`| ggplot2  | Histogram layer                                |
 | `geom_bar()`      | ggplot2  | Bar plot layer (can be stacked, grouped)       |
 | `geom_boxplot()`  | ggplot2  | Box plot layer                                 |
 | `geom_mosaic()`   | ggmoisaic| Moisaic plot layer                             |
-| `labs()`          | ggplot2  | Add titles and axis labels                      |
-| `scale_fill_manual()` | ggplot2 | Manual fill color scale                        |
-| `theme_minimal()` | ggplot2  | Minimalistic plot theme                         |
+| `labs()`          | ggplot2  | Add titles and axis labels                     |
+| `scale_fill_manual()` | ggplot2 | Manual fill color scale                     |
+| `theme_minimal()` | ggplot2  | Minimalistic plot theme                        |
 
 \newpage
 

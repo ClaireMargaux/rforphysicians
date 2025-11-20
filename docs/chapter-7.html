@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2025-08-13" />
+<meta name="date" content="2025-11-20" />
 
 <title>Appendix B</title>
 
@@ -2902,7 +2902,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Appendix B</h1>
 <h3 class="subtitle">R for physicians</h3>
-<h4 class="date">2025-08-13</h4>
+<h4 class="date">2025-11-20</h4>
 
 </div>
 
@@ -2913,27 +2913,27 @@ border-radius: 0px;
 <col width="78%" />
 </colgroup>
 <thead>
-<tr>
+<tr class="header">
 <th align="left">Author</th>
 <th align="left"></th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td align="left">Name</td>
 <td align="left">Claire Descombes</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">Affiliation</td>
 <td align="left">Universitätsklinik für Neurochirurgie, Inselspital
 Bern</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">Degree</td>
 <td align="left">MSc Statistics and Data Science, University of
 Bern</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">Contact</td>
 <td align="left"><a href="mailto:claire.descombes@insel.ch">claire.descombes@insel.ch</a></td>
 </tr>
@@ -2952,277 +2952,277 @@ efficient data handling</h1>
 <col width="50%" />
 </colgroup>
 <thead>
-<tr>
+<tr class="header">
 <th>Function(s)</th>
 <th>Package</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><strong>Selecting and filtering</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>subset()</code></td>
 <td>base R</td>
 <td>Select rows and columns of a data frame</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>select()</code>, <code>rename()</code></td>
 <td>dplyr</td>
 <td>Select or rename columns</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>filter()</code></td>
 <td>dplyr</td>
 <td>Select rows by condition</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>slice()</code></td>
 <td>dplyr</td>
 <td>Select rows by position</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>distinct()</code></td>
 <td>dplyr</td>
 <td>Return unique/distinct rows</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>duplicated()</code></td>
 <td>base R</td>
 <td>Logical vector: is row duplicated?</td>
 </tr>
-<tr>
+<tr class="even">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Sorting and ordering</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>order()</code>, <code>rank()</code></td>
 <td>base R</td>
 <td>Sort indices or compute ranks</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>arrange()</code></td>
 <td>dplyr</td>
 <td>Sort by one or more columns</td>
 </tr>
-<tr>
+<tr class="even">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Creating or transforming variables</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>transform()</code></td>
 <td>base R</td>
 <td>Add or overwrite columns in a data frame</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>mutate()</code>, <code>transmute()</code></td>
 <td>dplyr</td>
 <td>Create or overwrite columns; <code>transmute()</code> returns only
 new ones</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>cumsum()</code></td>
 <td>base R</td>
 <td>Cumulative sum of a vector</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>with()</code></td>
 <td>base R</td>
 <td>Evaluate expressions using data frame columns directly</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>across()</code></td>
 <td>dplyr</td>
 <td>Apply function(s) to multiple columns (within <code>mutate()</code>
 or <code>summarize()</code>)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Grouped operations</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>aggregate()</code>, <code>tapply()</code>,
 <code>rowsum()</code>, <code>by()</code></td>
 <td>base R</td>
 <td>Perform grouped calculations</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>ave()</code></td>
 <td>base R</td>
 <td>Grouped transformations (e.g., group-wise mean)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>group_by()</code>, <code>ungroup()</code></td>
 <td>dplyr</td>
 <td>Group rows by variable levels</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>summarize()</code></td>
 <td>dplyr</td>
 <td>Compute summary statistics (often after
 <code>group_by()</code>)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Combining data</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>rbind()</code>, <code>cbind()</code></td>
 <td>base R</td>
 <td>Bind rows or columns</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>merge()</code></td>
 <td>base R</td>
 <td>Join data frames by key</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>bind_rows()</code>, <code>bind_cols()</code></td>
 <td>dplyr</td>
 <td>Bind data frames by row or column</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>left_join()</code>, <code>inner_join()</code>,
 <code>right_join()</code></td>
 <td>dplyr</td>
 <td>Join data frames by key</td>
 </tr>
-<tr>
+<tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Reshaping data</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>reshape()</code></td>
 <td>base R</td>
 <td>Reshape data (complex interface)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>expand.grid()</code></td>
 <td>base R</td>
 <td>Create all combinations (cross-join)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>pivot_wider()</code>, <code>pivot_longer()</code></td>
 <td>tidyr</td>
 <td>Reshape data between wide and long formats</td>
 </tr>
-<tr>
+<tr class="even">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Descriptive statistics</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>mean()</code>, <code>median()</code>, <code>sd()</code>,
 <code>quantile()</code>, <code>min()</code>, <code>max()</code></td>
 <td>base R</td>
 <td>Univariate statistics</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>rowSums()</code>, <code>rowMeans()</code>,
 <code>colSums()</code>, <code>colMeans()</code></td>
 <td>base R</td>
 <td>Row- or column-wise statistics of data frames or matrices</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>summary()</code></td>
 <td>base R</td>
 <td>Summarize object (e.g., per column of data frame)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>table()</code>, <code>prop.table()</code>,
 <code>addmargins()</code></td>
 <td>base R</td>
 <td>Absolute and relative frequency tables</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>cor()</code>, <code>cov()</code></td>
 <td>base R</td>
 <td>Bivariate statistics (correlation, covariance)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><strong>Exploration and structure</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>head()</code>, <code>tail()</code></td>
 <td>base R</td>
 <td>Show first or last elements of an object</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>nrow()</code>, <code>ncol()</code>, <code>dim()</code></td>
 <td>base R</td>
 <td>Number of rows, columns, or both</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>str()</code></td>
 <td>base R</td>
 <td>Display structure of an object</td>
 </tr>
-<tr>
+<tr class="even">
 <td></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="odd">
 <td><strong>Apply functions and utilities</strong></td>
 <td></td>
 <td></td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>lapply()</code></td>
 <td>base R</td>
 <td>Apply a function over list/data frame elements</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>match()</code>, <code>%in%</code></td>
 <td>base R</td>
 <td>Matching and membership testing</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>match.arg()</code></td>
 <td>base R</td>
 <td>Match a value against a set of allowed values (useful in
@@ -3241,99 +3241,99 @@ plotting</h1>
 <col width="62%" />
 </colgroup>
 <thead>
-<tr>
+<tr class="header">
 <th>Function</th>
 <th>Package</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>plot()</code></td>
 <td>base R</td>
 <td>General-purpose plotting (scatter, lines, etc.)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>boxplot()</code></td>
 <td>base R</td>
 <td>Box plots by groups</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>pie()</code></td>
 <td>base R</td>
 <td>Pie charts from frequency tables</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>barplot()</code></td>
 <td>base R</td>
 <td>Bar plots for summary statistics</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>mosaicplot()</code></td>
 <td>base R</td>
 <td>Mosaic plot for contingency tables</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>hist()</code></td>
 <td>base R</td>
 <td>Histogram of numeric data</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>forestplot()</code></td>
 <td>forestplot</td>
 <td>Forest plot with advanced features</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>ggplot()</code></td>
 <td>ggplot2</td>
 <td>Initialize a ggplot object</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>aes()</code></td>
 <td>ggplot2</td>
 <td>Define aesthetics mappings (x, y, color, fill)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>geom_point()</code></td>
 <td>ggplot2</td>
 <td>Scatter plot layer</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>geom_line()</code></td>
 <td>ggplot2</td>
 <td>Line plot layer</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>geom_histogram()</code></td>
 <td>ggplot2</td>
 <td>Histogram layer</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>geom_bar()</code></td>
 <td>ggplot2</td>
 <td>Bar plot layer (can be stacked, grouped)</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>geom_boxplot()</code></td>
 <td>ggplot2</td>
 <td>Box plot layer</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>geom_mosaic()</code></td>
 <td>ggmoisaic</td>
 <td>Moisaic plot layer</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>labs()</code></td>
 <td>ggplot2</td>
 <td>Add titles and axis labels</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>scale_fill_manual()</code></td>
 <td>ggplot2</td>
 <td>Manual fill color scale</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>theme_minimal()</code></td>
 <td>ggplot2</td>
 <td>Minimalistic plot theme</td>
@@ -3376,6 +3376,13 @@ David, Author. 2016. <span>“<span>BIRT</span>
 Elena Kosourova. n.d. <span>“<span>RStudio</span> <span>Tutorial</span>
 for <span>Beginners</span>: <span>A</span> <span>Complete</span>
 <span>Guide</span>.”</span> Accessed January 26, 2025. <a href="https://www.datacamp.com/tutorial/r-studio-tutorial">https://www.datacamp.com/tutorial/r-studio-tutorial</a>.
+</div>
+<div id="ref-ghasemi_normality_2012" class="csl-entry">
+Ghasemi, Asghar, and Saleh Zahediasl. 2012. <span>“Normality
+<span>Tests</span> for <span>Statistical</span> <span>Analysis</span>:
+<span>A</span> <span>Guide</span> for
+<span>Non</span>-<span>Statisticians</span>.”</span> <em>International
+Journal of Endocrinology and Metabolism</em> 10 (2): 486–89. <a href="https://doi.org/10.5812/ijem.3505">https://doi.org/10.5812/ijem.3505</a>.
 </div>
 <div id="ref-grolemund_r_nodate" class="csl-entry">
 Grolemund, Hadley Wickham and Garrett. n.d. <em>R for <span>Data</span>

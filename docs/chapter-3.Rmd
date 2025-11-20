@@ -12,7 +12,7 @@ output:
     code_folding: show
     math_method: katex
 subtitle: "R for physicians"
-bibliography: /home/claire/Documents/GitHub/rforphysicians/docs/Rforphysicians.bib
+bibliography: C:/GitHub/rforphysicians/docs/Rforphysicians.bib
 link-citations: yes
 editor_options: 
   chunk_output_type: console
@@ -52,10 +52,10 @@ To be able to plot survival curves, we will also need survival data for the NHAN
 
 ```{r, echo=TRUE}
 # Load the merged_nhanes CSV file
-merged_nhanes <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
+merged_nhanes <- read.csv("C:/GitHub/rforphysicians/data_sets/merged_nhanes.csv")
 
 # Load the merged_nhanes_with_mort CSV file
-merged_nhanes_with_mort <- read.csv("/home/claire/Documents/GitHub/rforphysicians/data_sets/merged_nhanes_with_mort.csv")
+merged_nhanes_with_mort <- read.csv("C:/GitHub/rforphysicians/data_sets/merged_nhanes_with_mort.csv")
 ```
 
 # Including plots using base R
@@ -293,7 +293,7 @@ library(tidyverse) # after installation
 Structure of a `ggplot2` graph:
 
 ```{r ggplot2-structure, echo=FALSE, out.width="75%"}
-knitr::include_graphics(path = "images/ggplot2-structure.png")
+knitr::include_graphics(path = "C:/GitHub/rforphysicians/docs/images/ggplot2-structure.png")
 ```
 
 How to build a plot:
@@ -439,11 +439,18 @@ ggplot(gender_counts, aes(x = "", y = prop, fill = Gender)) +
 ```{r, out.width="75%"}
 library(ggmosaic)
 
-ggplot(data = merged_nhanes[merged_nhanes$SMQ020 %in% c("Yes","No"),]) +
-  geom_mosaic(aes(x = product(RIAGENDR), fill = SMQ020)) +
+mosaic <- merged_nhanes[merged_nhanes$SMQ020 %in% c("Yes", "No"), c("RIAGENDR", "SMQ020")]
+
+# Convert the relevant columns to factors
+mosaic$RIAGENDR <- factor(mosaic$RIAGENDR)       # Gender
+mosaic$SMQ020 <- factor(mosaic$SMQ020, levels = c("No", "Yes"))  # Smoking
+
+ggplot(mosaic, aes(x = RIAGENDR, fill = SMQ020)) +
+  geom_bar(position = "fill") +
   scale_fill_manual(values = c("salmon", "skyblue")) +
-  labs(x = "Gender", y = "Smoked at least 100 cigarettes?", title = "Mosaic plot of smoking status by gender") +
-  theme_minimal() +
+  labs(x = "Gender", y = "Smoked at least 100 cigarettes?", 
+       title = "Mosaic plot of smoking status by gender") + 
+  theme_minimal() + 
   theme(legend.position = "none")
 ```
 
@@ -591,7 +598,7 @@ Please note that after the plotting and saving, we need to call the function `de
 We can specify the resolution we want with arguments width and height. We can also specify the full path of the file we want to save if we don't want to save it in the current directory.
 
 ```{r, eval = FALSE}
-plotting_directory <- "/home/claire/Documents/GitHub/rforphysicians/docs/plots/"
+plotting_directory <- "C:/GitHub/rforphysicians/data_sets/docs/plots/"
 
 jpeg(file = paste0(plotting_directory,"hist_BMI.jpeg"), 
      width = 10, 
@@ -758,7 +765,7 @@ grid.arrange(plot1, plot2, ncol=2)
 ☑️ Exercise on saving plots n°1
 
 ```{r, eval = FALSE}
-plotting_directory <- "/home/claire/Documents/GitHub/rforphysicians/docs/plots/" # your plotting directory here
+plotting_directory <- "C:/GitHub/rforphysicians/data_sets/docs/plots/" # your plotting directory here
 
 jpeg(file = paste0(plotting_directory,"boxplots_bp_by_gender.jpeg"), 
      width = 10, 
@@ -791,7 +798,7 @@ par(mfrow=c(1,1))
 ☑️ Exercise on saving plots n°2
 
 ```{r, eval = FALSE}
-plotting_directory <- "/home/claire/Documents/GitHub/rforphysicians/docs/plots/" # your plotting directory here
+plotting_directory <- "C:/GitHub/rforphysicians/data_sets/docs/plots/" # your plotting directory here
 
 bar_plot_med_bmi_by_gender <- grid.arrange(plot1, plot2, ncol=2)
 ggsave(filename = "bar_plot_med_bmi_by_gender.png",

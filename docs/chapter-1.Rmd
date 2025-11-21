@@ -401,26 +401,30 @@ frac(numerator = 6, denominator = 2) # Calling the function
   
 I strongly recommend explicitly naming arguments, because it increases clarity, prevents order-related mistakes, and gives you flexibility in argument order: `frac(denominator = 2, numerator = 6)` works just as well. In contrast, when arguments are unnamed, order matters strictly — and a small mistake can completely change the result: `frac(2, 6)` is interpreted as `frac(numerator = 2, denominator = 6)`!
 
-## Warning
+## Why data types matter
 
-💡 Be careful before every analysis to make sure that the variables you're working on have the data type that you need! Let me illustrate this with a short example.
+💡 Before every analysis, always check that your variables have the correct data type!
+
+When importing data, R sometimes guesses the wrong type (numeric instead of categorical, character instead of factor, etc.). This can completely change the results of your analysis, especially for regression models.
+
+Here is a simple example:
 
 ```{r}
-# Let us assume that you have a data set with 3 groups, e.g., control, treatment 1, and treatment 2, and you coded them initially as 1, 2, and 3
+# Imagine a data set with 3 groups: control, treatment 1, treatment 2, coded initially as 1, 2, and 3
 df <- data.frame(
   Group = c(1, 2, 3, 2, 3),
-  `BP_systolic` = c(129, 135, 110, 124, 128)  # avoid spaces in column names
+  BP_systolic = c(129, 135, 110, 124, 128)  # avoid spaces in column names
 )
 
-# Take a look at the data
+# Look at the data
 df
 
-# Check the data type of the "Group" column
+# Check the data type of "Group"
 str(df$Group)
-# We see that the variable "Group" is coded as numeric, which is not ideal!
-# If we used this in a regression, the model would treat it as numeric and assume a ranking (control < treatment 1 < treatment 2), which is not what we want.
+# --> R treats "Group" as numeric!
+# If you used this variable in a regression, the model would assume a numeric order (control < treatment 1 < treatment 2), which is wrong.
 
-# That's why we recode "Group" as a factor
+# Correct: convert "Group" to a factor
 df$Group <- as.factor(df$Group)
 str(df$Group)
 ```
@@ -434,9 +438,13 @@ str(df$Group)
 ### Exercise 3
 
 ✏️ Exercise 3: Create a data frame with 10 rows and the columns `id`, `blood_pressure`, and `group`.
+
 – `id`: integers from 1 to 10
+
 – `blood_pressure`: random values from a normal distribution with mean 123 and standard deviation 8
+
 – `group`: a factor with levels "drug 1", "drug 2", and "obs arm" (you decide how to assign them, e.g. by using the function `sample()`)
+
 After creating that data frame, add a new column `stand_score` where you calculate a standardized score for each blood_pressure value. The standardized score is calculated based on the mean and standard deviation of the `blood_pressure` values in the dataset (standardized score = $(x−\mu)/\sigma$).
 
 💡 Hint: Use the function `rnorm()` to simulate normal values. Use the function `scale()` to centre and scale a vector, or alternatively the functions `mean()` and `sd()` to compute mean and standard deviation of a vector. You can use `help()` to learn more about how these functions work.
@@ -470,6 +478,8 @@ install.packages("dplyr")
 library(dplyr)
 ```
 
+💡 On institutional laptops, package installation may be blocked by your institution’s firewall. This is something you cannot disable yourself. If you experience problems installing R packages, try switching from your work network to a private network (e.g. home Wi-Fi or mobile hotspot). Also make sure that your institution’s VPN is disconnected, otherwise the firewall restrictions will still apply.
+
 ## Exercises
 
 ### Exercise 5
@@ -480,7 +490,7 @@ library(dplyr)
 
 # Solutions to the exercises
 
-Please not that those are only examples, there are always many ways to solve the same task!
+Please note that those are only examples, there are always many ways to solve the same task!
 
 ## Exercise 1
 

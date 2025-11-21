@@ -266,11 +266,15 @@ plot(fit,
 
 ## Exercises
 
-✏️ Exercise on plotting with base R n°1: Plot the first, second and third systolic blood pressure readings by gender using base R. Display all three plots (1st, 2nd and 3rd readings) in the same output panel.
+### Exercise 1
+
+✏️ Exercise 1: Plot the first, second and third systolic blood pressure readings by gender using base R. Display all three plots (1st, 2nd and 3rd readings) in the same output panel.
 
 💡 *Hint:* Try using the `par()` function (e.g. `par(mfrow=c(2,3))`; do not forget to reset it to `par(mfrow=c(1,1))` afterwards!)
 
-✏️ Exercise on plotting with base R n°2: Create a histogram showing the systolic blood pressure (1st reading) for each smoking status category (excluding those who refused to provide their smoking status). Set the number of breaks to 20. You should get three different plots. Display them all in the same output panel.
+## Exercise 2
+
+✏️ Exercise 2: Create a histogram showing the systolic blood pressure (1st reading) for each smoking status category (excluding those who refused to provide their smoking status) using base R. Set the number of breaks to 20. You should get three different plots. Display them all in the same output panel.
 
 # Including plots using `ggplot2`
 
@@ -284,7 +288,7 @@ install.packages("tidyverse")
 library(tidyverse) # after installation
 ```
 
-`ggplot2` is based on the grammar of graphics — the idea that every graph can be built from the same basic components:
+`ggplot2` is based on the grammar of graphics: the idea that every graph can be built from the same basic components:
 
 * a *data set*, 
 * a *coordinate system*, and
@@ -339,7 +343,9 @@ ggplot(merged_nhanes) +
 ## Box plots
 
 ```{r, out.width="75%"}
-ggplot(data = merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female")), y = BPXSY1, fill = factor(RIAGENDR))) +
+ggplot(data = merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female")), 
+                                 y = BPXSY1, 
+                                 fill = factor(RIAGENDR))) +
   geom_boxplot() +
   scale_fill_manual(values = c("salmon", "skyblue")) +
   labs(title = "Box plot of systolic BP by gender",
@@ -525,13 +531,16 @@ bp_data <- merged_nhanes %>%
 
 # We put the BP reading into three groups
 bp_data <- bp_data %>%
-  mutate(BPXSY1 = cut(BPXSY1, breaks = c(0, 120, 130, 200),
+  mutate(BPXSY1 = cut(BPXSY1, 
+                      breaks = c(0, 120, 130, 200),
                       labels = c("[0-120)", "[120-130)", "[130-200)"),
                       right = FALSE)) %>%
-  mutate(BPXSY2 = cut(BPXSY2, breaks = c(0, 120, 130, 200),
+  mutate(BPXSY2 = cut(BPXSY2, 
+                      breaks = c(0, 120, 130, 200),
                       labels = c("[0-120)", "[120-130)", "[130-200)"),
                       right = FALSE)) %>%
-  mutate(BPXSY3 = cut(BPXSY3, breaks = c(0, 120, 130, 200),
+  mutate(BPXSY3 = cut(BPXSY3, 
+                      breaks = c(0, 120, 130, 200),
                       labels = c("[0-120)", "[120-130)", "[130-200)"),
                       right = FALSE))
 
@@ -540,6 +549,9 @@ bp_long <- bp_data %>%
   pivot_longer(cols = starts_with("BPXSY"),
                names_to = "Reading",
                values_to = "Systolic_BP")
+
+# This is how our data looks like before plotting
+bp_long
 
 # Alluvial plot
 ggplot(bp_long,
@@ -573,20 +585,29 @@ fit <- survfit(Surv(PERMTH_INT, MORTSTAT) ~ 1,
 # Plot with ggsurvplot
 ggsurvplot(fit,
            data = merged_nhanes_no_outliers,
-           palette = "steelblue",
+           palette = c("steelblue"),
            conf.int = TRUE,  
            xlab = "Time (months)",
            ylab = "Survival probability",
            ylim = c(0.7, 1),
            risk.table = TRUE,
-           title = "Kaplan–Meier survival curve")
+           title = "Kaplan–Meier survival curve",
+           ggtheme = theme_minimal())
 ```
 
 ## Exercises
 
-✏️ Exercise on plotting with `ggplot2`: Using the same age groups as in the examples, create a bar plot showing the median BMI by age group. Then produce two further bar plots showing the same data for each gender, and display them in the same output panel, using the same y-axis to allow for better comparison.
+### Exercise 3
+
+✏️ Exercise 3: Using the same age groups as in the examples, create a bar plot showing the median BMI by age group using `ggplot2`. Then produce two further bar plots showing the same data for each gender, and display them in the same output panel, using the same y-axis to allow for better comparison.
 
 💡 *Hints:* Try using the `grid.arrange()` function from the `gridExtra` package (e.g. `grid.arrange(plot1, plot2, ncol=2)`), and the argument `ylim` in the `ggplot()` function.
+
+### Exercise 4
+
+✏️ Exercise 4: Reproduce the alluvial plot showing the evolution of the systolic blood pressure (i.e. with `ggplot2`), but using the diastolic blood pressure (`BPXDI1`, `BPXDI2`, `BPXDI3`). Use only the **last 100** participants with no NAs. Use the following breaks: `c(0, 60, 70, 80, 120)`.
+
+💡 *Hints:* Try using the `slice_tail()` function.
 
 # Saving plots
 
@@ -595,33 +616,37 @@ ggsurvplot(fit,
 We would use the `jpeg()` function to save a plot as a JPEG image and the `png()` function to save it as a PNG image.
 Please note that after the plotting and saving, we need to call the function `dev.off()` to save the file.
 
-We can specify the resolution we want with arguments width and height. We can also specify the full path of the file we want to save if we don't want to save it in the current directory.
+We can specify the resolution we want with arguments width and height. We can also specify the full/relative path of the file we want to save if we don't want to save it in the current directory.
 
 ```{r, eval = FALSE}
-plotting_directory <- "C:/GitHub/rforphysicians/data_sets/docs/plots/"
+results_directory <- "C:/GitHub/rforphysicians/docs/plots/"
 
-jpeg(file = paste0(plotting_directory,"hist_BMI.jpeg"), 
+jpeg(file = paste0(results_directory,"hist_BMI.jpeg"), 
      width = 10, 
      height = 6, 
      units = "in",
      res=100)
+
 hist(merged_nhanes$BMXBMI,
      breaks = 30,
      freq = TRUE,
      col = "steelblue",
      xlab = "Body Mass Index (BMI)",
      main = "Histogram of BMI")
+
 dev.off()
 
-png(file= paste0(plotting_directory,"pie_chart_gender.png"), 
+png(file= paste0(results_directory,"pie_chart_gender.png"), 
     width = 10, 
     height = 6, 
     units="in",
     res=100)
+
 pie(x = gender_table,
     labels = c("Female", "Male"),
     col = c("skyblue", "salmon"),
     main = "Gender Distribution")
+
 dev.off()
 ```
 
@@ -629,11 +654,14 @@ dev.off()
 
 Saving plots created using the `ggplot2` package is very easy with the `ggsave()` function. However, the plot must first be stored in a variable; otherwise, the function will simply save the last plot displayed. The function guesses the type of graphics from the file extension.
 
-We can specify the resolution we want with arguments width and height. We can also specify the full path of the file we want to save if we don't want to save it in the current directory.
+We can specify the resolution we want with arguments width and height. We can also specify the full/relative path of the file we want to save if we don't want to save it in the current directory.
 
 ```{r, eval = FALSE}
 boxplot_syst_bp_by_gender <- 
-  ggplot(data = merged_nhanes, aes(x = factor(RIAGENDR, labels = c("Male", "Female")), y = BPXSY1, fill = factor(RIAGENDR))) +
+  ggplot(data = merged_nhanes, 
+         aes(x = factor(RIAGENDR, labels = c("Male", "Female")), 
+             y = BPXSY1, 
+             fill = factor(RIAGENDR))) +
   geom_boxplot() +
   scale_fill_manual(values = c("salmon", "skyblue")) +
   labs(title = "Box plot of systolic BP by gender",
@@ -648,18 +676,26 @@ ggsave(filename = "boxplot_syst_bp_by_gender.png",
   width = 10,
   height = 6,
   units = c("in"),
-  path = plotting_directory)
+  path = results_directory)
 ```
 
 ## Exercises
 
-✏️ Exercise on saving plots n°1: Save the three box plots from the plotting exercise using base R n°1 as one JPEG image.
+Please note that those are only examples, there are always many ways to solve the same task!
 
-✏️ Exercise on saving plots n°2: Save the two bar plots from the plotting exercise using `ggplot2` as one PNG image.
+### Exercise 5
+
+✏️ Exercise 5: Save the three box plots from exercise 1 as one JPEG image using `jpeg()`.
+
+### Exercise 6
+
+✏️ Exercise 6: Save the two bar plots from exercise 3 as one PNG image using `ggsave()`.
 
 # Solutions to the exercises
 
-☑️ Exercise on plotting with base R n°1
+## Exercise 1
+
+☑️ Exercise 1:
 
 ```{r, out.width="75%"}
 par(mfrow=c(1,3))
@@ -667,24 +703,26 @@ boxplot(merged_nhanes$BPXSY1 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
         xlab = "Gender",
         ylab = "Systolic blood pressure (1st reading) [mmHg]",
-        main = "Boxplot of BP by gender",
+        main = "BP (1st reading)",
         col = c("salmon", "skyblue"))
 boxplot(merged_nhanes$BPXSY2 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
         xlab = "Gender",
         ylab = "Systolic blood pressure (2nd reading) [mmHg]",
-        main = "Boxplot of BP by gender",
+        main = "BP (2nd reading)",
         col = c("salmon", "skyblue"))
 boxplot(merged_nhanes$BPXSY3 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
         xlab = "Gender",
         ylab = "Systolic blood pressure (3rd reading) [mmHg]",
-        main = "Boxplot of BP by gender",
+        main = "BP (3rd reading)",
         col = c("salmon", "skyblue"))
 par(mfrow=c(1,1))
 ```
 
-☑️ Exercise on plotting with base R n°2
+## Exercise 2
+
+☑️ Exercise 2:
 
 ```{r, out.width="75%"}
 # We identify the different smoking status
@@ -716,7 +754,9 @@ merged_nhanes$age_group <- cut(merged_nhanes$RIDAGEYR, breaks = seq(10, 80, 10))
 table(merged_nhanes[merged_nhanes$SMQ040!="Refused",]$SMQ040, merged_nhanes[merged_nhanes$SMQ040!="Refused",]$age_group)
 ```
 
-☑️ Exercise on plotting with `ggplot2`
+## Exercise 3
+
+☑️ Exercise 3: 
 
 ```{r, out.width="75%"}
 # We define the age groups
@@ -743,7 +783,8 @@ med_bmi_male <- med_bmi[med_bmi$RIAGENDR == "Male",]
 
 plot1 <- ggplot(med_bmi_fem, aes(x = age_groups, y = BMXBMI)) +
   geom_bar(stat = "identity", fill = "skyblue") +
-  labs(title = "Median BMI, gender = female",
+  labs(title = "Median BMI",
+       subtitle = "Gender = female",
        x = "Age group [years]",
        y = "Median BMI") +
   theme_minimal() +
@@ -751,9 +792,10 @@ plot1 <- ggplot(med_bmi_fem, aes(x = age_groups, y = BMXBMI)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plot2 <- ggplot(med_bmi_male, aes(x = age_groups, y = BMXBMI)) +
   geom_bar(stat = "identity", fill = "salmon") +
-  labs(title = "Median BMI, gender = male",
+  labs(title = "Median BMI",
+       subtitle = "Gender = male",
        x = "Age group [years]",
-       y = "Median BMI") +
+       y = "") +
   theme_minimal() +
   ylim(c(0,30)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -762,43 +804,106 @@ library(gridExtra)
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
-☑️ Exercise on saving plots n°1
+## Exercice 4
+
+☑️ Exercise 4:
+
+```{r, out.width="75%"}
+library(ggalluvial)
+
+# We will draw an alluvial plot of the three diastolic blood pressure readings of the last 100 participants with no NA values in the corresponding columns
+bp_data <- merged_nhanes %>%
+  filter(!is.na(BPXDI1),
+         !is.na(BPXDI2),
+         !is.na(BPXDI3)) %>%
+  slice_tail(n = 100) %>%
+  select(SEQN, BPXDI1, BPXDI2, BPXDI3)
+
+# We put the BP reading into four groups
+bp_data <- bp_data %>%
+  mutate(BPXDI1 = cut(BPXDI1, 
+                      breaks = c(0, 60, 70, 80, 120),
+                      labels = c("[0-60)", "[60-70)", "[70-80)", "[80-120)"),
+                      right = FALSE)) %>%
+  mutate(BPXDI2 = cut(BPXDI2,
+                      breaks = c(0, 60, 70, 80, 120),
+                      labels = c("[0-60)", "[60-70)", "[70-80)", "[80-120)"),
+                      right = FALSE)) %>%
+  mutate(BPXDI3 = cut(BPXDI3, 
+                      breaks = c(0, 60, 70, 80, 120),
+                      labels = c("[0-60)", "[60-70)", "[70-80)", "[80-120)"),
+                      right = FALSE))
+
+# We reshape to long format for ggalluvial
+bp_long <- bp_data %>%
+  pivot_longer(cols = starts_with("BPXDI"),
+               names_to = "Reading",
+               values_to = "Diastolic_BP")
+
+# This is how our data looks like before plotting
+bp_long
+
+# Alluvial plot (do not forget to add a fourth color and adapt the text!)
+ggplot(bp_long,
+       aes(x = Reading, 
+           stratum = Diastolic_BP, 
+           alluvium = SEQN, 
+           fill = Diastolic_BP, 
+           label = Diastolic_BP)) +
+  geom_flow(stat = "alluvium", lode.guidance = "forward", alpha = 0.6, color = "white") +
+  geom_stratum(width = 0.5, color = "white") + 
+  geom_text(stat = "stratum", size = 3, color = "white") +
+  scale_fill_manual(values = c("skyblue", "steelblue", "salmon",  "brown")) +
+  theme_minimal() +
+  labs(title = "Alluvial plot of diastolic BP",
+       x = "Diastolic blood pressure (1st-3rd readings)", 
+       y = "Participants",
+       fill = "Diastolic BP")
+```
+
+## Exercise 5
+
+☑️ Exercise 5:
 
 ```{r, eval = FALSE}
-plotting_directory <- "C:/GitHub/rforphysicians/data_sets/docs/plots/" # your plotting directory here
+results_directory <- "C:/GitHub/rforphysicians/docs/plots/" # your results directory here
 
-jpeg(file = paste0(plotting_directory,"boxplots_bp_by_gender.jpeg"), 
+jpeg(file = paste0(results_directory,"boxplots_bp_by_gender.jpeg"), 
      width = 10, 
      height = 6, 
      units = "in",
      res=100)
+
 par(mfrow=c(1,3))
 boxplot(merged_nhanes$BPXSY1 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
         xlab = "Gender",
         ylab = "Systolic blood pressure (1st reading) [mmHg]",
-        main = "Boxplot of BP by gender",
+        main = "BP (1st reading)",
         col = c("salmon", "skyblue"))
 boxplot(merged_nhanes$BPXSY2 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
         xlab = "Gender",
         ylab = "Systolic blood pressure (2nd reading) [mmHg]",
-        main = "Boxplot of BP by gender",
+        main = "BP (2nd reading)",
         col = c("salmon", "skyblue"))
 boxplot(merged_nhanes$BPXSY3 ~ merged_nhanes$RIAGENDR,
         names = c("Male", "Female"),
         xlab = "Gender",
         ylab = "Systolic blood pressure (3rd reading) [mmHg]",
-        main = "Boxplot of BP by gender",
+        main = "BP (3rd reading)",
         col = c("salmon", "skyblue"))
+
 dev.off()
 par(mfrow=c(1,1))
 ```
 
-☑️ Exercise on saving plots n°2
+## Exercise 6
+
+☑️ Exercise 6:
 
 ```{r, eval = FALSE}
-plotting_directory <- "C:/GitHub/rforphysicians/data_sets/docs/plots/" # your plotting directory here
+results_directory <- "C:/GitHub/rforphysicians/docs/plots/" # your results directory here
 
 bar_plot_med_bmi_by_gender <- grid.arrange(plot1, plot2, ncol=2)
 ggsave(filename = "bar_plot_med_bmi_by_gender.png",
@@ -807,7 +912,7 @@ ggsave(filename = "bar_plot_med_bmi_by_gender.png",
   width = 10,
   height = 6,
   units = c("in"),
-  path = plotting_directory)
+  path = results_directory)
 ```
 
 # References

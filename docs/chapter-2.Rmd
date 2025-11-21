@@ -44,41 +44,51 @@ The reference material for this course, as well as some useful literature to dee
 
 ## Working directory
 
-When you get a file from somewhere on your computer (e.g. a dataset), you can either 
-* have it in your **R working directory** (see below), in which case you don't need to specify the full path to the file when you import it, 
-* or you can get files in different folders, by always **specifying the full path**.
+When you want to load a file (e.g. a dataset), you have two options:
 
-The advantage of putting the files in the folder that contains your script and is set as the working directory is that you can easily move the folder around on your computer without getting any problems with your script: just set the working directory to your source file every time you open it, and you'll be fine.
+* Put the file inside your **R working directory** (see below), so you don't need to specify the full path.
+* Store the file somewhere else, and then always give the full (or partial) path when importing it.
+
+If your file is stored in the folder that is currently set as your working directory, you can simply write:
 
 ```{r, eval = FALSE}
-# Example
-setwd("~/path/to/your/folder/")
+setwd("C:/path/to/your/folder/")
 data <- read.csv("testdata.csv")
+
+# This is convenient because you can move the entire folder around without breaking your code: as long as you set the working directory to that folder when you open the script, everything still works.
 ```
 
-The advantage of always giving the full path to a file is that you can get data in different folders on your computer, avoiding things like copying the source data in every folder where you have a corresponding script.
+If you want some structure inside your project (e.g. datasets stored in a subfolder "datasets"), you can use relative paths, which always start from the working directory:
+
+```{r, eval=FALSE}
+setwd("C:/path/to/your/folder/")
+data <- read.csv("datasets/testdata.csv")
+
+# This is safe and portable: moving the whole folder keeps the relative paths valid.
+```
+
+If your files are scattered across your computer, you may prefer to specify the absolute path each time:
 
 ```{r, eval = FALSE}
-# Example
-data <- read.csv("~/path/to/your/folder/testdata.csv")
+data <- read.csv("C:/some/other/folder/testdata.csv")
+
+# This avoids having to change the working directory, but: the code breaks if the file moves, and the script is harder to share with others (everyone has different folder structures).
 ```
 
 **Working directory**
 
 To tell R which folder you are working in (e.g., where your data is stored), you have several options:
 
-  + Go to *Session > Set Working Directory > Choose Directory* and select your folder manually.
-  + Use `setwd("path/to/your/folder")` in your script.
+  + Go to the tab *Session > Set Working Directory > Choose Directory* and select your folder manually.
+  + Use `setwd("C:/path/to/your/folder")` in your script/console.
   + Or, the most convenient for script-based work: go to *Session > Set Working Directory > To Source File Location* to automatically set the working directory to the location of your script.
-
-💡 Tip: To avoid file path errors and keep your project organized, it’s best to store your script and data files in the same folder, or at least place your data files in a subfolder like `data_sets` within your project directory. Then, set that folder as your working directory in R. This ensures that your code can reliably find and save your files.
 
 ```{r, eval=FALSE}
 # Command to display the current working directory
 getwd()
 
 # Command to manually set your working directory
-setwd("~/path/to/your/folder")
+setwd("C:/path/to/your/folder")
 
 # Command to automatically set your working directory to the location of your R file
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) 
@@ -88,18 +98,28 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 We will first look at how to import a CSV file into R as a data frame.
 
+### CSV
+
 CSV stands for Comma-Separated Values. In a `.csv` file, the values are stored as plain text, separated by commas. This is a simple and widely used format for storing tabular data.
 
 After setting your working directory or determining the path to your CSV file, you can use the `read.csv()` function to import the data. This will create a data frame, which is one of the most commonly used structures in R for handling datasets.
 
-💡 I recommend to use data frames as data type for your data — they are generally easier to work with than matrices, especially for beginners.
+💡 I recommend to use data frames as data type for your data: they are generally easier to work with than matrices, especially for beginners.
 
 ```{r, eval=FALSE}
 # Import a CSV file into a data frame
-dataset <- read.csv("~/path/to/your/folder/data.csv")
+dataset <- read.csv("C:/path/to/your/folder/data.csv")
 ```
 
-The function `read.csv()` has several useful arguments, including:
+The function `read.csv()` has several useful arguments:
+
+```
+read.csv(file, header = TRUE, sep = ",", quote = "\"",
+         dec = ".", fill = TRUE, comment.char = "", row.names, 
+         stringsAsFactors, ...)
+```
+
+  + `header`: A logical value (`TRUE/FALSE`) indicating whether the file contains the names of the variables as its first line. If missing, the value is determined from the file format: header is set to `TRUE` if the first row contains one fewer field than the number of columns.
 
   + `sep`: The field separator used in the file. For `read.csv()`, the default is a comma (`,`), which is standard for CSV files.
   
@@ -108,23 +128,46 @@ The function `read.csv()` has several useful arguments, including:
     + a number indicating the column to use as row names,
     + a character string naming the column with row names.
     
-    If a header is present and the first row has one fewer field than the number of columns, the first column is used as row names. Otherwise, rows are automatically numbered. Use `row.names = NULL` to force default numbering.
+    If a header is present and the first row has one fewer field than the number of columns, the first column is used as row names.
+    Otherwise, rows are automatically numbered. Use `row.names = NULL` to force default numbering.
   
   + `col.names`: Optional vector of column names. If not provided, default names like "V1", "V2", etc., are assigned.
   
-  + `stringsAsFactors`: TRUE/FALSE; should character vectors be converted to factors?
+  + `stringsAsFactors`: `TRUE/FALSE`; should character vectors be converted to factors?
 
-Another widely used data format is the Excel file (`.xlsx`). For these, you can use the `readxl` package to import the data:
+### XLS
+
+Another widely used data format is the Excel file (`.xlsx` or `.xls`). For these, you can use the `readxl` package to import the data:
 
 ```{r, eval=FALSE}
 # Load the readxl package (after installing it)
 library(readxl)
 
 # Read the first sheet of an Excel file
-dataset <- read_excel("~/path/to/your/folder/data.xlsx")
+dataset <- read_excel("C:/path/to/your/folder/data.xlsx")
 ```
 
-⚠️ Note: If your file is actually a CSV but mistakenly has a .xlsx extension, you should rename it to .csv and use read.csv() instead. Mixing up formats can lead to import errors.
+The function `read_excel()` also has several useful arguments:
+
+```
+read_excel(path, sheet = NULL, range = NULL,
+  col_names = TRUE, col_types = NULL, na = "",...
+)
+```
+
++  `path`: Path to the xls/xlsx file.
+
++  `sheet`: Sheet to read. Either a string (the name of a sheet), or an integer (the position of the sheet). Ignored if the sheet is specified via range. If neither argument specifies the sheet, defaults to the first sheet.
+
++  `range`: A cell range to read from, as described in cell-specification. Includes typical Excel ranges like "B3:D87", possibly including the sheet name like "Budget!B2:G14", and more. 
+
++  `col_names`: `TRUE` to use the first row as column names, `FALSE` to get default names, or a character vector giving a name for each column.
+
++  `col_types`: Either `NULL` to guess all from the spreadsheet or a character vector containing one entry per column from these options: "skip", "guess", "logical", "numeric", "date", "text" or "list".
+
++  `na`: Character vector of strings to interpret as missing values. By default, `readxl` treats blank cells as missing data.
+
+⚠️ Note: If your file is actually a CSV but mistakenly has a `.xlsx` extension, you should rename it to `.csv` and use `read.csv()` instead. Mixing up formats can lead to import errors.
 
 ### Load the NHANES data sets
 
@@ -243,7 +286,7 @@ As you can see, using `dplyr` and the pipe can make your life much easier.
 In the following chapter, we’ll use both base R and `tidyverse` functions without always noting which package they belong to. If you're ever unsure, you can check the top-left corner of the function's help page.
 
 ```{r, echo=FALSE, out.width = "70%"}
-knitr::include_graphics(path = "images/documentation.png")
+knitr::include_graphics(path = "C:/GitHub/rforphysicians/docs/images/documentation.png")
 ```
 
 ## Accessing elements in data frames
@@ -358,10 +401,9 @@ demo %>%
 ### Frequency tables and proportions
 
 ```{r}
-table(demo$RIAGENDR)                                # Gender distribution
-table(demo$DMDHRMAR)                                # Marital status of household reference person
-table(demo$AIALANGA)                                # Language of interview
-prop.table(table(demo$AIALANGA))                    # Proportional distribution of interview languages
+table(demo$RIAGENDR)                                # Gender
+table(demo$RIDRETH1)                                # Race/Hispanic origin
+prop.table(table(demo$DMDCITZN))                    # Citizenship status (proportions)
 ```
 
 With `dplyr`, you get frequencies directly:
@@ -490,11 +532,27 @@ demo_no_na <- demo %>%
 
 ### Exercise 2
 
-✏️ Exercise 2: inspect the structure of the `demo` data set, look at different entries, get familiar with those commands.
+✏️ Exercise 2: inspect the structure of the `demo` data set, look at different entries and familiarise yourself with the commands. Here are a few possible tasks, but try doing a few more of your own.
+
+- View the first few rows of the dataset
+
+- Display the names of all columns
+
+- View all unique values in the race column
+
+- Count how many people are married in the dataset (absolute counts and proportions)
+
+- Get a quick statistical summary of a few columns (e.g. age, total number of people in the family and age of the household reference person)
+
+- View the number of missing values in each column
+
+- Calculate the average age of the cohort
+
+- Calculate the median total number of people in the household by race
 
 ### Exercise 3
 
-✏️ Exercise 3: generate a new data frame selecting only the female patients that are above 18 years old and that took the interview in Spanish.
+✏️ Exercise 3: generate a new data frame selecting only the female patients that are above 18 years old and that took the ACASI interview in Spanish.
 
 # Combining data
 
@@ -558,7 +616,7 @@ You should specify the type of join you are looking for:
   + Full (outer) join: keep all rows from both `demo` and `bmx`, filling with NA where there are no matches: `full_join_df <- merge(demo, bmx, by = "SEQN", all = TRUE)`
 
 ```{r, echo=FALSE, out.width = "100%"}
-knitr::include_graphics(path = "images/types_of_joins.jpg")
+knitr::include_graphics(path = "C:/GitHub/rforphysicians/docs/images/types_of_joins.jpg")
 ```
 
 💡 `merge()` in base R is flexible but can be a bit verbose. For simpler syntax, you can also use the `dplyr` functions `left_join()`, `right_join()`, `inner_join()`, and `full_join()`.
@@ -599,7 +657,7 @@ Let us save a data frame in all those different formats.
 
 ```{r, eval=FALSE}
 # Specify the directory for the data
-directory <- "~/Documents/GitHub/rforphysicians/data_sets/"
+directory <- "C:/GitHub/rforphysicians/data_sets"
 
 # Save as CSV
 write.csv(merged_demo_bpx_bmx, file = file.path(directory,"merged_demo_bpx_bmx.csv"), row.names = FALSE)
@@ -639,26 +697,33 @@ load(file.path(directory, "merged_demo_bpx_bmx.RData"))
 
 # Solutions to the exercises
 
-Please not that those are only examples, there are always many ways to solve the same task!
+Please note that those are only examples, there are always many ways to solve the same task!
 
 ## Exercise 1
 
 ☑️ Exercise 1: 
 
-```{r, echo=FALSE}
+Start by downloading the different CSV files on your laptop, ideally in the same folder as your script.
+
+```{r}
 # Load the necessary CSV files into data frames
 
-directory <- "C:/GitHub/rforphysicians/data_sets/" # Use your own working directory here
+directory <- "C:/GitHub/rforphysicians/data_sets/" # Your files' directory here
 
-demo <- read.csv(paste0(directory,"DEMO_G.csv")) # Demographics (cycle G = 2011–2012)
-bpx  <- read.csv(paste0(directory,"BPX_G.csv")) # Blood pressure
-bmx  <- read.csv(paste0(directory,"BMX_G.csv")) # Body measures
-smq  <- read.csv(paste0(directory,"SMQ_G.csv")) # Smoking questionnaire
+demo <- read.csv(paste0(directory,"DEMO_G.csv"))  # Demographics (cycle G = 2011–2012)
+bpx  <- read.csv(paste0(directory,"BPX_G.csv"))   # Blood pressure
+bmx  <- read.csv(paste0(directory,"BMX_G.csv"))   # Body measures
+smq  <- read.csv(paste0(directory,"SMQ_G.csv"))   # Smoking questionnaire
+
+# Or simply set your working directory to "source file location", then you do not even have to precise the directory
+# e.g. demo <- read.csv("DEMO_G.csv")
 ```
 
 ## Exercise 2
 
-☑️ Exercise 2: Did you manage to select a specific column you were interested in? Were you able to check how many men and women are included in the data set? Here are a few examples of operations you can use to explore the data set.
+☑️ Exercise 2: Did you manage to select a specific column you were interested in? Were you able to check the number or proportions of entries for a few variables? Be creative :)
+
+Here are solutions for the few example tasks.
 
 ```{r}
 # View the first few rows of the dataset
@@ -667,20 +732,31 @@ head(demo)
 # Display the names of all columns
 names(demo)
 
-# View all unique values in the "AIALANGA" (Interview Language) column
-unique(demo$AIALANGA)
+# View all unique values in the race column
+unique(demo$RIDRETH1)
 
-# Count how many men and women are in the dataset
-table(demo$RIAGENDR)
-
-# Get a quick statistical summary of a few columns
-summary(demo[,c('RIDAGEYR','DMDHHSZA','DMDHRAGE')])
+# Count how many people are married in the dataset
+# (absolute counts and proportions)
+married <- demo %>%
+  mutate(DMDMARTL = ifelse(DMDMARTL == "Married", "married", "other")) %>%
+  select(DMDMARTL)
+table(married)
+prop.table(table(married))
+  
+# Get a quick statistical summary of a few columns 
+# (here age, total number of people in the family and age of the household reference person)
+summary(demo[,c('RIDAGEYR','DMDFMSIZ','DMDHRAGE')])
 
 # View the number of missing values in each column
 colSums(is.na(demo))
 
 # Calculate the average age
 mean(demo$RIDAGEYR, na.rm = TRUE)
+
+# Calculate the median total number of people in the household by race
+demo %>%
+  group_by(RIDRETH1) %>%
+  summarise(median_people_household = median(DMDHHSIZ, na.rm = TRUE))
 ```
 
 ## Exercise 3
@@ -688,7 +764,7 @@ mean(demo$RIDAGEYR, na.rm = TRUE)
 ☑️ Exercise 3:
 
 ```{r}
-# Filter the dataset to include only female patients that are above 18 years old and that took the interview in Spanish.
+# Filter the dataset to include only female patients that are above 18 years old and that took the ACASI interview in Spanish.
 demo_filtered <- demo[demo$RIAGENDR == "Female" & 
                       demo$RIDAGEYR > 17 & 
                       !is.na(demo$AIALANGA) & demo$AIALANGA == "Spanish", ]
@@ -723,8 +799,10 @@ merged_nhanes <- Reduce(function(x, y) inner_join(x, y, by = "SEQN"), data_list)
 ```{r, eval=FALSE}
 # Save the merged dataset in your working directory
 # Click on Session > Set Working Directory > To Source File Location, or use file.path()
-write.csv(merged_nhanes, "merged_nhanes.csv", row.names = FALSE)
-saveRDS(merged_nhanes, "merged_nhanes.rds")
+
+results_directory <- "C:/GitHub/rforphysicians/data_sets"
+write.csv(merged_nhanes, file.path(results_directory, "merged_nhanes.csv"), row.names = FALSE)
+saveRDS(merged_nhanes, file.path(results_directory, "merged_nhanes.rds"))
 ```
 
 \newpage

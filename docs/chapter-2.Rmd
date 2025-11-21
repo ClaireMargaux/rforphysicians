@@ -47,7 +47,7 @@ The reference material for this course, as well as some useful literature to dee
 When you want to load a file (e.g. a dataset), you have two options:
 
 * Put the file inside your **R working directory** (see below), so you don't need to specify the full path.
-* Store the file somewhere else, and then always give the full (or partial) path when importing it.
+* Store the file somewhere else, and then always give the full (or relative) path when importing it.
 
 If your file is stored in the folder that is currently set as your working directory, you can simply write:
 
@@ -55,7 +55,9 @@ If your file is stored in the folder that is currently set as your working direc
 setwd("C:/path/to/your/folder/")
 data <- read.csv("testdata.csv")
 
-# This is convenient because you can move the entire folder around without breaking your code: as long as you set the working directory to that folder when you open the script, everything still works.
+# This is convenient because you can move the entire folder around without 
+# breaking your code: as long as you set the working directory to that folder 
+# when you open the script, everything still works.
 ```
 
 If you want some structure inside your project (e.g. datasets stored in a subfolder "datasets"), you can use relative paths, which always start from the working directory:
@@ -72,7 +74,9 @@ If your files are scattered across your computer, you may prefer to specify the 
 ```{r, eval = FALSE}
 data <- read.csv("C:/some/other/folder/testdata.csv")
 
-# This avoids having to change the working directory, but: the code breaks if the file moves, and the script is harder to share with others (everyone has different folder structures).
+# This avoids having to change the working directory, but: the code breaks if 
+# the file moves, and the script is harder to share with others (everyone has 
+# different folder structures).
 ```
 
 **Working directory**
@@ -259,7 +263,8 @@ summary_df
 ```{r}
 # With dplyr, no pipe:
 
-cars <- mutate(cars, speed_group = cut(speed, breaks = c(0, 10, 20, 30), labels = c("Low", "Medium", "High")))
+cars <- mutate(cars, speed_group = cut(speed, breaks = c(0, 10, 20, 30), 
+                                       labels = c("Low", "Medium", "High")))
 
 summary_df <- summarise(group_by(cars, speed_group),
                         avg_dist = mean(dist),
@@ -309,15 +314,13 @@ ind_mat <- cbind(c(1, 3, 5), c(2, 4, 6))
 demo[ind_mat]  # Access rows and columns using multiple indices
 
 # Select rows based on a condition
-head(demo[, "RIDAGEYR"] > 50)  # Logical condition for age greater than 50
-head(!(demo[, "DMDHHSIZ"] > 3))  # Logical negation for total number of people in the household not greater than 3
-demo[demo[, "RIDAGEYR"] > 50, ]  # Rows where age > 50
-demo[demo[, "DMDHHSIZ"] < 3, ]  # Rows where total number of people in the household greater than 3
-demo[demo[, "DMDHHSIZ"] >= 3, ]  # Rows where total number of people in the household greater or equal 3
+head(demo[demo[, "RIDAGEYR"] > 50, ])  # Rows where age > 50
+head(demo[demo[, "DMDHHSIZ"] < 3, ])  # Rows where total number of people in the household greater than 3
+head(demo[demo[, "DMDHHSIZ"] >= 3, ])  # Rows where total number of people in the household greater or equal 3
 
 # Combine logical vectors using "&" (AND), "|" (OR), and "!" (NOT)
-demo[(demo[, "RIDAGEYR"] > 50 & demo[, "RIAGENDR"] == "Female"), ]  # Both conditions must be true
-demo[(demo[, "DMDHHSIZ"] < 3 | demo[, "RIAGENDR"] == "Male"), ]  # One condition must be true
+head(demo[(demo[, "RIDAGEYR"] > 50 & demo[, "RIAGENDR"] == "Female"), ])  # Both conditions must be true
+head(demo[(demo[, "DMDHHSIZ"] < 3 | demo[, "RIAGENDR"] == "Male"), ])  # One condition must be true
 ```
 
 💡 To inspect one column, you can also use the dollar `$` symbol to access a column as a vector.
@@ -335,7 +338,7 @@ demo[1, ]  # Row 1 (all columns)
 
 ### `dplyr` syntax
 
-With `dplyr`, you can achieve the same things more readably, especially for filtering rows and selecting columns.
+With `dplyr`, you can achieve the same things more readable, especially for filtering rows and selecting columns.
 
 ```{r}
 # Select columns
@@ -563,7 +566,8 @@ In practice, data is often spread across multiple data frames that need to be co
 To add columns side-by-side, the data frames must have the same number of rows.
 
 ```{r}
-# Extract one column from demo to create an additional data frame with the same number of rows
+# Extract one column from demo to create an additional data frame with the same 
+# number of rows
 extra_info <- demo$RIDRETH1
 
 # Combine using cbind
@@ -580,7 +584,8 @@ combined_df <- demo %>%
 To stack data frames vertically, the data frames must have the same column names and types.
 
 ```{r}
-# Extract one column from demo to create an additional data frame with the same structure (column names and types)
+# Extract one column from demo to create an additional data frame with the same 
+# structure (column names and types)
 (new_participant <- demo[18,])
 
 # Combine using rbind
@@ -715,8 +720,10 @@ bpx  <- read.csv(paste0(directory,"BPX_G.csv"))   # Blood pressure
 bmx  <- read.csv(paste0(directory,"BMX_G.csv"))   # Body measures
 smq  <- read.csv(paste0(directory,"SMQ_G.csv"))   # Smoking questionnaire
 
-# Or simply set your working directory to "source file location", then you do not even have to precise the directory
-# e.g. demo <- read.csv("DEMO_G.csv")
+# Or simply set your working directory to "source file location", then if you 
+# indeed placed your data in the same folder as your script, you do not even 
+# have to precise the directory:
+# demo <- read.csv("DEMO_G.csv")
 ```
 
 ## Exercise 2
@@ -764,7 +771,8 @@ demo %>%
 ☑️ Exercise 3:
 
 ```{r}
-# Filter the dataset to include only female patients that are above 18 years old and that took the ACASI interview in Spanish.
+# Filter the dataset to include only female patients that are above 18 years old 
+# and that took the ACASI interview in Spanish
 demo_filtered <- demo[demo$RIAGENDR == "Female" & 
                       demo$RIDAGEYR > 17 & 
                       !is.na(demo$AIALANGA) & demo$AIALANGA == "Spanish", ]

@@ -3105,7 +3105,15 @@ df &lt;- data.frame(
   ID = 1:5,
   Name = c(&quot;Anna&quot;, &quot;Ben&quot;, &quot;Carla&quot;, &quot;David&quot;, &quot;Eva&quot;),
   Age = c(23, 31, 29, 40, 35)
-)</code></pre>
+)
+
+# Let us display that data frame
+df</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["ID"],"name":[1],"type":["int"],"align":["right"]},{"label":["Name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Age"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"Anna","3":"23"},{"1":"2","2":"Ben","3":"31"},{"1":"3","2":"Carla","3":"29"},{"1":"4","2":"David","3":"40"},{"1":"5","2":"Eva","3":"35"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 <p>Now let’s inspect thus object using a few useful functions.</p>
 <pre class="r"><code># General object inspection
 typeof(df)          # Returns the internal storage type of the object</code></pre>
@@ -3208,7 +3216,7 @@ statistical sense, a place within a vector may be reserved for it by
 assigning it the special value <code>NA</code>. In general any operation
 on an NA becomes an NA.</p>
 <pre class="r"><code>z &lt;- c(1:3,NA)
-print(z)</code></pre>
+z</code></pre>
 <pre><code>## [1]  1  2  3 NA</code></pre>
 <pre class="r"><code>is.na(z)</code></pre>
 <pre><code>## [1] FALSE FALSE FALSE  TRUE</code></pre>
@@ -3344,17 +3352,17 @@ data frame.</li>
                  group = sample(c(&quot;exp&quot;,&quot;control&quot;), size = 5, replace = TRUE)))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["val"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"4","3":"exp"},{"1":"2","2":"5","3":"control"},{"1":"3","2":"2","3":"control"},{"1":"4","2":"6","3":"control"},{"1":"5","2":"5","3":"exp"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["val"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["chr"],"align":["left"]}],"data":[{"1":"1","2":"4","3":"control"},{"1":"2","2":"5","3":"exp"},{"1":"3","2":"2","3":"control"},{"1":"4","2":"6","3":"control"},{"1":"5","2":"5","3":"control"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>str(d)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    5 obs. of  3 variables:
 ##  $ id   : int  1 2 3 4 5
 ##  $ val  : num  4 5 2 6 5
-##  $ group: chr  &quot;exp&quot; &quot;control&quot; &quot;control&quot; &quot;control&quot; ...</code></pre>
+##  $ group: chr  &quot;control&quot; &quot;exp&quot; &quot;control&quot; &quot;control&quot; ...</code></pre>
 <p>Data frame columns can be accessed using <code>$</code> symbol</p>
 <pre class="r"><code>d$group</code></pre>
-<pre><code>## [1] &quot;exp&quot;     &quot;control&quot; &quot;control&quot; &quot;control&quot; &quot;exp&quot;</code></pre>
+<pre><code>## [1] &quot;control&quot; &quot;exp&quot;     &quot;control&quot; &quot;control&quot; &quot;control&quot;</code></pre>
 </div>
 <div id="functions" class="section level3" number="2.3.7">
 <h3><span class="header-section-number">2.3.7</span> Functions</h3>
@@ -3395,7 +3403,8 @@ instead of categorical, character instead of factor, etc.). This can
 completely change the results of your analysis, especially for
 regression models.</p>
 <p>Here is a simple example:</p>
-<pre class="r"><code># Imagine a data set with 3 groups: control, treatment 1, treatment 2, coded initially as 1, 2, and 3
+<pre class="r"><code># Imagine a data set with 3 groups: control, treatment 1, treatment 2, coded 
+# initially as 1, 2, and 3
 df &lt;- data.frame(
   Group = c(1, 2, 3, 2, 3),
   BP_systolic = c(129, 135, 110, 124, 128)  # avoid spaces in column names
@@ -3412,7 +3421,8 @@ df</code></pre>
 str(df$Group)</code></pre>
 <pre><code>##  num [1:5] 1 2 3 2 3</code></pre>
 <pre class="r"><code># --&gt; R treats &quot;Group&quot; as numeric!
-# If you used this variable in a regression, the model would assume a numeric order (control &lt; treatment 1 &lt; treatment 2), which is wrong.
+# If you used this variable in a regression, the model would assume a numeric 
+# order (control &lt; treatment 1 &lt; treatment 2), which is wrong.
 
 # Correct: convert &quot;Group&quot; to a factor
 df$Group &lt;- as.factor(df$Group)
@@ -3478,7 +3488,8 @@ packages</strong>. You can install packages using the
 <pre class="r"><code># To install a package, you can use the function.
 install.packages(&quot;dplyr&quot;)
 
-# Alternatively, you can click on &#39;Packages&#39; in the bottom right pane, then click on &#39;Install&#39; and type in the name of the package you want to install.
+# Alternatively, you can click on &#39;Packages&#39; in the bottom right pane, then 
+# click on &#39;Install&#39; and type in the name of the package you want to install.
 
 # To load a package you&#39;ve already install, just load it using the library() function.
 library(dplyr)</code></pre>
@@ -3525,7 +3536,7 @@ eligible</code></pre>
                  group = factor(sample(c(&quot;drug 1&quot;, &quot;drug 2&quot;, &quot;obs arm&quot;), 10, replace = TRUE))))</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"1","2":"125.1784","3":"obs arm"},{"1":"2","2":"120.3670","3":"drug 2"},{"1":"3","2":"121.9550","3":"obs arm"},{"1":"4","2":"125.6263","3":"drug 1"},{"1":"5","2":"113.9310","3":"drug 1"},{"1":"6","2":"111.1586","3":"drug 1"},{"1":"7","2":"117.3717","3":"obs arm"},{"1":"8","2":"107.6841","3":"obs arm"},{"1":"9","2":"127.7501","3":"drug 1"},{"1":"10","2":"119.7413","3":"drug 2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]}],"data":[{"1":"1","2":"118.0740","3":"drug 2"},{"1":"2","2":"129.3147","3":"drug 2"},{"1":"3","2":"120.1285","3":"drug 1"},{"1":"4","2":"122.9731","3":"drug 2"},{"1":"5","2":"124.4082","3":"drug 2"},{"1":"6","2":"113.8928","3":"obs arm"},{"1":"7","2":"122.2461","3":"obs arm"},{"1":"8","2":"127.6541","3":"obs arm"},{"1":"9","2":"126.4907","3":"obs arm"},{"1":"10","2":"132.5900","3":"obs arm"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code># Compute standardized scores for blood pressure
@@ -3538,7 +3549,7 @@ df$stand_score_2 &lt;- (df$blood_pressure - mean(df$blood_pressure))/sd(df$blood
 df</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stand_score"],"name":[4],"type":["dbl[,1]"],"align":["right"]},{"label":["stand_score_2"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"125.1784","3":"obs arm","4":"0.9298091","5":"0.9298091"},{"1":"2","2":"120.3670","3":"drug 2","4":"0.1966713","5":"0.1966713"},{"1":"3","2":"121.9550","3":"obs arm","4":"0.4386357","5":"0.4386357"},{"1":"4","2":"125.6263","3":"drug 1","4":"0.9980574","5":"0.9980574"},{"1":"5","2":"113.9310","3":"drug 1","4":"-0.7840294","5":"-0.7840294"},{"1":"6","2":"111.1586","3":"drug 1","4":"-1.2064828","5":"-1.2064828"},{"1":"7","2":"117.3717","3":"obs arm","4":"-0.2597452","5":"-0.2597452"},{"1":"8","2":"107.6841","3":"obs arm","4":"-1.7359154","5":"-1.7359154"},{"1":"9","2":"127.7501","3":"drug 1","4":"1.3216715","5":"1.3216715"},{"1":"10","2":"119.7413","3":"drug 2","4":"0.1013279","5":"0.1013279"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["id"],"name":[1],"type":["int"],"align":["right"]},{"label":["blood_pressure"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[3],"type":["fct"],"align":["left"]},{"label":["stand_score"],"name":[4],"type":["dbl[,1]"],"align":["right"]},{"label":["stand_score_2"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"118.0740","3":"drug 2","4":"-1.0268169","5":"-1.0268169"},{"1":"2","2":"129.3147","3":"drug 2","4":"0.9969750","5":"0.9969750"},{"1":"3","2":"120.1285","3":"drug 1","4":"-0.6569131","5":"-0.6569131"},{"1":"4","2":"122.9731","3":"drug 2","4":"-0.1447773","5":"-0.1447773"},{"1":"5","2":"124.4082","3":"drug 2","4":"0.1136053","5":"0.1136053"},{"1":"6","2":"113.8928","3":"obs arm","4":"-1.7795913","5":"-1.7795913"},{"1":"7","2":"122.2461","3":"obs arm","4":"-0.2756731","5":"-0.2756731"},{"1":"8","2":"127.6541","3":"obs arm","4":"0.6980015","5":"0.6980015"},{"1":"9","2":"126.4907","3":"obs arm","4":"0.4885353","5":"0.4885353"},{"1":"10","2":"132.5900","3":"obs arm","4":"1.5866546","5":"1.5866546"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>

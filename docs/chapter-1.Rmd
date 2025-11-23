@@ -65,11 +65,19 @@ knitr::include_graphics(path = "images/rstudio-window-start.png")
 
 ## Console
 
-In the **Console tab**, we first see information about the version of R we are using and some basic commands to try out. At the end of these descriptions, we can type our R code, press Enter and see the result below the code line.
+In the **Console tab**, we first see information about the version of R we are using and some basic commands to try out. At the end of these descriptions, we can type our R code.
 
 ```{r, echo=TRUE}
 2+2
 ```
+
+💡 To run a line in the Console, just type Enter. 
+
+```{r, echo=FALSE, out.width = "10%"}
+knitr::include_graphics(path = "images/Enter.jpg")
+```
+
+**Important** to note from now on: all the code you see in grey fields, such as this `2+2`, corresponds to code that can be run to produce a result, for example in the console. The code that appears in the white field following `##` is the output that you get in the console when you run that code.
 
 ## Help
 
@@ -91,6 +99,15 @@ To start recording a script, click *File – New File – R Script*. This will o
 
 ```{r, echo=FALSE, out.width = "70%"}
 knitr::include_graphics(path = "images/rstudio-window.png")
+```
+
+💡 To run a line in a Script file, first put your cursor on the line you want to run, and then you have two options: 
+
+- you can click on the `run` button at the top of the upper left panel, 
+- or you can simply type Ctrl + Enter.
+
+```{r, echo=FALSE, out.width = "16%"}
+knitr::include_graphics(path = "images/Ctrl-Enter.jpg")
 ```
 
 💡 When your code starts to get long or complex, consider breaking it down into separate scripts with clear and specific purposes — for example:
@@ -171,7 +188,9 @@ Here’s an example to clarify the difference between variables and objects.
 
 ```{r}
 # We create an object (here: a vector) named 'vec' and assign a sequence of numbers to it.
-vec <- 1:10 
+
+vec <- 1:10 # Defines the object
+vec # Displays the object
 
 # 'vec' is the variable. The sequence of numbers (1, 2, 3, ..., 10) is the object.
 ```
@@ -229,7 +248,6 @@ In R, data types define the kind of information a variable can hold. Here are so
 Represents real numbers (e.g., 3.14, -2.5, 0).
 
 ```{r} 
-typeof(3.14)
 str(3.14)
 ```
 
@@ -238,24 +256,21 @@ str(3.14)
 Represents whole numbers (e.g., 2L, -5L). The "L" suffix indicates an integer.
 
 ```{r} 
-typeof(2L) 
 str(2L)
 ```
 
 ### Logical
 
-Represents Boolean values (TRUE or FALSE).
+Represents Boolean values (`TRUE` or `FALSE`).
 
 ```{r} 
-typeof(TRUE)
 str(TRUE)
 ```
 
 ```{r}
 # Example of a logical operation
 values <- 1:10
-above_five <- (values > 5)
-above_five
+values > 5
 ```
 
 ### Character
@@ -263,7 +278,6 @@ above_five
 Represents text or strings (e.g., "hello", "world").
 
 ```{r} 
-typeof("hello")
 str("hello")
 ```
 
@@ -272,7 +286,6 @@ str("hello")
 Represents complex numbers (e.g., 1 + 2i).
 
 ```{r} 
-typeof(1 + 2i) 
 str(1 + 2i)
 ```
 
@@ -283,6 +296,7 @@ In some cases the components of a vector may not be known. When an element or va
 ```{r} 
 z <- c(1:3,NA)
 z
+
 is.na(z)
 ```
 
@@ -300,14 +314,12 @@ Objects are the entities that R operates on. These can be:
 ### Vectors
   + The most fundamental data structure.
   + A one-dimensional array of elements of the same data type (e.g., numeric, character, logical).
-  + Created using the `c()` function.
+  + Created using e.g. the `c()` function.
   
 ```{r}
 vec1 <- c(1,2,3)
 str(vec1)
-```
 
-```{r}
 # Alternative ways of creating vectors:
 vec2 <- 1:3  # Sequence of integers
 vec3 <- seq(1, 3, by=1)  # More general sequence
@@ -315,12 +327,22 @@ vec3 <- seq(1, 3, by=1)  # More general sequence
 
 Vector elements can be accessed using `[]` brackets.
 
+💡 Note that R uses 1-based indexing, meaning that the first element of a vector is denoted with the index 1 (unlike other programming language, like Python, which start at 0).
+
 ```{r}
-# Accessing elements of the vector by index (R uses 1-based indexing)
-vec1[1]  # First element
-vec2[c(2, 3)]  # Elements at indices 2 and 3
-vec3[c(-2)]  # All elements except for the element at index 2
+# Accessing elements of the vector by index
+(vec <- seq(10, 15, by=1))
+
+# Access element
+vec[1]  # First element
+vec[c(2, 3)]  # Elements at indices 2 and 3
+vec[-2]  # All elements except for the element at index 2
+vec[length(vec)]  # Last element
 ```
+
+💡 Use `length()` to get the length of vectors.
+
+💡 By **enclosing the assignment in parentheses** `()`, you not only create/define the object but also automatically print its value to the console: a useful shortcut. This is equivalent to writing `print(object)` or simply typing the object name (e.g., `object`), but it saves you an extra line of code.
 
 ### Matrices
   + Two-dimensional arrays of elements of the same data type.
@@ -329,15 +351,12 @@ vec3[c(-2)]  # All elements except for the element at index 2
 ```{r, echo=TRUE}
 (mat <- matrix(c(1,2,3,4), nrow = 2, ncol = 2))
 str(mat)
+
+# Access element
+mat[1,2]
 ```
 
-💡 By enclosing the assignment in parentheses `()`, you not only create the object but also automatically print its value to the console: a useful shortcut. This is equivalent to writing `print(object)` or simply typing the object name (e.g., `object`), but it saves you an extra line of code.
-
-```{r}
-(mat)
-print(mat)
-mat
-```
+Matrices elements can be accessed using `[,]` brackets, but with two indices this time: one for the row, one for the column!
 
 ### Arrays
   + Generalization of matrices to more than two dimensions.
@@ -376,13 +395,15 @@ str(fac)
                  val = c(4,5,2,6,5),
                  group = sample(c("exp","control"), size = 5, replace = TRUE)))
 str(d)
-```
 
-Data frame columns can be accessed using `$` symbol
-
-```{r}
+# Access element
 d$group
+d[3,2]
 ```
+
+Data frame columns can be accessed using `$` symbol.
+
+Data frame elements can be accessed using `[,]` brackets, but with two indices like for matrices: one for the row, one for the column!
 
 ### Functions
   + Reusable blocks of code that perform a specific task.
@@ -403,6 +424,14 @@ frac(numerator = 6, denominator = 2) # Calling the function
   + *Implicitly given in order*, e.g., `frac(6, 2)`.
   
 I strongly recommend explicitly naming arguments, because it increases clarity, prevents order-related mistakes, and gives you flexibility in argument order: `frac(denominator = 2, numerator = 6)` works just as well. In contrast, when arguments are unnamed, order matters strictly — and a small mistake can completely change the result: `frac(2, 6)` is interpreted as `frac(numerator = 2, denominator = 6)`!
+
+Also, a function sometimes has arguments which have a **default value**, meaning that the function can still run even if you do not give a value for those arguments, the function will simply use the defaults values instead. An example: when you look in the documentation for the function `rnorm()` (e.g. by running `help(rnorm)`), you find this expression:
+
+```
+rnorm(n, mean = 0, sd = 1)
+```
+
+The description tells us: "Random generation for the normal distribution with mean equal to mean and standard deviation equal to sd." As we can see, the arguments `mean` and `sd` have default values, namely `0` and `1`. So if you do not tell the function otherwise, and simply run `rnorm(n = 10)`, you will get 10 numbers following a *standard* normal distribution, but if you run `rnorm(n = 10, mean = 2, sd = 0.5)`, you can generate number following a normal distribution with location and shape of your choice!
 
 ## Why data types matter
 
@@ -438,7 +467,7 @@ str(df$Group)
 
 ### Exercise 2
 
-✏️ Exercise 2: Given a vector of ages (`ages <- c(35, 45, 60, 15, 50, 8)`), determine which patients are eligible for a treatment (age above 18). Return a Boolean vector indicating whether each patient meets the age criteria.
+✏️ Exercise 2: Given a vector of ages (`ages <- c(35, 45, 60, 15, 50, 8)`), determine which patients are eligible for a treatment (age above 18). Return a Boolean vector indicating whether each patient meets the age criteria (something like `TRUE, TRUE, TRUE, FALSE, TRUE, FALSE`). Then use this Boolean vector to create a second vector of ages containing only the ages above 18.
 
 ### Exercise 3
 
@@ -511,9 +540,16 @@ knitr::include_graphics(path = "C:/GitHub/rforphysicians/docs/images/new-script.
 ☑️ Exercise 2:
 
 ```{r}
-ages <- c(35, 45, 60, 15, 50, 8)
+# We first define the ages vector
+(ages <- c(35, 45, 60, 15, 50, 8))
+# Now we check, through a logical operation, which are above 18
+ages >= 18
+# Or equivalently
+ages > 17
+# Now we store this Boolean vector
 eligible <- ages >= 18
-eligible
+# And select only the entries of 'ages' which are above 18
+(ages_above_18 <- ages[eligible])
 ```
 
 ## Exercise 3

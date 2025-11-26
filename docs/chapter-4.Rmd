@@ -1389,9 +1389,9 @@ Example Application: Analysing the impact of age, treatment type, and other cova
 
 ✏️ N°3 Exercise on comparing proportions: Test whether smoking at least 100 cigarettes in life (`SMQ020 == "Yes"` and `SMQ020 == "No"`) differs by marital status of the household reference person (`DMDHRMAR == "Married"` vs every other marital status).
  
-✏️ N°4 Exercise on comparing proportions: Test the association between cigar smoking (`SMQ680`) and pipe smoking (`SMQ690`).
+✏️ N°4 Exercise on comparing proportions: Test the association between marital status of the participant (`DMDMARTL == Married` and `DMDMARTL == Living with partner` vs all other cases) and pregnancy at exam (`RIDEXPRG == Yes, positive lab pregnancy test or self-reported pregnant at exam` vs `RIDEXPRG == The participant was not pregnant at exam`, and leave out the uncertain cases).
 
-✏️ N°5 Exercise on comparing more than two groups: Compare mean BMI (`BMXBMI`) across age groups.
+✏️ N°5 Exercise on comparing more than two groups: Compare mean BMI (`BMXBMI`) across age groups (please choose the groups `"(10,20]", "(20,30]", "(30,40]", "(40,50]", "(50,60]", "(60,70]"`).
 
 💡 Hint: remember how we used the function `cut()` to create age groups in Chapter 3.
 
@@ -1485,12 +1485,16 @@ chisq.test(tab)
 ```{r, out.width="75%"}
 # We are again comparing proportions, so we need to determine if we have to use a Chi-square test or a Fisher's exact test
 
-# First, let us select the pipe and cigar smokers
-smoke <- merged_nhanes[merged_nhanes$SMQ020 %in% c("Yes", "No"),]
-smoke$DMDHRMAR <- ifelse(smoke$DMDHRMAR == "Married", "Married", "Not married")
+# First, let us select the marital status and pregnancy status
+pregnancy_df <- merged_nhanes[merged_nhanes$RIDEXPRG %in%
+                                c("Yes, positive lab pregnancy test or self-reported pregnant at exam", 
+                                  "The participant was not pregnant at exam"),c("RIDEXPRG","DMDMARTL")]
+pregnancy_df$RIDEXPRG <- ifelse(pregnancy_df$RIDEXPRG  == "Yes, positive lab pregnancy test or self-reported pregnant at exam", "Pregnant", "Not pregnant") # Purely cosmetic operation
+pregnancy_df$DMDMARTL <- ifelse(pregnancy_df$DMDMARTL  %in% c("Married","Living with partner"), 
+                                "Partner", "No partner")
 
 # Let us visualize the contingency table
-(tab <- table(smoke$SMQ020, smoke$DMDHRMAR))
+(tab <- table(pregnancy_df))
 
 # What are the expected cell counts in this case?
 chisq <- chisq.test(tab)
@@ -1498,12 +1502,12 @@ round(chisq$expected,2)
 
 # Since the expected counts are way above 5, we use a chi-square test to compare the proportions
 chisq.test(tab)
-# The p-value is highly significant (p-value = 2.115e-05)
+# The p-value is slightly significant (p-value = 0.02333)
 ```
 
 ☑️ N°5 Exercise on comparing more than two groups
 
-```{r}
+```{r, out.width="75%"}
 # We define the age groups 
 merged_nhanes <- merged_nhanes %>%
   mutate(AGE_GROUP = cut(RIDAGEYR, breaks = seq(10, 80, 10)))
@@ -1517,9 +1521,25 @@ merged_nhanes %>%
     mean_BMXBMI = mean(BMXBMI, na.rm = TRUE)
   )
 
+# Let us have a look at the distribution of the BMI for those groups
+BMI_df <- merged_nhanes[,c("AGE_GROUP", "BMXBMI")]
+for(i in levels(BMI_df$AGE_GROUP)){
+  qqnorm(BMI_df$BMXBMI[BMI_df$AGE_GROUP == i],
+     col = "coral",
+     xlab = "Normal quantiles",
+     ylab = "BMI",
+     main = paste("Q-Q-plot of BMI group",i))
+} # using a for loop to win some space
+# All the BMIs are slightly skewed, but we should have enough data to trust an ANOVA
+
 # Let us now test the means using a one-way ANOVA
-oneway.test(BMXBMI ~ AGE_GROUP, data = merged_nhanes)
+oneway.test(BMXBMI ~ AGE_GROUP, data = BMI_df)
 # The p-value is highly significant (p-value < 2.2e-16)
+
+# If we are unsure about the use of the ANOVA, we can still try to run a
+# Kruskal-Wallis test
+kruskal.test(BMXBMI ~ AGE_GROUP, data = BMI_df)
+# The p-value is also highly significant (p-value < 2.2e-16)
 ```
 
 ☑️ N°6 Exercise on comparing more than two groups – Kruskal-Wallis test

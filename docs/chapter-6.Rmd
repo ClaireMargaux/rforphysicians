@@ -72,6 +72,7 @@ Follows a list of some of the key variables from the NHANES data sets.
 | DMDBORN4      | Country of birth                                      |
 | DMDCITZN      | Citizenship status                                    |
 | DMDMARTL      | Marital status                                        |
+| DMDEDUC2      | Education level                                       |
 | RIDEXPRG      | Pregnancy status at exam                              |
 | INDHHIN2      | Annual household income                               |
 | INDFMIN2      | Annual family income                                  |

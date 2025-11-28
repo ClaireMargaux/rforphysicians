@@ -1345,15 +1345,121 @@ Continuous response variable.
 
 <u>3. Requirements</u>
 
-* Linearity: the relationship between each predictor and outcome must be linear.
-* Normality of residuals: the residuals should follow a normal distribution.
-* Constant variance (a.k.a. homoscedasticity): the variance of the residuals does not depend on the values of the predictor variables.
-* Independence: the observations should be independent (not repeated measures).
+* Linearity: the relationship between each predictor and outcome must be *linear*.
+* Normality of residuals: the *residuals* should follow a *normal* distribution.
+* Constant variance (a.k.a. *homoscedasticity*): the variance of the residuals does not depend on the values of the predictor variables.
+* Independence: the *observations* should be *independent* (not repeated measures).
 
 💡 Residuals are the difference between a real-world observation and a value predicted by a model.
 
+<u>4. R function</u>
 
-💡 R^2 ......
+`glm(formula, family, ...)`: is used to fit generalized linear models, specified by giving a symbolic description of the linear predictor and a description of the error distribution.
+
+<u>5. Important arguments</u>
+
+```
+glm(formula, family = gaussian, data, weights, subset,
+    na.action, start = NULL, etastart, mustart, offset,
+    control = list(...), model = TRUE, method = "glm.fit",
+    x = FALSE, y = TRUE, singular.ok = TRUE, contrasts = NULL, ...)
+```
+
+* `formula`: an object of class "formula" (or one that can be coerced to that class), a symbolic description of the model to be fitted.
+* `family`: a description of the error distribution and link function to be used in the model.
+* `data`: an optional data frame, list or environment (or object coercible by as.data.frame to a data frame) containing the variables in the model.
+* `na.action`: a function which indicates what should happen when the data contain NAs. The default is set by the `na.action` setting of options. The ‘factory-fresh’ default is `na.omit`. 
+
+<u>6. Example</u>
+
+```{r, out.width="75%"}
+library(DescTools) # DescTools to compute (pseudo) coefficients of determination
+
+# Look at how BMI and other predictors (age, gender, race, smoking habits) 
+# influence systolic blood pressure (first reading)
+data_noNA <- na.omit(merged_nhanes[, c("BPXSY1", "BMXBMI", "RIDAGEYR", "RIAGENDR", "RIDRETH1", "SMQ020")])
+
+# --------------------------------------------------
+# 1. Linear model (BMI only)
+# --------------------------------------------------
+model_linear <- glm(BPXSY1 ~ BMXBMI, data = data_noNA, family = gaussian())
+summary(model_linear)
+
+# Coefficient of determination (pseudo R² for GLM)
+PseudoR2(model_linear, which = "CoxSnell")
+
+# Plot linear fit
+ggplot(data_noNA, aes(x = BMXBMI, y = BPXSY1)) +
+  geom_point(alpha = 0.5) +
+  stat_smooth(method = "glm", formula = y ~ x, se = FALSE, color = "coral") +
+  labs(title = "Linear fit: BMI vs systolic BP") +
+  theme_minimal()
+
+# Residuals vs fitted values
+resid_df <- data.frame(
+  Fitted = fitted(model_linear),
+  Residuals = residuals(model_linear)
+)
+ggplot(resid_df, aes(x = Fitted, y = Residuals)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "coral") +
+  labs(
+    title = "Residuals vs Fitted (linear model)",
+    x = "Fitted values",
+    y = "Residuals"
+  ) +
+  theme_minimal()
+
+# --------------------------------------------------
+# 2. Quadratic model (BMI + BMI^2)
+# --------------------------------------------------
+model_quad <- glm(BPXSY1 ~ BMXBMI + I(BMXBMI^2), data = data_noNA, family = gaussian())
+summary(model_quad)
+
+# Coefficient of determination
+PseudoR2(model_quad, which = "CoxSnell")
+
+# Plot quadratic fit
+ggplot(data_noNA, aes(x = BMXBMI, y = BPXSY1)) +
+  geom_point(alpha = 0.5) +
+  stat_smooth(method = "glm", formula = y ~ x + I(x^2), se = FALSE, color = "coral") +
+  labs(title = "Quadratic fit: BMI vs systolic BP") +
+  theme_minimal()
+
+# Residuals vs fitted values
+resid_quad_df <- data.frame(
+  Fitted = fitted(model_quad),
+  Residuals = residuals(model_quad)
+)
+ggplot(resid_quad_df, aes(x = Fitted, y = Residuals)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "coral") +
+  labs(
+    title = "Residuals vs Fitted (quadratic model)",
+    x = "Fitted values",
+    y = "Residuals"
+  ) +
+  theme_minimal()
+
+# --------------------------------------------------
+# 3. Multivariable linear model
+# --------------------------------------------------
+model_multi <- glm(BPXSY1 ~ BMXBMI + RIDAGEYR + RIAGENDR + RIDRETH1 + SMQ020,
+                   data = data_noNA, family = gaussian())
+summary(model_multi)
+
+# Pseudo R²
+PseudoR2(model_multi, which = "CoxSnell")
+```
+
+💡 The coefficient of determination, denoted `R^2` and pronounced "R squared", is the proportion of the variation in the outcome variable that is predictable from the predictor(s). It provides a measure of how well observed outcomes are replicated by the model, based on the proportion of total variation of outcomes explained by the model. A value of 0 means the model explains none of the variance and a value of 1 means it explains all of it. Pseudo R-squared is a measure of goodness-of-fit for models where R-squared cannot be calculated, such as logistic regression. Cox and Snell's R^2 is based on the log likelihood for the model compared to the log likelihood for a baseline model. 
+
+💡 When conducting a residual analysis, a "residuals versus fits plot" is the most frequently created plot. It is a scatter plot of residuals on the y axis and fitted values (estimated responses) on the x axis. The plot is used to detect non-linearity, unequal error variances, and outliers. What we wish:
+
+* The residuals "bounce randomly" around the 0 line. This suggests that the assumption that the relationship is linear is reasonable.
+* The residuals roughly form a "horizontal band" around the 0 line. This suggests that the variances of the error terms are equal.
+* No one residual "stands out" from the basic random pattern of residuals. This suggests that there are no outliers.
+
 
 ### Logistic regression
 
@@ -1363,55 +1469,204 @@ Binary response variable.
 
 <u>3. Requirements</u>
 
-* Linearity: the relationship between the log-odds of the outcome and each predictor must be linear.
-* Independence: the observations should be independent (not repeated measures).
-* XXX
+* Linearity: the relationship between the *log-odds of the outcome* and each predictor must be *linear*.
+* Independence: the *observations* should be *independent* (not repeated measures).
+* Large sample size:  a general guideline is that you need a *minimum of about 10 events* per explanatory variable.
 
+<u>4. R function</u>
+
+See "Linear regression".
+
+<u>5. Important arguments</u>
+
+See "Linear regression".
+
+<u>6. Example</u>
+
+```{r}
+library(DescTools) # DescTools to compute (pseudo) coefficients of determination
+
+# Outcome: marital status (DMDMARTL > married = 1 if married, 0 otherwise)
+# Input: age, gender, education level, household income
+data_logit <- na.omit(merged_nhanes[, c("DMDMARTL", "RIDAGEYR", "RIAGENDR", "DMDEDUC2", "INDHHIN2")])
+
+# Convert marital status to binary: 1 = Married, 0 = Not married
+data_logit$married <- ifelse(data_logit$DMDMARTL == "Married", 1, 0)
+
+# --------------------------------------------------
+# 1. Logistic regression: single predictor
+# --------------------------------------------------
+model_logit <- glm(married ~ RIDAGEYR, data = data_logit, family = binomial())
+summary(model_logit)
+
+# Pseudo R²
+PseudoR2(model_logit, which = "CoxSnell")
+
+# Predicted probabilities
+data_logit$pred_prob <- fitted(model_logit)
+
+# --------------------------------------------------
+# 2. Multivariable logistic regression
+# --------------------------------------------------
+model_logit_multi <- glm(married ~ RIDAGEYR + RIAGENDR + DMDEDUC2 + INDHHIN2,
+                         data = data_logit, family = binomial())
+summary(model_logit_multi)
+
+# Pseudo R²
+PseudoR2(model_logit_multi, which = "CoxSnell")
+```
 
 ## Cox (proportional hazards) regression
 
-Purpose: Used for survival analysis, particularly when studying the time to an event (e.g., time to death, relapse).
-Assumptions: Proportional hazards assumption, meaning the effect of the predictor on the hazard rate is constant over time.
-Example Application: Analysing the impact of age, treatment type, and other covariates on patient survival times.
+Cox regression is used for survival analysis, particularly when studying the time to an event (e.g., time to death, time to recurrence).
+
+<u>2. Type of data</u>
+
+Time-to-event response variable.
+
+<u>3. Requirements</u>
+
+* *Proportional hazards* assumption, meaning the effect of the predictor on the hazard rate is *constant over time*.
 
 ### Hazard function
 
+The hazard function describes the instantaneous risk of experiencing the event of interest at a particular time, assuming the individual has survived up to that point. In survival analysis, it’s like asking: “At this exact moment, how likely is it that the event happens next?”
+
+In the Cox proportional hazards model, the hazard function is expressed as the product of a baseline hazard and a factor that depends on the covariates.
+
+$$
+h(t) = h_0(t) * \exp(\sum_{i=1}^{p} \beta_i x_i)
+$$
+
+A Cox model assumes **proportional hazards**. This means that the effect of the covariates on the hazard is multiplicative and **constant over time**. Each covariate scales the baseline hazard by a fixed proportion, regardless of when the event occurs. For example, if a covariate doubles the hazard, it does so at every point in time.
+
+<u>4. R function</u>
+
+`coxph(formula, ...)`: Fits a Cox proportional hazards regression model.
+
+<u>5. Important arguments</u>
+
+```
+coxph(formula, data=, weights, subset, 
+      na.action, init, control, 
+      ties=c("efron","breslow","exact"), 
+      singular.ok=TRUE, robust, 
+      model=FALSE, x=FALSE, y=TRUE, tt, method=ties,
+      id, cluster, istate, statedata, nocenter=c(-1, 0, 1), ...)
+```
+
+* `formula`: a formula object, with the response on the left of a ~ operator, and the terms on the right. The response must be a survival object as returned by the `Surv` function.
+* `data`: a data.frame in which to interpret the variables named in the formula.
+* `na.action`: a missing-data filter function.
+
+<u>6. Example</u>
+
+```{r, out.width="75%"}
+library(survival) # for survival analysis (Surv, coxph)
+library(survminer) # for survival analysis (ggsurvplot)
+
+# Select relevant columns and remove missing
+cox_data <- merged_nhanes_with_mort %>%
+  select(MORTSTAT, PERMTH_EXM, SMQ020) %>%
+  filter(!is.na(SMQ020) & SMQ020 != "Refused" & SMQ020 != "Dont' know") %>%
+  mutate(
+    smoker = case_when(
+      SMQ020 == "Yes" ~ "Yes",
+      SMQ020 == "No" ~ "No"
+    ),
+    smoker = factor(smoker, levels = c("Yes", "No"))
+  )
+
+# --------------------------------------------------
+# 1. Fit simple Cox model: effect of smoking
+# --------------------------------------------------
+cox_model <-  coxph(Surv(PERMTH_EXM, MORTSTAT) ~ smoker, data = cox_data)
+summary(cox_model)
+
+# Hazard ratio for smokers vs non-smokers
+exp(coef(cox_model))
+exp(confint(cox_model))
+
+# --------------------------------------------------
+# 2. Kaplan-Meier curves by smoking status
+# --------------------------------------------------
+km_fit <- survfit(Surv(PERMTH_EXM, MORTSTAT) ~ smoker, data = cox_data)
+
+ggsurvplot(
+  fit = km_fit,
+  data = cox_data,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  legend.labs = c("Smoker", "Non-smoker"),
+  palette = c("coral", "steelblue"),  # colors for the lines
+  title = "Survival by smoking status",
+  xlab = "Months since NHANES exam",
+  ylab = "Survival rate",
+  ggtheme = theme_minimal()
+)
+```
+
 ### Competing risks
 
+Competing risks occur when an individual can experience one of several mutually exclusive events, and the occurrence of one event prevents the others from happening. For example, in a study of time to heart attack, death from cancer is a competing risk: once a person dies of cancer, they can no longer have a heart attack. This has to be taken into account when planning a survival analysis.
 
-# Exercices & Solutions
+# Exercises & Solutions
 
-## Exercices
+## Exercises
 
-✏️ N°1 Exercise on comparing means: Compare the systolic blood pressure (1st reading, in mmHg, `BPXSY1`) between males and females (`RIAGENDR`). To choose the right test, determine if the data is roughly normal or skewed.
+### Exercise 1
 
-✏️ N°2 Exercise on comparing means: Compare the age of the household reference person (`DMDHRAGE`) between participants who smoke at least 100 cigarettes in life (`SMQ020 == "Yes"`) and non-smokers (`SMQ020 == "No"`). To choose the right test, determine if the data is roughly normal or skewed.
+✏️ Exercise 1: Compare the systolic blood pressure (1st reading, in mmHg, `BPXSY1`) between males and females (`RIAGENDR`). To choose the right test, determine if the data is roughly normal or skewed.
 
-✏️ N°3 Exercise on comparing proportions: Test whether smoking at least 100 cigarettes in life (`SMQ020 == "Yes"` and `SMQ020 == "No"`) differs by marital status of the household reference person (`DMDHRMAR == "Married"` vs every other marital status).
+### Exercise 2
+
+✏️ Exercise 2: Compare the age of the household reference person (`DMDHRAGE`) between participants who smoke at least 100 cigarettes in life (`SMQ020 == "Yes"`) and non-smokers (`SMQ020 == "No"`). To choose the right test, determine if the data is roughly normal or skewed.
+
+### Exercise 3
+
+✏️ Exercise 3: Test whether smoking at least 100 cigarettes in life (`SMQ020 == "Yes"` and `SMQ020 == "No"`) differs by marital status of the household reference person (`DMDHRMAR == "Married"` vs every other marital status).
  
-✏️ N°4 Exercise on comparing proportions: Test the association between marital status of the participant (`DMDMARTL == Married` and `DMDMARTL == Living with partner` vs all other cases) and pregnancy at exam (`RIDEXPRG == Yes, positive lab pregnancy test or self-reported pregnant at exam` vs `RIDEXPRG == The participant was not pregnant at exam`, and leave out the uncertain cases).
+### Exercise 4
 
-✏️ N°5 Exercise on comparing more than two groups: Compare mean BMI (`BMXBMI`) across age groups (please choose the groups `"(10,20]", "(20,30]", "(30,40]", "(40,50]", "(50,60]", "(60,70]"`).
+✏️ Exercise 4: Test the association between marital status of the participant (`DMDMARTL == Married` and `DMDMARTL == Living with partner` vs all other cases) and pregnancy at exam (`RIDEXPRG == Yes, positive lab pregnancy test or self-reported pregnant at exam` vs `RIDEXPRG == The participant was not pregnant at exam`, and leave out the uncertain cases).
+
+### Exercise 5
+
+✏️ Exercise 5: Compare mean BMI (`BMXBMI`) across age groups (please choose the groups `"(10,20]", "(20,30]", "(30,40]", "(40,50]", "(50,60]", "(60,70]"`).
 
 💡 Hint: remember how we used the function `cut()` to create age groups in Chapter 3.
 
-✏️ N°6 Exercise on comparing more than two groups: Compare waist circumference (`BMXWAIST`) across different smoking frequency categories (`SMQ040`).
+### Exercise 6
 
-✏️ N°7 Exercise on normality: Check visually if BMI (`BMXBMI`) is normally distributed.
+✏️ Exercise 6: Check visually if BMI (`BMXBMI`) is normally distributed.
 
-✏️ N°8 Exercise on correlation: Compute the Pearson correlation between weight (`BMXWT`) and BMI (`BMXBMI`). Compute the Spearman correlation between height (`BMXHT`) and waist circumference (`BMXWAIST`).
+### Exercise 7 
 
-✏️ N°9 Exercise on survival analysis: Using the NHANES mortality data (MORTSTAT, PERMTH_INT), plot the Kaplan–Meier survival curve by gender. Then perform a Log-Rank test to compare survival curves.
+✏️ Exercise 7: Compare BMI (`BMXBMI`) across different smoking frequency categories (`SMQ040`).
 
-✏️ N°10 Exercise on linear regression: Fit a linear regression model predicting systolic blood pressure (`BPXSY1`) using age (`RIDAGEYR`) and BMI (`BMXBMI`) as predictors. Interpret the coefficients.
+### Exercise 8
 
-✏️ N°11 Exercise on logistic regression: Predict the probability of being a smoker (`SMQ020 == "Yes"`) using age and BMI as predictors. Interpret the coefficients.
+✏️ Exercise 8: Compute the Pearson correlation between weight (`BMXWT`) and BMI (`BMXBMI`). Compute the Spearman correlation between height (`BMXHT`) and waist circumference (`BMXWAIST`).
 
-💡 Hints
+### Exercise 9
+
+✏️ Exercise 9: Using the NHANES mortality data (`MORTSTAT`, `PERMTH_INT`), plot the Kaplan–Meier survival curve by gender. Then perform a Log-Rank test to compare survival curves.
+
+### Exercise 10
+
+✏️ Exercise 10: Fit a linear regression model predicting systolic blood pressure (`BPXSY1`) using age (`RIDAGEYR`) and BMI (`BMXBMI`) as predictors. Interpret the coefficients.
+
+### Exercise 11
+
+✏️ Exercise 11: Predict the probability of being a smoker (`SMQ020 == "Yes"`) using age and BMI as predictors. Interpret the coefficients.
+
 
 ## Solutions
 
-☑️ N°1 Exercise on comparing means
+### Exercise 1
+
+☑️ Exercise 1
 
 ```{r, out.width="75%"}
 # Let us have a look at the systolic blood pressure in our data set
@@ -1436,7 +1691,9 @@ t.test(x = females, y = males,
 # If the data had been to skewed, we could have used a Wilcoxon rank-sum test (also called Mann–Whitney U test)
 ```
 
-☑️ N°2 Exercise on comparing means
+### Exercise 2
+
+☑️ Exercise 2
 
 ```{r, out.width="75%"}
 # Let us have a look at the waist circumference in our data set
@@ -1459,7 +1716,9 @@ wilcox.test(x = smokers, y = nonsmokers,
 # The p-value is highly significant (p-value = 4.888e-11)
 ```
 
-☑️ N°3 Exercise on comparing proportions
+### Exercise 3
+
+☑️ Exercise 3
 
 ```{r, out.width="75%"}
 # We are comparing proportions, so we need to determine if we have to use a Chi-square test or a Fisher's exact test
@@ -1480,7 +1739,9 @@ chisq.test(tab)
 # The p-value is highly significant (p-value = 2.115e-05)
 ```
 
-☑️ N°4 Exercise on comparing proportions
+### Exercise 4
+
+☑️ Exercise 4
 
 ```{r, out.width="75%"}
 # We are again comparing proportions, so we need to determine if we have to use a Chi-square test or a Fisher's exact test
@@ -1505,7 +1766,9 @@ chisq.test(tab)
 # The p-value is slightly significant (p-value = 0.02333)
 ```
 
-☑️ N°5 Exercise on comparing more than two groups
+### Exercise 5
+
+☑️ Exercise 5
 
 ```{r, out.width="75%"}
 # We define the age groups 
@@ -1542,17 +1805,169 @@ kruskal.test(BMXBMI ~ AGE_GROUP, data = BMI_df)
 # The p-value is also highly significant (p-value < 2.2e-16)
 ```
 
-☑️ N°6 Exercise on comparing more than two groups – Kruskal-Wallis test
+### Exercise 6
 
-☑️ N°7 Exercise on normality: qqplot
+☑️ Exercise 6
 
-☑️ N°8 Exercise on correlation: pearson and spearman
+```{r, out.width="75%"}
+# Let us check that with a normal Q-Q-plot
+qqnorm(merged_nhanes$BMXBMI)
+# BMI is relatively skewed
+```
 
-☑️ N°9 Exercise on survival analysis: km + log rank
+### Exercise 7
 
-☑️ N°10 Exercise on linear regression:
+☑️ Exercise 7
 
-☑️ N°11 Exercise on logistic regression:
+```{r, out.width="75%"}
+smoking_noNA <- merged_nhanes[
+  !is.na(merged_nhanes$SMQ040) & 
+  !is.na(merged_nhanes$BMXBMI) & 
+  merged_nhanes$SMQ040 != "Refused", 
+]
+
+# Let us have a look at the distributions of the BMI values for the smoking groups
+ggplot(smoking_noNA, aes(x = SMQ040, y = BMXBMI)) +
+  geom_boxplot(fill = "steelblue", alpha = 0.7) +
+  labs(
+    x = "Smoking habits",
+    y = "BMI",
+    title = "BMI by smoking habits"
+  ) +
+  theme_minimal()
+
+# Since BMI is not very normally distributed, let us test the distributions 
+# using a Kruskal-Wallis test
+kruskal.test(BMXBMI ~ SMQ040, data = smoking_noNA)
+```
+
+### Exercise 8
+
+☑️ Exercise 8
+
+```{r}
+# Let us evaluate the correlation of weight and BMI
+cor.test(x = merged_nhanes$BMXWT, y = merged_nhanes$BMXBMI, method = c("pearson")) 
+
+# Let us evaluate the correlation of height and waist circumference
+cor.test(x = merged_nhanes$BMXHT, y = merged_nhanes$BMXWAIST, method = c("spearman"))
+```
+
+### Exercise 9
+
+☑️ Exercise 9
+
+```{r, out.width="75%"}
+# Load necessary libraries
+library(survival)
+library(survminer)
+
+# Data frame for curves
+km_df <- merged_nhanes_with_mort %>%
+  filter(!is.na(RIAGENDR), !is.na(PERMTH_INT), !is.na(MORTSTAT)) %>%
+  select(RIAGENDR, PERMTH_INT, MORTSTAT) %>%
+  mutate(
+    gender = factor(RIAGENDR, labels = c("Female", "Male"))
+  )
+
+# Fit Kaplan-Meier survival curves by gender
+km_fit <- survfit(Surv(time = PERMTH_INT, 
+                 event = MORTSTAT) ~ gender, 
+                 data = km_df)
+
+# Plot Kaplan-Meier curves
+ggsurvplot(
+  fit = km_fit,
+  data = km_df,
+  risk.table = TRUE,
+  pval = TRUE,
+  conf.int = TRUE,
+  legend.labs = c("Female", "Male"),
+  palette = c("coral", "steelblue"),  # colors for the lines
+  title = "Survival by smoking status",
+  xlab = "Months since NHANES exam",
+  ylab = "Survival rate",
+  ggtheme = theme_minimal()
+)
+
+# Perform Log-Rank test to compare survival between genders
+logrank_test <- survdiff(Surv(time = merged_nhanes_with_mort$PERMTH_INT, 
+                 event = merged_nhanes_with_mort$MORTSTAT) ~ RIAGENDR, 
+                 data = merged_nhanes_with_mort)
+logrank_test
+```
+
+### Exercise 10
+
+☑️ Exercise 10
+
+```{r}
+# Create a clean subset with no missing values
+sub_nhanes <- merged_nhanes %>%
+  filter(!is.na(BPXSY1), !is.na(RIDAGEYR), !is.na(BMXBMI))
+
+# Fit linear regression model
+bp_model <- glm(BPXSY1 ~ RIDAGEYR + BMXBMI, data = sub_nhanes, family = gaussian())
+
+# View model summary
+summary(bp_model)
+```
+
+```
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 95.44353    0.86907  109.82   <2e-16 ***
+RIDAGEYR     0.44704    0.01003   44.55   <2e-16 ***
+BMXBMI       0.24890    0.02970    8.38   <2e-16 ***
+```
+
+* `(Intercept) = 95.44`.
+* RIDAGEYR = `0.447`: each additional year of age is associated with a 0.447 mmHg increase in systolic BP, holding BMI constant.
+* `BMXBMI = 0.249`: each additional unit of BMI is associated with a 0.249 mmHg increase in systolic BP, holding age constant.
+* All coefficients are highly significant (p < 0.001).
+
+### Exercise 11
+
+☑️ Exercise 11
+
+```{r}
+# Create a clean subset without missing values
+sub_nhanes <- merged_nhanes %>%
+  filter(!is.na(SMQ020), !is.na(RIDAGEYR), !is.na(BMXBMI)) %>%
+  mutate(
+    SMQ020_bin = ifelse(SMQ020 == "Yes", 1, 0)  # Convert to 0/1 for logistic regression
+  )
+
+# Fit logistic regression model
+smoke_model <- glm(SMQ020_bin ~ RIDAGEYR + BMXBMI, 
+                   data = sub_nhanes, 
+                   family = binomial)
+
+# View model summary
+summary(smoke_model)
+
+# Odds ratio
+exp(coef(smoke_model))
+```
+
+```
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -0.964836   0.142370  -6.777 1.23e-11 ***
+RIDAGEYR     0.015520   0.001602   9.686  < 2e-16 ***
+BMXBMI      -0.003205   0.004113  -0.779    0.436 
+
+> # Odds ratio
+> exp(coef(smoke_model))
+(Intercept)    RIDAGEYR      BMXBMI 
+  0.3810457   1.0156407   0.9968002 
+```
+
+* `(Intercept) = -0.965`.
+* `RIDAGEYR = 0.0155`: Each additional year of age increases the log-odds of being a smoker by 0.0155, holding BMI constant. This is statistically significant (p < 0.001).
+* `BMXBMI = -0.0032`: Each additional unit of BMI slightly decreases the log-odds of being a smoker, but this effect is not statistically significant (p = 0.436).
+
+Age has a small but significant positive association with smoking. BMI has essentially no significant effect on smoking in this model.
 
 \newpage
 

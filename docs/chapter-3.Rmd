@@ -268,13 +268,13 @@ plot(fit,
 
 ### Exercise 1
 
-✏️ Exercise 1: Plot the first, second and third systolic blood pressure readings by gender using base R. Display all three plots (1st, 2nd and 3rd readings) in the same output panel.
+✏️ Exercise 1: Create box plots of the first, second and third systolic blood pressure readings by gender (i.e. each of the three plots should contain two box plots: one for males and one for females) using base R. Display all three plots (1st, 2nd and 3rd readings) in the same output panel.
 
-💡 *Hint:* Try using the `par()` function (e.g. `par(mfrow=c(2,3))`; do not forget to reset it to `par(mfrow=c(1,1))` afterwards!)
+💡 *Hint:* Try using the `par()` function (e.g. `par(mfrow=c(2,3))` to display multiple plots in the same panel; do not forget to reset it to `par(mfrow=c(1,1))` afterwards!)
 
-## Exercise 2
+### Exercise 2
 
-✏️ Exercise 2: Create a histogram showing the systolic blood pressure (1st reading) for each smoking status category (excluding those who refused to provide their smoking status) using base R. Set the number of breaks to 20. You should get three different plots. Display them all in the same output panel.
+✏️ Exercise 2: Create a histogram showing the systolic blood pressure (1st reading) for each smoking status category (`"Not at all", "Some days", "Every day"`, excluding those who refused to provide their smoking status) using base R. Set the number of breaks to 20. You should get three different plots. Display them all in the same output panel.
 
 # Including plots using `ggplot2`
 
@@ -588,7 +588,7 @@ ggsurvplot(fit,
            palette = c("steelblue"),
            conf.int = TRUE,  
            xlab = "Time (months)",
-           ylab = "Survival probability",
+           ylab = "Survival rate",
            ylim = c(0.7, 1),
            risk.table = TRUE,
            title = "Kaplan–Meier survival curve",
@@ -599,7 +599,7 @@ ggsurvplot(fit,
 
 ### Exercise 3
 
-✏️ Exercise 3: Using the same age groups as in the examples, create a bar plot showing the median BMI by age group using `ggplot2`. Then produce two further bar plots showing the same data for each gender, and display them in the same output panel, using the same y-axis to allow for better comparison.
+✏️ Exercise 3: Using the same age groups as in the examples (`(10,20], (20,30], (30,40], (40,50], (50,60], (60,70], (70,80]`), create a bar plot showing the median BMI by age group using `ggplot2`. Then produce two further bar plots showing the same data for each gender, and display them in the same output panel, using the same y-axis to allow for better comparison.
 
 💡 *Hints:* Try using the `grid.arrange()` function from the `gridExtra` package (e.g. `grid.arrange(plot1, plot2, ncol=2)`), and the argument `ylim` in the `ggplot()` function.
 
@@ -607,7 +607,7 @@ ggsurvplot(fit,
 
 ✏️ Exercise 4: Reproduce the alluvial plot showing the evolution of the systolic blood pressure (i.e. with `ggplot2`), but using the diastolic blood pressure (`BPXDI1`, `BPXDI2`, `BPXDI3`). Use only the **last 100** participants with no NAs. Use the following breaks: `c(0, 60, 70, 80, 120)`.
 
-💡 *Hints:* Try using the `slice_tail()` function.
+💡 *Hints:* Try using the `slice_tail()` function to select the last 100 participants.
 
 # Saving plots
 
